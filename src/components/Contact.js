@@ -46,8 +46,8 @@ function Contact() {
                                 ADDRESS
                             </h2>
                             <p className="mt-1">
-                                Somewhere In <br />
-                                Toronto, ON Canada
+                                Toronto <br />
+                                Ontario, Canada
                             </p>
                         </div>
                         <div className="lg:w1/2 px-6 mt-4 lg:mt-0">
@@ -73,7 +73,7 @@ function Contact() {
                         Let's Connect
                     </h2>
                     <p className="leading-relaxed mb-5">
-                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illum suscipit officia aspernatur veritatis. Asperiores, aliquid?
+                        Together we will come to successful solutions. Tell me more about your projects.
                     </p>
                     <div className="relative mb-4">
                         <label htmlFor="name" className="leading-7 text-sm text-gray-400">
