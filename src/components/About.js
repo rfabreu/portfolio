@@ -9,17 +9,17 @@ function About() {
                     <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium text-white">
                         Hi, I'm Rafael.
                         <br className="hidden lg:inline-block" />
-                        Software Engineer and Full-stack Web Developer.
+                        <span className="title-font sm:text-4xl text-3xl mb-4 font-medium text-white">Software Engineer and Full-stack Web Developer.</span>
                     </h1>
                     <p className="mb-8 leading-relaxed">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quilaborum quasi, incidunt dolore iste nostrum cupiditate voluptas? Laborum, voluptas natus?
+                    I studied at the University of Toronto coding Bootcamp, and recently acquired a certificate from Red Had in OpenShift and Kubernetes. Throughout the years I've demonstrated success in the technology, television, and education industries. Where through teamwork and leadership I contributed to implementing innovative solutions. My goal is to help you build great things through good Software Engineering practices.
                     </p>
                     <div className="flex justify-center">
                         <a href="#contact" className="inline-flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded text-lg">
                             Work With Me
                         </a>
                         <a href="#projects" className="ml-4 inline-flex text-gray-400 bg-gray-800 border-0 py-2 px-6 focus:outline-none hover:bg-gray-700 hover:text-white ronded text-lg">
-                            See My Past Work
+                            See My Work
                         </a>
                     </div>
                 </div>
