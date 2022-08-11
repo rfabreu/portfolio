@@ -28,3 +28,5 @@ export const projects = [
         link: "https://github.com/rfabreu",
     },
 ];
+
+export const skills = ['HTML', 'CSS', 'JavaScript', 'React', 'MySQL', 'Python', 'Kubernetes', 'Object-Oriented Programming'];
