@@ -12,7 +12,7 @@ function Projects() {
                         Projects I've Worked On
                     </h1>
                     <p className="lg:w-2/3 mx-auto leading-relaxed text-base">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Explicabo facilis repellat ab cupiditate alias vero aliquid obcaecati quisquam fuga dolore.
+                        Check some of the projects I have recently been working on. Feel free to use these and any other projects listed on my GitHub.
                     </p>
                 </div>
                 <div className="flex flex-wrap -m-4">
