@@ -1,9 +1,16 @@
 export const projects = [
     {
+        title: "PAY-DAY",
+        subtitle: "Node.Js, Express.Js, Day.Js, MySQL, Sequelize, Handlebars.Js, Bootstrap, JavaScript",
+        description: "Pay-Day is an app to assist users clock-in/out in a timesheet registy and allows managers to track working hours.",
+        image: "https://www.cio.com/wp-content/uploads/2021/12/4_software-engineering-100733150-orig.jpg?quality=50&strip=all",
+        link: "https://github.com/tahir-arslan/pay-day",
+    },
+    {
         title: "CHARGE IT UP",
         subtitle: "HTML, CSS, Tailwind, JavaScript",
         description: "Charge it up is an application that helps electric vehicle owners find charging stations close to a postal code or zip code across North America.",
-        image: "https://www.cio.com/wp-content/uploads/2021/12/4_software-engineering-100733150-orig.jpg?quality=50&strip=all",
+        image: "https://online.engineering.arizona.edu/wp-content/themes/eng/images/blog/top-skills-software-and-computer-engineering.jpg",
         link: "https://github.com/rfabreu/ev-mapper",
     },
     {
@@ -17,7 +24,7 @@ export const projects = [
         title: "Portfolio Generator",
         subtitle: "JavaScript and CSS",
         description: "This CLI application is a tool built with Node.js that assists users in creating a web portfolio template by answering command-line prompts.",
-        image: "https://online.engineering.arizona.edu/wp-content/themes/eng/images/blog/top-skills-software-and-computer-engineering.jpg",
+        image: "https://www.cio.com/wp-content/uploads/2021/12/4_software-engineering-100733150-orig.jpg?quality=50&strip=all",
         link: "https://github.com/rfabreu/portfolio-generator",
     },
     {
@@ -26,6 +33,13 @@ export const projects = [
         description: "A desktop application that runs on the command-line and takes the user through a RPG game. The user faces an array of enemies by answering prompts.",
         image: "https://www.cio.com/wp-content/uploads/2021/12/4_software-engineering-100733150-orig.jpg?quality=50&strip=all",
         link: "https://github.com/rfabreu/jest-another-RPG",
+    },
+    {
+        title: "ROBOT GLADIATORS",
+        subtitle: "JavaScript, HTML",
+        description: "A web application that runs on the browser and takes the user through a RPG game. Where the user battles multiple enemy robots by answering to prompts.",
+        image: "https://online.engineering.arizona.edu/wp-content/themes/eng/images/blog/top-skills-software-and-computer-engineering.jpg",
+        link: "https://github.com/rfabreu/robot-gladiators",
     },
 ];
 
