@@ -29,4 +29,4 @@ export const projects = [
     },
 ];
 
-export const skills = ['HTML', 'CSS', 'JavaScript', 'React', 'MySQL', 'Python', 'Kubernetes', 'Object-Oriented Programming'];
+export const skills = ['HTML', 'CSS', 'JavaScript', 'React', 'MySQL', 'Git', 'Kubernetes', 'Node.Js','Object-Oriented Programming', 'Test-Driven Development'];
