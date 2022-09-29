@@ -1,5 +1,5 @@
 import React from "react";
-import hero from "../images/hero.png";
+import hero from "../hero.png";
 import { Link } from "react-scroll";
 
 function About() {
