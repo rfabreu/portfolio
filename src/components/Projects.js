@@ -24,14 +24,14 @@ function Projects() {
                             target="_blank" rel="noreferrer">
                             <div className="flex relative">
                                 <img alt="gallery" className="absolute inset-0 w-full h-full object-cover object-center" src={project.image} />
-                                <div className="px-8 py-10 relative z-9 w-full border-4 border-gray-800 bg-gray-900 opacity-0 hover:opacity-100">
+                                <div className="px-8 py-10 relative z-9 w-full border-4 border-gray-800 bg-gray-900 opacity-0 duration-300 hover:transition-opacity hover:duration-300 hover:opacity-100">
                                     <h2 className="tracking-widest text-sm title-font font-medium text-green-400 mb-1">
                                         {project.subtitle}
                                     </h2>
                                     <h1 className="title-font text-lg font-medium text-white mb-3">
                                         {project.title}
                                     </h1>
-                                    <p className="leading-relaxed">{project.description}</p>
+                                    <p className="leading-relaxed mb-3">{project.description}</p>
                                     <div class="bg-gray-900 p-4">
                                         <a href={project.git} target="_blank" rel="noreferrer">
                                             <button class="inline-flex items-center px-4 py-2 bg-gray-400 hover:bg-gray-500 text-gray-800 text-sm font-medium rounded-md mr-2">
