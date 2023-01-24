@@ -1,6 +1,6 @@
 import { ArrowRightIcon, TerminalIcon } from "@heroicons/react/solid";
 import React from "react";
-import Resume from "../docs/Rafael_Abreu_Resume.pdf";
+import Resume from "../docs/Rafael de Abreu Gomes - resume.pdf";
 
 function Navbar() {
     return (
@@ -19,7 +19,7 @@ function Navbar() {
                     <a href="#skills" className="mr-5 hover:text-white">
                         Skills
                     </a>
-                    <a href={Resume} download="Rafael_Abreu_Resume.pdf" className="mr-5 hover:text-white">
+                    <a href={Resume} download="Rafael de Abreu Gomes - resume.pdf" className="mr-5 hover:text-white">
                         Resume
                     </a>
                     {/* <a href="#testimonials" className="mr-5 hover:text-white">
