@@ -1,7 +1,7 @@
 import { ArrowRightIcon, TerminalIcon } from "@heroicons/react/solid";
 import React from "react";
-import Resume from "../docs/Rafael_Abreu_Resume.pdf";
-import { Link } from "react-scroll";
+import { Link } from 'react-router-dom';
+import Resume from "../docs/Rafael de Abreu Gomes - resume.pdf";
 
 function Navbar() {
     return (
@@ -20,7 +20,7 @@ function Navbar() {
                     <Link to="skills" activeClass="active" spy={true} smooth={true} offset={-70} duration={1000} style={{ cursor: "pointer" }} className="mr-5 hover:text-white">
                         Skills
                     </Link>
-                    <a href={Resume} download="Rafael_Abreu_Resume.pdf" className="mr-5 hover:text-white">
+                    <a href={Resume} download="Rafael de Abreu Gomes - resume.pdf" className="mr-5 hover:text-white">
                         Resume
                     </a>
                     {/* <a href="#testimonials" className="mr-5 hover:text-white">
