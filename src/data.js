@@ -2,7 +2,7 @@ export const projects = [
     {
         title: "SECOND CHANCE",
         subtitle: "MERN Stack",
-        description: "An e-commerce solution built using the MERN Stack. That allows users to sell and buy second-hand products in an easy and convenient way.",
+        description: "Second-Chance is an e-commerce platform for buying and selling second-hand items. Built with the MERN Stack, this secure platform provides a streamlined and user-friendly experience for both buyers and sellers.",
         image: "/images/type_mini.png",
         git: "https://github.com/rfabreu/second-chance",
         link: "https://second-chance-e-commerce.herokuapp.com",
@@ -10,7 +10,7 @@ export const projects = [
     {
         title: "PAY-DAY",
         subtitle: "Node.Js, MySQL, Handlebars.Js, Bootstrap",
-        description: "Pay-Day is an app that assists users to clock-in/out in a timesheet registry and allows managers to track working hours in order to process payments.",
+        description: "Pay-Day is an app that simplifies employee time tracking and payment processing. It lets users clock-in/out, and managers to monitor and manage employee hours. Quick and efficient, it helps businesses manage their team easily.",
         image: "/images/screen_mini.png",
         git: "https://github.com/rfabreu/pay-day",
         link: "https://pay-day-schedule.herokuapp.com",
@@ -18,7 +18,7 @@ export const projects = [
     {
         title: "CHARGE IT UP",
         subtitle: "HTML, CSS, Tailwind, JavaScript",
-        description: "Charge it up is an application that helps electric vehicle owners find charging stations close to a postal code or zip code across North America.",
+        description: "Charge-it-up is a convenient application that allows electric vehicle owners to quickly and easily locate charging stations near their current location. It covers all of North America and is a great resource for EV owners.",
         image: "/images/screen_mini.png",
         git: "https://github.com/rfabreu/ev-mapper",
         link: "https://tarequem.github.io/ev-mapper/",
@@ -26,7 +26,7 @@ export const projects = [
     {
         title: "README Generator",
         subtitle: "JavaScript",
-        description: "This application uses CLI prompts to assist developers to quickly generate professional README files.",
+        description: "This application simplifies the documentation process by providing a fast, easy way to create professional README files with CLI prompts. Saves time and simplifies the creation of essential project documentation.",
         image: "/images/type_mini.png",
         git: "https://github.com/rfabreu/README-generator",
         link: "https://drive.google.com/file/d/1p-_po8fnrgY4lg3X1aOg0Pd4jjgSN-Yc/view",
@@ -34,7 +34,7 @@ export const projects = [
     {
         title: "Portfolio Generator",
         subtitle: "JavaScript and CSS",
-        description: "This CLI application is a tool built with Node.js that assists users in creating a web portfolio template by answering command-line prompts.",
+        description: "This CLI app, built with Node.js, helps users create a professional web portfolio quickly and easily by providing a series of command-line prompts. It's a good way to showcase your skills in a compelling way.",
         image: "/images/type_mini.png",
         git: "https://github.com/rfabreu/portfolio-generator",
         link: "#",
@@ -42,7 +42,7 @@ export const projects = [
     {
         title: "Jest-Another-RPG",
         subtitle: "Node.Js, Jest",
-        description: "A desktop application that runs on the command-line and takes the user through a RPG game. The user faces an array of enemies by answering prompts.",
+        description: "A command-line based RPG game that allows the player to battle enemies through prompts and text-based interactions. Explore an exciting, interactive adventure as you fight to defeat your foes.",
         image: "/images/screen_mini.png",
         git: "https://github.com/rfabreu/jest-another-RPG",
         link: "#",
