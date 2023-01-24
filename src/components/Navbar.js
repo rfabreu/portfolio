@@ -1,7 +1,7 @@
 import { ArrowRightIcon, TerminalIcon } from "@heroicons/react/solid";
 import React from "react";
-import { Link } from 'react-router-dom';
 import Resume from "../docs/Rafael de Abreu Gomes - resume.pdf";
+import { Link } from "react-scroll";
 
 function Navbar() {
     return (
