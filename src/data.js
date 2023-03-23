@@ -49,25 +49,4 @@ export const projects = [
     },
 ];
 
-export const skills = ['HTML', 'CSS', 'JavaScript', 'React', 'MySQL', 'Git', 'Kubernetes', 'Node.Js','Object-Oriented Programming', 'Test-Driven Development'];
-
-export const testimonials = [
-    {
-        quote: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium dolore rerum laborum iure enim sint nemo omnis voluptate exercitationem eius?",
-        image: "../public/logo192.png",
-        name: "First_Name Last_Name",
-        company: "Some Company",
-    },
-    {
-        quote: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium dolore rerum laborum iure enim sint nemo omnis voluptate exercitationem eius?",
-        image: "../public/logo192.png",
-        name: "First_Name Last_Name",
-        company: "Some Company",
-    },
-    {
-        quote: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium dolore rerum laborum iure enim sint nemo omnis voluptate exercitationem eius?",
-        image: "../public/logo192.png",
-        name: "First_Name Last_Name",
-        company: "Some Company",
-    },
-];
+export const skills = ['HTML', 'CSS', 'Bootstrap & Tailwind CSS', 'JavaScript', 'React', 'Python', 'MySQL', 'Node.Js', 'MongoDB', 'Git', 'Kubernetes', 'Docker', 'Object-Oriented Programming', 'Test-Driven Development', 'MVC', 'CI/CD'];
