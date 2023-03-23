@@ -15,7 +15,7 @@ function About() {
                         <span className="title-font sm:text-4xl text-3xl mb-4 font-medium text-white">Software Engineer and Full-stack Web Developer.</span>
                     </h1>
                     <p className="mb-8 leading-relaxed">
-                    I studied at the <strong>University of Toronto</strong> coding Bootcamp, and received a certificate from Red Had in <strong>Kubernetes</strong> through their <strong>OpenShift</strong> platform Bootcamp. Throughout the years I've demonstrated success in the Technology, Television, and Education industries. Where through teamwork and leadership I contributed to implementing innovative solutions. My goal is to effectively help you build great things through good <strong>Software Engineering</strong> practices.
+                    I studied at the <strong>University of Toronto</strong> coding Bootcamp, and received a certificate from <strong>Red Had</strong> in <strong>Kubernetes</strong> through their Bootcamp with training on <strong>OpenShift</strong>. Throughout the years I've demonstrated success in the Technology, Television, and Education industries. Where through teamwork and leadership I contributed to implementing innovative and effective solutions. Ready to leverage my skills to help build great solutions through good <strong>Software Engineering</strong> practices.
                     </p>
                     <div className="flex justify-center">
                         <Link to="contact" activeClass="active" spy={true} smooth={true} offset={-70} duration={2000} style={{cursor:"pointer"}} className="inline-flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded text-lg">
