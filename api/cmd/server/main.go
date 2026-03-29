@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/rfabreu/portfolio-api/internal/chat"
 	"github.com/rfabreu/portfolio-api/internal/middleware"
 )
 
@@ -21,6 +22,13 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprint(w, `{"status":"ok"}`)
 	})
+
+	geminiKey := os.Getenv("GEMINI_API_KEY")
+	if geminiKey == "" {
+		log.Println("WARNING: GEMINI_API_KEY not set — chat endpoint will fail")
+	}
+	provider := chat.NewGeminiProvider(geminiKey, "")
+	mux.Handle("POST /api/chat", chat.NewHandler(provider))
 
 	handler := middleware.CORS(allowedOrigins)(middleware.RateLimit(rpm)(mux))
 
