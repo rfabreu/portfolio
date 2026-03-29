@@ -1,0 +1,52 @@
+---
+import TechTag from './TechTag.astro';
+
+const tags: { label: string; color: 'indigo' | 'purple' | 'pink' }[] = [
+  { label: 'Go', color: 'indigo' },
+  { label: 'Python', color: 'purple' },
+  { label: 'React', color: 'pink' },
+  { label: 'Kubernetes', color: 'indigo' },
+  { label: 'AI/ML', color: 'purple' },
+];
+---
+
+<section id="hero" class="relative min-h-[85vh] flex items-center overflow-hidden">
+  <div class="absolute -top-16 right-20 w-72 h-72 orb-indigo rounded-full pointer-events-none"></div>
+  <div class="absolute -bottom-10 left-48 w-52 h-52 orb-purple rounded-full pointer-events-none"></div>
+  <div class="absolute top-10 -left-10 w-44 h-44 orb-pink rounded-full pointer-events-none"></div>
+
+  <div class="container mx-auto max-w-6xl px-6 relative z-10">
+    <div class="font-mono text-accent-indigo text-xs tracking-[3px] mb-5 animate-fade-in" style="animation-delay: 0.1s;">
+      // HELLO WORLD
+    </div>
+
+    <h1 class="text-5xl sm:text-7xl md:text-8xl font-black leading-none animate-fade-up" style="letter-spacing: -0.06em; animation-delay: 0.2s;">
+      RAFAEL<br />ABREU
+    </h1>
+
+    <p class="mt-5 text-text-secondary text-base md:text-lg max-w-lg leading-relaxed animate-fade-in" style="animation-delay: 0.5s;">
+      Software Engineer building <span class="text-accent-purple-light">intelligent systems</span> across the full stack. Go, Python, React, and the infrastructure that connects them.
+    </p>
+
+    <div class="mt-6 flex flex-wrap gap-2.5 animate-stagger" style="animation-delay: 0.7s;">
+      {tags.map((tag) => (
+        <TechTag label={tag.label} color={tag.color} />
+      ))}
+    </div>
+
+    <div class="mt-8 flex flex-wrap gap-4 animate-fade-in" style="animation-delay: 1s;">
+      <a
+        href="#projects"
+        class="px-6 py-2.5 bg-accent-indigo rounded-btn text-white text-sm font-semibold hover:bg-accent-indigo/90 transition-colors duration-200"
+      >
+        View Projects
+      </a>
+      <button
+        id="hero-chat-trigger"
+        class="px-6 py-2.5 border border-white/15 rounded-btn text-gray-300 text-sm font-medium hover:border-accent-indigo/40 hover:text-accent-indigo transition-colors duration-200"
+      >
+        Ask my AI →
+      </button>
+    </div>
+  </div>
+</section>

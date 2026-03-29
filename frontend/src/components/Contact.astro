@@ -1,0 +1,69 @@
+---
+import SectionHeader from './SectionHeader.astro';
+---
+
+<section id="contact" class="py-20 px-6">
+  <div class="container mx-auto max-w-6xl reveal">
+    <SectionHeader number="04" label="CONTACT" title="Let's Connect" />
+
+    <div class="grid md:grid-cols-2 gap-12 mt-8">
+      <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="space-y-5">
+        <input type="hidden" name="form-name" value="contact" />
+        <p class="hidden">
+          <label>Don't fill this out: <input name="bot-field" /></label>
+        </p>
+
+        <div>
+          <label for="name" class="font-mono text-xs text-text-muted tracking-wider block mb-2">NAME</label>
+          <input type="text" id="name" name="name" required
+            class="w-full bg-surface border border-surface-border rounded-btn px-4 py-3 text-text-primary text-sm focus:border-accent-indigo/60 focus:ring-1 focus:ring-accent-indigo/30 outline-none transition-colors"
+            placeholder="Your name" />
+        </div>
+
+        <div>
+          <label for="email" class="font-mono text-xs text-text-muted tracking-wider block mb-2">EMAIL</label>
+          <input type="email" id="email" name="email" required
+            class="w-full bg-surface border border-surface-border rounded-btn px-4 py-3 text-text-primary text-sm focus:border-accent-indigo/60 focus:ring-1 focus:ring-accent-indigo/30 outline-none transition-colors"
+            placeholder="your@email.com" />
+        </div>
+
+        <div>
+          <label for="message" class="font-mono text-xs text-text-muted tracking-wider block mb-2">MESSAGE</label>
+          <textarea id="message" name="message" required rows="5"
+            class="w-full bg-surface border border-surface-border rounded-btn px-4 py-3 text-text-primary text-sm focus:border-accent-indigo/60 focus:ring-1 focus:ring-accent-indigo/30 outline-none transition-colors resize-none"
+            placeholder="Tell me about your project or just say hello..."></textarea>
+        </div>
+
+        <button type="submit"
+          class="px-8 py-3 bg-accent-indigo rounded-btn text-white text-sm font-semibold hover:bg-accent-indigo/90 transition-colors duration-200">
+          Send Message
+        </button>
+      </form>
+
+      <div class="space-y-6">
+        <div>
+          <div class="font-mono text-xs text-accent-indigo tracking-wider mb-3">GET IN TOUCH</div>
+          <p class="text-text-secondary text-sm leading-relaxed">
+            I'm always interested in hearing about new opportunities, collaborations, or just connecting with fellow engineers.
+          </p>
+        </div>
+
+        <div class="space-y-4">
+          <a href="https://github.com/rfabreu" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 text-text-secondary text-sm hover:text-accent-purple transition-colors group">
+            <span class="font-mono text-accent-purple/60 group-hover:text-accent-purple">→</span>
+            github.com/rfabreu
+          </a>
+          <a href="https://linkedin.com/in/rafael-a-gomes" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 text-text-secondary text-sm hover:text-accent-pink transition-colors group">
+            <span class="font-mono text-accent-pink/60 group-hover:text-accent-pink">→</span>
+            linkedin.com/in/rafael-a-gomes
+          </a>
+        </div>
+
+        <div class="p-5 bg-surface border border-surface-border rounded-card">
+          <div class="font-mono text-xs text-text-muted tracking-wider mb-2">LOCATION</div>
+          <p class="text-text-secondary text-sm">Toronto, Ontario, Canada</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

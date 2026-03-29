@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHeader from './SectionHeader.astro';
+import FeaturedProjectCard from './FeaturedProjectCard.astro';
+import ProjectCard from './ProjectCard.astro';
+
+const allProjects = await getCollection('projects');
+const sorted = allProjects.sort((a, b) => a.data.order - b.data.order);
+const featured = sorted.filter((p) => p.data.featured);
+const other = sorted.filter((p) => !p.data.featured);
+---
+
+<section id="projects" class="py-20 px-6">
+  <div class="container mx-auto max-w-6xl reveal">
+    <SectionHeader number="02" label="PROJECTS" title="Selected Work" />
+
+    {featured.length > 0 && (
+      <div class="grid md:grid-cols-2 gap-4 mb-6">
+        {featured.map((project) => (
+          <FeaturedProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            image={project.data.image}
+            tags={project.data.tags}
+            category={project.data.category}
+            slug={project.id}
+          />
+        ))}
+      </div>
+    )}
+
+    {other.length > 0 && (
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {other.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            tags={project.data.tags}
+            github={project.data.github}
+            demo={project.data.demo}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</section>

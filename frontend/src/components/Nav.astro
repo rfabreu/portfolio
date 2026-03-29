@@ -1,0 +1,50 @@
+---
+import MobileNav from '../islands/MobileNav.tsx';
+
+const navItems = [
+  { label: 'About', href: '#about' },
+  { label: 'Projects', href: '#projects' },
+  { label: 'Skills', href: '#skills' },
+  { label: 'Contact', href: '#contact' },
+];
+
+const resumePath = '/Rafael_Abreu_Resume.pdf';
+---
+
+<header class="sticky top-0 z-50 bg-base/80 backdrop-blur-md border-b border-surface-border">
+  <nav class="container mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
+    <a href="/" class="font-mono text-text-primary text-sm font-bold tracking-wide">
+      RA<span class="text-accent-indigo">.</span>
+    </a>
+
+    <div class="hidden md:flex items-center gap-7">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class="text-text-muted text-xs tracking-[1.5px] uppercase hover:text-accent-indigo transition-colors duration-200"
+        >
+          {item.label}
+        </a>
+      ))}
+    </div>
+
+    <div class="hidden md:flex items-center gap-3">
+      <a
+        href={resumePath}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-4 py-1.5 border border-accent-indigo/40 rounded-btn text-accent-indigo text-xs tracking-wide hover:bg-accent-indigo/10 transition-colors duration-200"
+      >
+        RESUME
+      </a>
+      <a
+        href="#contact"
+        class="px-4 py-1.5 bg-accent-indigo rounded-btn text-white text-xs tracking-wide hover:bg-accent-indigo/90 transition-colors duration-200"
+      >
+        LET'S TALK
+      </a>
+    </div>
+
+    <MobileNav client:load navItems={navItems} resumePath={resumePath} />
+  </nav>
+</header>

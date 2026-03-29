@@ -1,0 +1,43 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  image: string;
+  tags: string[];
+  category: string;
+  slug: string;
+}
+
+const { title, description, image, tags, category, slug } = Astro.props;
+
+const tagColorClasses = [
+  'bg-accent-indigo/10 text-accent-indigo-light border-accent-indigo/20',
+  'bg-accent-purple/10 text-accent-purple-light border-accent-purple/20',
+  'bg-accent-pink/10 text-accent-pink-light border-accent-pink/20',
+];
+---
+
+<a href={`/project/${slug}`} class="group block bg-surface border border-surface-border rounded-card overflow-hidden hover:border-accent-indigo/30 transition-colors duration-300">
+  <div class="relative h-48 md:h-56 overflow-hidden">
+    <img
+      src={image}
+      alt={title}
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+      loading="lazy"
+    />
+    <div class="absolute top-3 right-3 font-mono text-[10px] text-accent-indigo bg-accent-indigo/10 border border-accent-indigo/25 px-2 py-0.5 rounded-tag">
+      {category}
+    </div>
+  </div>
+  <div class="p-5">
+    <h3 class="text-text-primary text-lg font-bold" style="letter-spacing: -0.03em;">{title}</h3>
+    <p class="text-text-muted text-sm mt-2 line-clamp-2">{description}</p>
+    <div class="mt-4 flex flex-wrap gap-1.5">
+      {tags.map((tag, i) => (
+        <span class={`font-mono text-[10px] px-2 py-0.5 rounded-tag border ${tagColorClasses[i % 3]}`}>
+          {tag}
+        </span>
+      ))}
+    </div>
+  </div>
+</a>

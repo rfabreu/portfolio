@@ -1,0 +1,43 @@
+---
+import SectionHeader from './SectionHeader.astro';
+---
+
+<section id="about" class="py-20 px-6">
+  <div class="container mx-auto max-w-6xl reveal">
+    <SectionHeader number="01" label="ABOUT" title="Who I Am" />
+
+    <div class="grid md:grid-cols-2 gap-12 mt-8">
+      <div class="space-y-5">
+        <p class="text-text-secondary leading-relaxed">
+          I'm a Software Engineer with experience across technology, television, and education.
+          I build full-stack applications and the infrastructure that supports them — from React
+          frontends to Go microservices to Kubernetes clusters.
+        </p>
+        <p class="text-text-secondary leading-relaxed">
+          I completed the University of Toronto Coding Bootcamp and hold a Red Hat Kubernetes
+          certificate (OpenShift). My current focus is on building intelligent systems that
+          leverage AI to solve real problems.
+        </p>
+      </div>
+
+      <div class="space-y-4">
+        <div class="p-5 bg-surface border border-surface-border rounded-card">
+          <div class="font-mono text-accent-indigo text-xs tracking-wider mb-2">FOCUS AREAS</div>
+          <ul class="space-y-2 text-text-secondary text-sm">
+            <li>→ Full-Stack Engineering (Go, Python, React)</li>
+            <li>→ AI Integration & LLM Applications</li>
+            <li>→ Cloud Infrastructure & DevOps</li>
+            <li>→ System Design & Architecture</li>
+          </ul>
+        </div>
+        <div class="p-5 bg-surface border border-surface-border rounded-card">
+          <div class="font-mono text-accent-purple text-xs tracking-wider mb-2">EDUCATION</div>
+          <ul class="space-y-2 text-text-secondary text-sm">
+            <li>→ University of Toronto — Coding Bootcamp</li>
+            <li>→ Red Hat — Kubernetes/OpenShift Certificate</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

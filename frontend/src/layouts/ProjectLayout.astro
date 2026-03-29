@@ -1,0 +1,123 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import GradientDivider from '../components/GradientDivider.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image: string;
+  tags: string[];
+  category: string;
+  github?: string;
+  demo?: string;
+}
+
+const { title, description, image, tags, category, github, demo } = Astro.props;
+
+const tagColorClasses = [
+  'bg-accent-indigo/10 border-accent-indigo/25 text-accent-indigo-light',
+  'bg-accent-purple/10 border-accent-purple/25 text-accent-purple-light',
+  'bg-accent-pink/10 border-accent-pink/20 text-accent-pink-light',
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#050508" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <title>{title} | Rafael Abreu</title>
+  </head>
+  <body class="bg-base text-text-secondary">
+    <Nav />
+
+    <article class="container mx-auto max-w-4xl px-6 py-16">
+      <a href="/#projects" class="text-text-muted text-sm hover:text-accent-indigo transition-colors mb-8 inline-block">
+        ← Back to Projects
+      </a>
+
+      <div class="font-mono text-accent-indigo text-xs tracking-[3px] mb-3">{category}</div>
+      <h1 class="text-4xl md:text-5xl font-black mb-4" style="letter-spacing: -0.06em;">{title}</h1>
+      <p class="text-text-secondary text-lg mb-6">{description}</p>
+
+      <div class="flex flex-wrap gap-2 mb-6">
+        {tags.map((tag, i) => (
+          <span class={`font-mono text-xs px-3 py-1 border rounded-tag ${tagColorClasses[i % 3]}`}>
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      <div class="flex gap-4 mb-10">
+        {github && (
+          <a href={github} target="_blank" rel="noopener noreferrer" class="px-5 py-2 border border-surface-border rounded-btn text-text-secondary text-sm hover:border-accent-indigo/40 hover:text-accent-indigo transition-colors">
+            View Code →
+          </a>
+        )}
+        {demo && (
+          <a href={demo} target="_blank" rel="noopener noreferrer" class="px-5 py-2 bg-accent-indigo rounded-btn text-white text-sm hover:bg-accent-indigo/90 transition-colors">
+            Live Demo →
+          </a>
+        )}
+      </div>
+
+      <img src={image} alt={title} class="w-full rounded-card border border-surface-border mb-12" loading="lazy" />
+
+      <GradientDivider />
+
+      <div class="prose-custom mt-12">
+        <slot />
+      </div>
+    </article>
+
+    <Footer />
+
+    <style>
+      .prose-custom :global(h2) {
+        color: #ffffff;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+      }
+      .prose-custom :global(p) {
+        color: #a0a0b0;
+        line-height: 1.7;
+        margin-bottom: 1rem;
+      }
+      .prose-custom :global(ul) {
+        color: #a0a0b0;
+        list-style: none;
+        padding-left: 0;
+      }
+      .prose-custom :global(li) {
+        padding-left: 1.25rem;
+        position: relative;
+        margin-bottom: 0.5rem;
+      }
+      .prose-custom :global(li::before) {
+        content: '→';
+        position: absolute;
+        left: 0;
+        color: #6366f1;
+      }
+      .prose-custom :global(strong) {
+        color: #ffffff;
+        font-weight: 600;
+      }
+      .prose-custom :global(code) {
+        font-family: 'Courier New', monospace;
+        background: rgba(255,255,255,0.05);
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+      }
+    </style>
+  </body>
+</html>

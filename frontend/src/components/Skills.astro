@@ -1,0 +1,54 @@
+---
+import SectionHeader from './SectionHeader.astro';
+
+const categories = [
+  {
+    label: 'LANGUAGES',
+    color: 'text-accent-indigo',
+    skills: ['Go', 'Python', 'JavaScript', 'TypeScript', 'HTML', 'CSS'],
+  },
+  {
+    label: 'FRAMEWORKS & TOOLS',
+    color: 'text-accent-purple',
+    skills: ['React', 'Astro', 'Node.js', 'Tailwind CSS', 'Bootstrap', 'Git'],
+  },
+  {
+    label: 'INFRASTRUCTURE',
+    color: 'text-accent-pink',
+    skills: ['Kubernetes', 'Docker', 'CI/CD', 'Netlify', 'Fly.io'],
+  },
+  {
+    label: 'AI & DATA',
+    color: 'text-accent-indigo',
+    skills: ['LLM Integration', 'Gemini API', 'RAG', 'MongoDB', 'MySQL'],
+  },
+  {
+    label: 'PRACTICES',
+    color: 'text-accent-purple',
+    skills: ['TDD', 'OOP', 'MVC', 'System Design', 'Agile'],
+  },
+];
+---
+
+<section id="skills" class="py-20 px-6">
+  <div class="container mx-auto max-w-6xl reveal">
+    <SectionHeader number="03" label="EXPERTISE" title="Tech Stack" />
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+      {categories.map((cat) => (
+        <div class="bg-surface border border-surface-border rounded-card p-5">
+          <div class={`font-mono text-xs font-bold tracking-wider mb-3 ${cat.color}`}>
+            {cat.label}
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {cat.skills.map((skill) => (
+              <span class="font-mono text-xs text-text-secondary bg-white/5 px-2.5 py-1 rounded-tag">
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

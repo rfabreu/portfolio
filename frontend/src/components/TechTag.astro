@@ -1,0 +1,18 @@
+---
+interface Props {
+  label: string;
+  color?: 'indigo' | 'purple' | 'pink';
+}
+
+const { label, color = 'indigo' } = Astro.props;
+
+const colorMap = {
+  indigo: 'bg-accent-indigo/10 border-accent-indigo/25 text-accent-indigo-light',
+  purple: 'bg-accent-purple/10 border-accent-purple/25 text-accent-purple-light',
+  pink: 'bg-accent-pink/10 border-accent-pink/20 text-accent-pink-light',
+};
+---
+
+<span class={`font-mono text-xs px-3 py-1 border rounded-tag ${colorMap[color]}`}>
+  {label}
+</span>
