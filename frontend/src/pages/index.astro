@@ -8,6 +8,7 @@ import Projects from '../components/Projects.astro';
 import Skills from '../components/Skills.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
+import ChatWidget from '../islands/ChatWidget.tsx';
 ---
 
 <BaseLayout>
@@ -24,4 +25,5 @@ import Footer from '../components/Footer.astro';
     <Contact />
   </main>
   <Footer />
+  <ChatWidget client:load />
 </BaseLayout>
