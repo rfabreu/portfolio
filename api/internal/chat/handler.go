@@ -2,6 +2,7 @@ package chat
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -40,6 +41,7 @@ func NewHandler(provider Provider) http.Handler {
 
 		response, err := provider.GenerateResponse(r.Context(), SystemPrompt(), req.Messages)
 		if err != nil {
+			log.Printf("Chat error: %v", err)
 			http.Error(w, `{"error":"failed to generate response"}`, http.StatusInternalServerError)
 			return
 		}
