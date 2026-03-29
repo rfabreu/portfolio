@@ -33,3 +33,6 @@ api/tmp/
 
 # Old CRA build
 build/
+
+# Local Netlify folder
+.netlify
