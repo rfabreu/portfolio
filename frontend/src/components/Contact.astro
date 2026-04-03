@@ -7,7 +7,7 @@ import SectionHeader from './SectionHeader.astro';
     <SectionHeader number="04" label="CONTACT" title="Let's Connect" />
 
     <div class="grid md:grid-cols-2 gap-12 mt-8">
-      <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="space-y-5">
+      <form name="contact" method="POST" action="/success" data-netlify="true" netlify-honeypot="bot-field" class="space-y-5">
         <input type="hidden" name="form-name" value="contact" />
         <p class="hidden">
           <label>Don't fill this out: <input name="bot-field" /></label>
