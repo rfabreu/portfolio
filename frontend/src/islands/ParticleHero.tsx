@@ -116,8 +116,8 @@ function initParticles(width: number, height: number, isMobile: boolean): Partic
     particles.push({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.5 * speedMultiplier,
-      vy: (Math.random() - 0.5) * 0.5 * speedMultiplier,
+      vx: (Math.random() - 0.5) * 0.8 * speedMultiplier,
+      vy: (Math.random() - 0.5) * 0.8 * speedMultiplier,
       r: color[0],
       g: color[1],
       b: color[2],
@@ -240,7 +240,7 @@ export default function ParticleHero() {
         const p = particles[i];
 
         // Mouse attraction (desktop)
-        if (mouseX > 0 && mouseY > 0) {
+        if (mouseX >= 0 && mouseY >= 0) {
           const dx = mouseX - p.x;
           const dy = mouseY - p.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -289,7 +289,7 @@ export default function ParticleHero() {
 
         let brightness = 0.5;
         let size = p.baseSize * dpr;
-        if (mouseX > 0 && mouseY > 0) {
+        if (mouseX >= 0 && mouseY >= 0) {
           const dx = mouseX - p.x;
           const dy = mouseY - p.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
@@ -394,9 +394,6 @@ export default function ParticleHero() {
     window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('visibilitychange', onVisibility);
 
-    // Enable pointer events on canvas for mouse tracking
-    canvas.style.pointerEvents = 'auto';
-
     // Start
     if (reducedMotion) {
       frame(); // Single static render
@@ -432,7 +429,7 @@ export default function ParticleHero() {
         inset: 0,
         width: '100%',
         height: '100%',
-        pointerEvents: 'none',
+        pointerEvents: 'auto',
       }}
     />
   );
