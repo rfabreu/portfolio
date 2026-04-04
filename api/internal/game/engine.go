@@ -195,11 +195,12 @@ func SelectMove(b Board, session Session) int {
 		return moves[0].index
 	}
 
-	// Pick 2nd or 3rd best move that doesn't allow an immediate win
-	for _, m := range moves[1:] {
-		if len(moves) > 2 && m.index == moves[len(moves)-1].index {
-			continue // Skip the worst move
-		}
+	// Pick 2nd or 3rd best move that doesn't allow an immediate win.
+	// With only 2 moves, the only suboptimal move is the worst — fall back to optimal.
+	if len(moves) <= 2 {
+		return moves[0].index
+	}
+	for _, m := range moves[1 : len(moves)-1] { // Exclude the worst move
 		if !wouldAllowImmediateWin(b, m.index) {
 			return m.index
 		}
