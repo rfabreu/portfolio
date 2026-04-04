@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import GameBoard from '../islands/GameBoard.tsx';
+---
+
+<BaseLayout title="Playground | Rafael Abreu" description="Play Tic-Tac-Toe against Rafael's AI — built with Go and minimax.">
+  <Nav />
+  <main class="min-h-[80vh] py-20 px-6">
+    <div class="container mx-auto max-w-6xl">
+      <div class="mb-2">
+        <span class="font-mono text-accent-indigo text-xs tracking-[3px]">05 // PLAYGROUND</span>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-black mb-4" style="letter-spacing: -0.06em;">
+        Beat My AI
+      </h1>
+      <p class="text-text-secondary text-sm md:text-base max-w-lg leading-relaxed mb-10">
+        A game of Tic-Tac-Toe powered by a Go backend running minimax with alpha-beta pruning. You're X. Make your move.
+      </p>
+      <GameBoard client:load />
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
