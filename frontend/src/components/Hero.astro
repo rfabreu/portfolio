@@ -1,5 +1,6 @@
 ---
 import TechTag from './TechTag.astro';
+import ParticleHero from '../islands/ParticleHero.tsx';
 
 const tags: { label: string; color: 'indigo' | 'purple' | 'pink' }[] = [
   { label: 'Go', color: 'indigo' },
@@ -11,9 +12,7 @@ const tags: { label: string; color: 'indigo' | 'purple' | 'pink' }[] = [
 ---
 
 <section id="hero" class="relative min-h-[85vh] flex items-center overflow-hidden">
-  <div class="absolute -top-16 right-20 w-72 h-72 orb-indigo rounded-full pointer-events-none"></div>
-  <div class="absolute -bottom-10 left-48 w-52 h-52 orb-purple rounded-full pointer-events-none"></div>
-  <div class="absolute top-10 -left-10 w-44 h-44 orb-pink rounded-full pointer-events-none"></div>
+  <ParticleHero client:load />
 
   <div class="container mx-auto max-w-6xl px-6 relative z-10">
     <div class="font-mono text-accent-indigo text-xs tracking-[3px] mb-5 animate-fade-in" style="animation-delay: 0.1s;">
