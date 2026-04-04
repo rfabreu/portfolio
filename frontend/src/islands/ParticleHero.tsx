@@ -121,7 +121,7 @@ function initParticles(width: number, height: number, isMobile: boolean): Partic
       r: color[0],
       g: color[1],
       b: color[2],
-      baseSize: 2 + Math.random() * 2,
+      baseSize: 2.5 + Math.random() * 2.5,
     });
   }
   return particles;
@@ -287,7 +287,7 @@ export default function ParticleHero() {
         colors[i * 3 + 1] = p.g;
         colors[i * 3 + 2] = p.b;
 
-        let brightness = 0.5;
+        let brightness = 0.65;
         let size = p.baseSize * dpr;
         if (mouseX >= 0 && mouseY >= 0) {
           const dx = mouseX - p.x;
@@ -295,7 +295,7 @@ export default function ParticleHero() {
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < MOUSE_RADIUS) {
             const t = 1 - dist / MOUSE_RADIUS;
-            brightness = 0.5 + t * 0.5;
+            brightness = 0.65 + t * 0.35;
             size += t * 3 * dpr;
           }
         }
@@ -312,7 +312,7 @@ export default function ParticleHero() {
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < connectionDist) {
-            const alpha = (1 - dist / connectionDist) * 0.15;
+            const alpha = (1 - dist / connectionDist) * 0.25;
             linePositions.push(
               particles[i].x, particles[i].y,
               particles[j].x, particles[j].y,
