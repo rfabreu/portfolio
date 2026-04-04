@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/rfabreu/portfolio-api/internal/chat"
+	"github.com/rfabreu/portfolio-api/internal/game"
 	"github.com/rfabreu/portfolio-api/internal/middleware"
 )
 
@@ -29,6 +30,7 @@ func main() {
 	}
 	provider := chat.NewGeminiProvider(geminiKey, "")
 	mux.Handle("POST /api/chat", chat.NewHandler(provider))
+	mux.Handle("POST /api/game", game.NewHandler())
 
 	handler := middleware.CORS(allowedOrigins)(middleware.RateLimit(rpm)(mux))
 
