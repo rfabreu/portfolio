@@ -228,12 +228,12 @@ export default function ParticleHero() {
     }
 
     const MOUSE_RADIUS = 120 * dpr;
-    const CONNECTION_DIST = Math.min(150 * dpr, w * 0.12);
 
     function frame() {
       if (paused || !gl) return;
 
       const count = particles.length;
+      const connectionDist = Math.min(150 * dpr, w * 0.12);
 
       // Update positions
       for (let i = 0; i < count; i++) {
@@ -311,8 +311,8 @@ export default function ParticleHero() {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < CONNECTION_DIST) {
-            const alpha = (1 - dist / CONNECTION_DIST) * 0.15;
+          if (dist < connectionDist) {
+            const alpha = (1 - dist / connectionDist) * 0.15;
             linePositions.push(
               particles[i].x, particles[i].y,
               particles[j].x, particles[j].y,
@@ -387,10 +387,18 @@ export default function ParticleHero() {
       }
     }
 
+    // WebGL context loss — prevent silent failures on mobile/GPU pressure
+    function onContextLost(e: Event) {
+      e.preventDefault();
+      cancelAnimationFrame(animId);
+      paused = true;
+    }
+
     // Event listeners
     window.addEventListener('resize', onResize);
     canvas.addEventListener('mousemove', onMouseMove);
     canvas.addEventListener('mouseleave', onMouseLeave);
+    canvas.addEventListener('webglcontextlost', onContextLost);
     window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('visibilitychange', onVisibility);
 
@@ -407,6 +415,7 @@ export default function ParticleHero() {
       window.removeEventListener('resize', onResize);
       canvas.removeEventListener('mousemove', onMouseMove);
       canvas.removeEventListener('mouseleave', onMouseLeave);
+      canvas.removeEventListener('webglcontextlost', onContextLost);
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('visibilitychange', onVisibility);
       // Clean up WebGL resources
@@ -424,6 +433,7 @@ export default function ParticleHero() {
   return (
     <canvas
       ref={canvasRef}
+      aria-hidden="true"
       style={{
         position: 'absolute',
         inset: 0,
