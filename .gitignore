@@ -31,8 +31,10 @@ api/tmp/
 # Superpowers (brainstorm sessions)
 .superpowers/
 
-# Old CRA build
+# Legacy CRA (removed in V1 cleanup)
 build/
+src/
+public/
 
 # Local Netlify folder
 .netlify
