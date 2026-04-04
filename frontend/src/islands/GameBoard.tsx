@@ -40,6 +40,7 @@ export default function GameBoard() {
     }
 
     setError(null);
+    const prevBoard = [...board];
     const newBoard = [...board];
     newBoard[index] = 'X';
     setBoard(newBoard);
@@ -78,6 +79,9 @@ export default function GameBoard() {
       }
 
       const data = await resp.json();
+      if (!Array.isArray(data?.board) || data.board.length !== 9) {
+        throw new Error('Invalid response from game server.');
+      }
       setBoard(data.board);
 
       if (data.status === 'ai_win') {
@@ -87,18 +91,13 @@ export default function GameBoard() {
       } else if (data.status === 'draw') {
         setStatus('draw');
         setSession((s) => ({ ...s, draws: s.draws + 1 }));
-      } else if (data.status === 'player_win') {
-        setStatus('player_win');
-        setWinLine(findWinLine(data.board));
-        setSession((s) => ({ ...s, wins: s.wins + 1 }));
       } else {
         setStatus('playing');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong.');
-      // Revert the player's move on error
-      setBoard(board);
-      setStatus(board.every((c) => c === '') ? 'waiting' : 'playing');
+      setBoard(prevBoard);
+      setStatus(prevBoard.every((c) => c === '') ? 'waiting' : 'playing');
     } finally {
       setIsThinking(false);
     }
