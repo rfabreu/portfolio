@@ -2,6 +2,7 @@ package game
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -39,7 +40,7 @@ func NewHandler() http.Handler {
 		copy(req.Board[:], raw.Board)
 
 		if err := validateBoard(req.Board); err != "" {
-			http.Error(w, `{"error":"`+err+`"}`, http.StatusBadRequest)
+			http.Error(w, `{"error":"invalid board value"}`, http.StatusBadRequest)
 			return
 		}
 
@@ -70,6 +71,10 @@ func NewHandler() http.Handler {
 
 		// AI makes a move
 		move := SelectMove(req.Board, req.Session)
+		if move < 0 || move > 8 {
+			http.Error(w, `{"error":"no valid move available"}`, http.StatusInternalServerError)
+			return
+		}
 		board := req.Board
 		board[move] = "O"
 
@@ -95,7 +100,9 @@ func NewHandler() http.Handler {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(resp)
+		if err := json.NewEncoder(w).Encode(resp); err != nil {
+			log.Printf("game: failed to encode response: %v", err)
+		}
 	})
 }
 
