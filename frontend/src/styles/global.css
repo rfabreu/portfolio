@@ -19,6 +19,22 @@
   --radius-btn: 8px;
 }
 
+html[data-theme="dark"],
+html:not([data-theme]) {
+  --color-base: #050508;
+  --color-surface: rgba(255, 255, 255, 0.03);
+  --color-surface-border: rgba(255, 255, 255, 0.06);
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a0a0b0;
+  --color-text-muted: #666666;
+  --color-accent-indigo: #6366f1;
+  --color-accent-purple: #8b5cf6;
+  --color-accent-pink: #ec4899;
+  --color-accent-indigo-light: #a5b4fc;
+  --color-accent-purple-light: #c4b5fd;
+  --color-accent-pink-light: #f9a8d4;
+}
+
 html[data-theme="light"] {
   --color-base: #F8F7F4;
   --color-surface: #FFFFFF;
