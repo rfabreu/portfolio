@@ -64,11 +64,11 @@ Roadmap: `docs/phase2-roadmap.md`
 - [x] P1: Interactive Particle Hero (PR #8)
 - [x] P2: AI Playground (PR #9)
 - [x] V1 Cleanup (PR #10)
-- [ ] P3: Kubernetes Migration (needs cloud account)
+- [ ] P3: Kubernetes Migration (on hold — needs $0 hosting option)
 - [ ] P4: Expanded Project Case Studies
 - [ ] P5: Privacy Analytics
-- [ ] P6: Blog/Writing Section
-- [ ] P7: Dark/Light Theme Toggle
+- [ ] P6: Blog/Writing Section (needs article content)
+- [x] P7: Dark/Light Theme Toggle (PR #17)
 - [ ] P8: Testimonials (blocked on content)
 
 ## Docs Workflow
