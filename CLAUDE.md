@@ -77,9 +77,19 @@ Each feature follows: design spec → implementation plan → feature branch →
 - Specs: `docs/superpowers/specs/`
 - Plans: `docs/superpowers/plans/`
 
+## Production Safety Rules
+
+**`main` is production. Pushing to `main` triggers live deployments.**
+
+- **NEVER push to `main` unless the user explicitly says "push to main".** Committing locally is fine when asked; pushing is not.
+- **ALL work happens on feature branches** (`feature/<name>`, `fix/<name>`). Merge to `main` only via PR.
+- **No "safe" exceptions.** Docs, dependency patches, config changes — everything triggers CI/CD. There is no safe push to main.
+- **Verify locally before any merge.** Run `npm run build` (frontend) and `go test ./...` (API) and visually confirm in the browser.
+- **`.gitignore` patterns must be root-relative** (`/src/` not `src/`) to avoid blocking Tailwind v4's source scanning of `frontend/src/`. Bare patterns match recursively and will silently break utility class generation.
+
 ## Branching
 
-- `main` is production
+- `main` is production — protected, deploy-on-push
 - Feature branches: `feature/<name>`
 - Bug fixes: `fix/<name>`
 - Each branch → PR to `main`
