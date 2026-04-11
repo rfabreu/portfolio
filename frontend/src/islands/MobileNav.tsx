@@ -59,7 +59,7 @@ export default function MobileNav({ navItems, resumePath }: Props) {
               RESUME
             </a>
             <a
-              href="#contact"
+              href="/#contact"
               onClick={() => setIsOpen(false)}
               className="px-6 py-2 bg-accent-indigo rounded-lg text-white text-sm"
             >
