@@ -70,10 +70,15 @@ No component code duplication — all components already use theme tokens via Ta
 
 - **ChatWidget.tsx** — `bg-[#0a0a0f]`, `border-white/10`, `bg-white/5`, `text-white`, `bg-[#6366f1]`, `text-gray-300`, `text-gray-400`, `text-gray-500`
 - **MobileNav.tsx** — `bg-[#050508]`, `bg-white`, `text-white`, `text-[#6366f1]`, `border-[#6366f1]/40`
-- **GameBoard.tsx** — `text-white`, `bg-accent-indigo`
+- **GameBoard.tsx** — `text-white` (Play Again button), `text-red-400` (error text)
 - **Hero.astro** — `border-white/15`, `text-gray-300`
+- **ProjectLayout.astro** — `<style>` block has 6 hardcoded colors for prose-custom styles: `#ffffff`, `#a0a0b0`, `#6366f1`, `rgba(255,255,255,0.05)`
+- **Skills.astro** — `bg-white/5` on skill tags
+- **ProjectCard.astro** — `bg-white/5` on tech tags
+- **success.astro** — `text-white` on CTA button
+- **GradientDivider.astro** — hardcoded rgba accent values in gradient (faint on light backgrounds)
 
-Strategy: Replace hardcoded values with theme-aware Tailwind classes (`bg-base`, `text-text-primary`, `border-surface-border`, etc.) or CSS custom properties where Tailwind classes aren't sufficient.
+Strategy: Replace hardcoded values with theme-aware Tailwind classes (`bg-base`, `text-text-primary`, `border-surface-border`, etc.) or CSS custom properties where Tailwind classes aren't sufficient. For the ProjectLayout prose styles, convert hardcoded hex to `var(--color-*)` references.
 
 ### ThemeToggle Island
 
@@ -96,8 +101,10 @@ The WebGL particle canvas inverts its color scheme in light mode:
 
 - **Dark mode:** Bright indigo/purple particles, light connecting lines on dark background
 - **Light mode:** Dark indigo/purple particles, dark connecting lines on light background
-- The island reads `data-theme` from `<html>` at init and listens for changes
-- Only the color uniforms change — animation logic and interaction are identical
+- The island reads `data-theme` from `<html>` at init and listens for changes (via `MutationObserver` on the `data-theme` attribute)
+- **Color changes:** Particle colors are vertex attributes sourced from a `PALETTE` constant; the line color is a `u_color` uniform. Both need a dark-mode and light-mode variant.
+- **Blending mode change:** The current additive blend (`gl.SRC_ALPHA, gl.ONE`) makes particles glow on dark backgrounds but washes out on light ones. Light mode must switch to standard alpha blending (`gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA`).
+- Animation logic and interaction are identical across both modes.
 
 ### Theme Persistence & Flash Prevention
 
@@ -135,10 +142,14 @@ The WebGL particle canvas inverts its color scheme in light mode:
 | `src/components/Nav.astro` | Add ThemeToggle island |
 | `src/islands/MobileNav.tsx` | Add theme toggle to overlay |
 | `src/layouts/BaseLayout.astro` | Add head script for flash prevention, update meta theme-color |
-| `src/layouts/ProjectLayout.astro` | Same head script and meta updates |
 | `src/islands/ParticleHero.tsx` | Read theme, invert particle colors in light mode |
 | `src/islands/ChatWidget.tsx` | Replace hardcoded colors with theme tokens |
 | `src/islands/GameBoard.tsx` | Replace hardcoded colors with theme tokens |
+| `src/layouts/ProjectLayout.astro` | Convert prose-custom `<style>` hardcoded colors to CSS vars, add head script |
+| `src/components/Skills.astro` | Replace `bg-white/5` with theme-aware class |
+| `src/components/ProjectCard.astro` | Replace `bg-white/5` with theme-aware class |
+| `src/components/GradientDivider.astro` | Adjust gradient opacity for light mode |
+| `src/pages/success.astro` | Replace `text-white` with theme-aware class |
 
 ## Out of Scope
 
