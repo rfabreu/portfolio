@@ -5,9 +5,8 @@ image: "/images/fptv_website.png"
 tags: ["HTML", "CSS", "JavaScript", "Weebly"]
 category: "Full-Stack"
 featured: true
-order: 1
+order: 4
 github: "https://github.com/rfabreu/FPTV-WebFeatures"
-demo: "https://fptv.ca"
 ---
 
 ## Overview

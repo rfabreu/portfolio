@@ -5,7 +5,7 @@ image: "/images/charge_it_up.jpg"
 tags: ["HTML", "CSS", "Tailwind", "JavaScript"]
 category: "Frontend"
 featured: false
-order: 3
+order: 7
 github: "https://github.com/rfabreu/ev-mapper"
 demo: "https://tarequem.github.io/ev-mapper/"
 ---
