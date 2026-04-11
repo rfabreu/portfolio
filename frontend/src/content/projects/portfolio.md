@@ -1,7 +1,7 @@
 ---
 title: "Developer Portfolio"
 description: "Full-stack monorepo with Astro frontend, Go API, AI chatbot, WebGL particle hero, and dark/light theming."
-image: "/images/placeholder.svg"
+image: "/images/portfolio_website.png"
 tags: ["Astro", "React", "Go", "Tailwind CSS"]
 category: "Full-Stack"
 featured: true
