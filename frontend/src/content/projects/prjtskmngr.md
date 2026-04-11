@@ -1,7 +1,7 @@
 ---
 title: "PRJTSKMNGR"
 description: "Cross-department project coordination platform with role-based workflows, approval chains, and audit trails."
-image: "/images/placeholder.svg"
+image: "/images/prjtskmngr_dashboard.png"
 tags: ["Go", "Next.js", "PostgreSQL", "Docker"]
 category: "Full-Stack"
 featured: true
