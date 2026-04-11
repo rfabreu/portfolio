@@ -79,15 +79,15 @@ export default function ChatWidget() {
       </button>
 
       {isOpen && (
-        <div className="fixed bottom-20 right-5 z-50 w-[360px] max-h-[500px] bg-[#0a0a0f] border border-white/10 rounded-xl shadow-2xl flex flex-col overflow-hidden">
-          <div className="px-4 py-3 border-b border-white/10">
-            <div className="text-white text-sm font-bold">Ask Rafael's AI</div>
-            <div className="text-gray-500 text-xs mt-0.5">Ask about experience, projects, or skills</div>
+        <div className="fixed bottom-20 right-5 z-50 w-[360px] max-h-[500px] bg-base border border-surface-border rounded-xl shadow-2xl flex flex-col overflow-hidden">
+          <div className="px-4 py-3 border-b border-surface-border">
+            <div className="text-text-primary text-sm font-bold">Ask Rafael's AI</div>
+            <div className="text-text-muted text-xs mt-0.5">Ask about experience, projects, or skills</div>
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[200px] max-h-[340px]">
             {messages.length === 0 && (
-              <div className="text-gray-500 text-sm">
+              <div className="text-text-muted text-sm">
                 Hey! I'm Rafael's AI assistant. Ask me about his experience, projects, or tech stack.
               </div>
             )}
@@ -97,8 +97,8 @@ export default function ChatWidget() {
                 <div
                   className={`max-w-[85%] px-3 py-2 rounded-lg text-sm ${
                     msg.role === 'user'
-                      ? 'bg-[#6366f1] text-white'
-                      : 'bg-white/5 text-gray-300'
+                      ? 'bg-accent-indigo text-white'
+                      : 'bg-surface text-text-secondary'
                   }`}
                 >
                   {msg.content}
@@ -108,7 +108,7 @@ export default function ChatWidget() {
 
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-white/5 text-gray-400 px-3 py-2 rounded-lg text-sm">
+                <div className="bg-surface text-text-muted px-3 py-2 rounded-lg text-sm">
                   Thinking...
                 </div>
               </div>
@@ -126,20 +126,20 @@ export default function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          <form onSubmit={sendMessage} className="p-3 border-t border-white/10 flex gap-2">
+          <form onSubmit={sendMessage} className="p-3 border-t border-surface-border flex gap-2">
             <input
               ref={inputRef}
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask something..."
-              className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-[#6366f1]/50"
+              className="flex-1 bg-surface border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent-indigo/50"
               disabled={isLoading}
             />
             <button
               type="submit"
               disabled={isLoading || !input.trim()}
-              className="px-3 py-2 bg-[#6366f1] rounded-lg text-white text-sm disabled:opacity-40 hover:bg-[#6366f1]/90 transition-colors"
+              className="px-3 py-2 bg-accent-indigo rounded-lg text-white text-sm disabled:opacity-40 hover:bg-accent-indigo/90 transition-colors"
             >
               →
             </button>
