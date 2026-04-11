@@ -101,18 +101,31 @@ interface Particle {
   baseSize: number;
 }
 
-const PALETTE = [
+const DARK_PALETTE = [
   [0.389, 0.4, 0.945],   // #6366f1 indigo
   [0.545, 0.361, 0.965],  // #8b5cf6 purple
   [0.925, 0.286, 0.600],  // #ec4899 pink
 ] as const;
 
-function initParticles(width: number, height: number, isMobile: boolean): Particle[] {
+const LIGHT_PALETTE = [
+  [0.310, 0.275, 0.898],  // #4F46E5 indigo (deeper)
+  [0.486, 0.227, 0.929],  // #7C3AED purple (deeper)
+  [0.859, 0.153, 0.467],  // #DB2777 pink (deeper)
+] as const;
+
+const DARK_LINE_COLOR: [number, number, number] = [0.389, 0.4, 0.945];
+const LIGHT_LINE_COLOR: [number, number, number] = [0.310, 0.275, 0.898];
+
+function isLightTheme(): boolean {
+  return document.documentElement.dataset.theme === 'light';
+}
+
+function initParticles(width: number, height: number, isMobile: boolean, palette: typeof DARK_PALETTE): Particle[] {
   const count = Math.max(60, Math.min(120, Math.floor(width / 15)));
   const speedMultiplier = isMobile ? 1.5 : 1.0;
   const particles: Particle[] = [];
   for (let i = 0; i < count; i++) {
-    const color = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+    const color = palette[Math.floor(Math.random() * palette.length)];
     particles.push({
       x: Math.random() * width,
       y: Math.random() * height,
@@ -179,6 +192,7 @@ export default function ParticleHero() {
     let mouseY = -1000;
     let animId = 0;
     let paused = false;
+    let currentLight = isLightTheme();
 
     function resize() {
       if (!canvas || !gl) return;
@@ -188,7 +202,8 @@ export default function ParticleHero() {
       canvas.width = w;
       canvas.height = h;
       gl.viewport(0, 0, w, h);
-      particles = initParticles(w, h, isMobile);
+      currentLight = isLightTheme();
+      particles = initParticles(w, h, isMobile, currentLight ? LIGHT_PALETTE : DARK_PALETTE);
     }
 
     resize();
@@ -326,14 +341,19 @@ export default function ParticleHero() {
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.enable(gl.BLEND);
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+      if (currentLight) {
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+      } else {
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+      }
       gl.disable(gl.DEPTH_TEST);
 
       // Draw lines
       if (linePositions.length > 0) {
         gl.useProgram(lineProg);
         gl.uniform2f(lLoc.resolution, w, h);
-        gl.uniform3f(lLoc.color, 0.389, 0.4, 0.945); // indigo for lines
+        const lineColor = currentLight ? LIGHT_LINE_COLOR : DARK_LINE_COLOR;
+        gl.uniform3f(lLoc.color, lineColor[0], lineColor[1], lineColor[2]);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, linePosBuf);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(linePositions), gl.DYNAMIC_DRAW);
@@ -402,6 +422,25 @@ export default function ParticleHero() {
     window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('visibilitychange', onVisibility);
 
+    // Listen for theme changes
+    const themeObserver = new MutationObserver(() => {
+      const nowLight = isLightTheme();
+      if (nowLight !== currentLight) {
+        currentLight = nowLight;
+        const palette = currentLight ? LIGHT_PALETTE : DARK_PALETTE;
+        for (let i = 0; i < particles.length; i++) {
+          const color = palette[Math.floor(Math.random() * palette.length)];
+          particles[i].r = color[0];
+          particles[i].g = color[1];
+          particles[i].b = color[2];
+        }
+      }
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+
     // Start
     if (reducedMotion) {
       frame(); // Single static render
@@ -418,6 +457,7 @@ export default function ParticleHero() {
       canvas.removeEventListener('webglcontextlost', onContextLost);
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('visibilitychange', onVisibility);
+      themeObserver.disconnect();
       // Clean up WebGL resources
       gl.deleteBuffer(particlePosBuf);
       gl.deleteBuffer(particleSizeBuf);

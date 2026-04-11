@@ -19,6 +19,47 @@
   --radius-btn: 8px;
 }
 
+html[data-theme="dark"],
+html:not([data-theme]) {
+  --color-base: #050508;
+  --color-surface: rgba(255, 255, 255, 0.03);
+  --color-surface-border: rgba(255, 255, 255, 0.06);
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a0a0b0;
+  --color-text-muted: #666666;
+  --color-accent-indigo: #6366f1;
+  --color-accent-purple: #8b5cf6;
+  --color-accent-pink: #ec4899;
+  --color-accent-indigo-light: #a5b4fc;
+  --color-accent-purple-light: #c4b5fd;
+  --color-accent-pink-light: #f9a8d4;
+}
+
+html[data-theme="light"] {
+  --color-base: #F8F7F4;
+  --color-surface: #FFFFFF;
+  --color-surface-border: rgba(0, 0, 0, 0.06);
+  --color-text-primary: #111111;
+  --color-text-secondary: #555555;
+  --color-text-muted: #999999;
+  --color-accent-indigo: #4F46E5;
+  --color-accent-purple: #7C3AED;
+  --color-accent-pink: #DB2777;
+  --color-accent-indigo-light: #4F46E5;
+  --color-accent-purple-light: #7C3AED;
+  --color-accent-pink-light: #DB2777;
+}
+
+html.theme-transitioning * {
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-transitioning * {
+    transition: none !important;
+  }
+}
+
 @layer base {
   body {
     @apply bg-base text-text-secondary antialiased;
@@ -52,6 +93,10 @@
 @utility gradient-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.2), transparent);
+}
+
+html[data-theme="light"] .gradient-divider {
+  background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.4), rgba(124, 58, 237, 0.3), transparent);
 }
 
 

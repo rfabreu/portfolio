@@ -32,6 +32,17 @@ const tagColorClasses = [
     <meta name="theme-color" content="#050508" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <title>{title} | Rafael Abreu</title>
+    <script is:inline>
+      (function() {
+        var theme = localStorage.getItem('theme');
+        if (!theme) {
+          theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+        document.documentElement.dataset.theme = theme;
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', theme === 'light' ? '#F8F7F4' : '#050508');
+      })();
+    </script>
   </head>
   <body class="bg-base text-text-secondary">
     <Nav />
@@ -79,7 +90,7 @@ const tagColorClasses = [
 
     <style>
       .prose-custom :global(h2) {
-        color: #ffffff;
+        color: var(--color-text-primary);
         font-size: 1.5rem;
         font-weight: 800;
         letter-spacing: -0.04em;
@@ -87,12 +98,12 @@ const tagColorClasses = [
         margin-bottom: 1rem;
       }
       .prose-custom :global(p) {
-        color: #a0a0b0;
+        color: var(--color-text-secondary);
         line-height: 1.7;
         margin-bottom: 1rem;
       }
       .prose-custom :global(ul) {
-        color: #a0a0b0;
+        color: var(--color-text-secondary);
         list-style: none;
         padding-left: 0;
       }
@@ -105,15 +116,15 @@ const tagColorClasses = [
         content: '→';
         position: absolute;
         left: 0;
-        color: #6366f1;
+        color: var(--color-accent-indigo);
       }
       .prose-custom :global(strong) {
-        color: #ffffff;
+        color: var(--color-text-primary);
         font-weight: 600;
       }
       .prose-custom :global(code) {
         font-family: 'Courier New', monospace;
-        background: rgba(255,255,255,0.05);
+        background: var(--color-surface);
         padding: 0.15rem 0.4rem;
         border-radius: 4px;
         font-size: 0.875rem;

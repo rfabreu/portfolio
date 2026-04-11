@@ -1,12 +1,13 @@
 ---
 import MobileNav from '../islands/MobileNav.tsx';
+import ThemeToggle from '../islands/ThemeToggle.tsx';
 
 const navItems = [
-  { label: 'About', href: '#about' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Skills', href: '#skills' },
+  { label: 'About', href: '/#about' },
+  { label: 'Projects', href: '/#projects' },
+  { label: 'Skills', href: '/#skills' },
   { label: 'Playground', href: '/playground' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Contact', href: '/#contact' },
 ];
 
 const resumePath = '/Rafael_Abreu_Resume.pdf';
@@ -30,6 +31,7 @@ const resumePath = '/Rafael_Abreu_Resume.pdf';
     </div>
 
     <div class="hidden md:flex items-center gap-3">
+      <ThemeToggle client:load />
       <a
         href={resumePath}
         target="_blank"
@@ -39,7 +41,7 @@ const resumePath = '/Rafael_Abreu_Resume.pdf';
         RESUME
       </a>
       <a
-        href="#contact"
+        href="/#contact"
         class="px-4 py-1.5 bg-accent-indigo rounded-btn text-white text-xs tracking-wide hover:bg-accent-indigo/90 transition-colors duration-200"
       >
         LET'S TALK

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ThemeToggle from './ThemeToggle';
 
 interface NavItem {
   label: string;
@@ -21,25 +22,28 @@ export default function MobileNav({ navItems, resumePath }: Props) {
         aria-label={isOpen ? 'Close menu' : 'Open menu'}
       >
         <span
-          className={`block w-5 h-0.5 bg-white transition-all duration-300 ${
+          className={`block w-5 h-0.5 bg-text-primary transition-all duration-300 ${
             isOpen ? 'rotate-45 translate-y-1' : ''
           }`}
         />
         <span
-          className={`block w-5 h-0.5 bg-white transition-all duration-300 ${
+          className={`block w-5 h-0.5 bg-text-primary transition-all duration-300 ${
             isOpen ? '-rotate-45 -translate-y-1' : ''
           }`}
         />
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-40 bg-[#050508] flex flex-col items-center justify-center gap-8">
+        <div className="fixed inset-0 z-40 bg-base flex flex-col items-center justify-center gap-8">
+          <div className="absolute top-5 right-14">
+            <ThemeToggle />
+          </div>
           {navItems.map((item) => (
             <a
               key={item.label}
               href={item.href}
               onClick={() => setIsOpen(false)}
-              className="text-white text-2xl font-bold hover:text-[#6366f1] transition-colors"
+              className="text-text-primary text-2xl font-bold hover:text-accent-indigo transition-colors"
               style={{ letterSpacing: '-0.06em' }}
             >
               {item.label}
@@ -50,14 +54,14 @@ export default function MobileNav({ navItems, resumePath }: Props) {
               href={resumePath}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-2 border border-[#6366f1]/40 rounded-lg text-[#6366f1] text-sm"
+              className="px-6 py-2 border border-accent-indigo/40 rounded-lg text-accent-indigo text-sm"
             >
               RESUME
             </a>
             <a
-              href="#contact"
+              href="/#contact"
               onClick={() => setIsOpen(false)}
-              className="px-6 py-2 bg-[#6366f1] rounded-lg text-white text-sm"
+              className="px-6 py-2 bg-accent-indigo rounded-lg text-white text-sm"
             >
               LET'S TALK
             </a>
