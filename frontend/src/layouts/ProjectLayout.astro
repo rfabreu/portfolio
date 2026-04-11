@@ -90,7 +90,7 @@ const tagColorClasses = [
 
     <style>
       .prose-custom :global(h2) {
-        color: #ffffff;
+        color: var(--color-text-primary);
         font-size: 1.5rem;
         font-weight: 800;
         letter-spacing: -0.04em;
@@ -98,12 +98,12 @@ const tagColorClasses = [
         margin-bottom: 1rem;
       }
       .prose-custom :global(p) {
-        color: #a0a0b0;
+        color: var(--color-text-secondary);
         line-height: 1.7;
         margin-bottom: 1rem;
       }
       .prose-custom :global(ul) {
-        color: #a0a0b0;
+        color: var(--color-text-secondary);
         list-style: none;
         padding-left: 0;
       }
@@ -116,15 +116,15 @@ const tagColorClasses = [
         content: '→';
         position: absolute;
         left: 0;
-        color: #6366f1;
+        color: var(--color-accent-indigo);
       }
       .prose-custom :global(strong) {
-        color: #ffffff;
+        color: var(--color-text-primary);
         font-weight: 600;
       }
       .prose-custom :global(code) {
         font-family: 'Courier New', monospace;
-        background: rgba(255,255,255,0.05);
+        background: var(--color-surface);
         padding: 0.15rem 0.4rem;
         border-radius: 4px;
         font-size: 0.875rem;
