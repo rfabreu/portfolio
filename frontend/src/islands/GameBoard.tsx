@@ -40,6 +40,7 @@ export default function GameBoard() {
     }
 
     setError(null);
+    if (status === 'waiting' && typeof umami !== 'undefined') umami.track('game-started');
     const prevBoard = [...board];
     const newBoard = [...board];
     newBoard[index] = 'X';
