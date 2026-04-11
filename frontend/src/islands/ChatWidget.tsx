@@ -70,7 +70,10 @@ export default function ChatWidget() {
   return (
     <>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (!isOpen && typeof umami !== 'undefined') umami.track('chat-opened');
+          setIsOpen(!isOpen);
+        }}
         className="fixed bottom-5 right-5 z-50 w-[52px] h-[52px] rounded-[14px] flex items-center justify-center text-white text-xl shadow-lg transition-transform hover:scale-105"
         style={{ background: 'linear-gradient(135deg, var(--color-accent-indigo), var(--color-accent-purple))' }}
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
