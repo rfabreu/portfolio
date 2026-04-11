@@ -3,13 +3,13 @@
 ## Project Structure
 
 ```
-frontend/          Astro 6 site (static output)
-api/               Go API server (AI chatbot)
-docs/              Roadmap and design specs
+frontend/          Astro 6 site (static output, islands architecture)
+api/               Go API server (chat + game endpoints)
+docs/              Roadmap, design specs, implementation plans
 .github/workflows/ CI + deploy pipelines
 ```
 
-Legacy CRA files at root (`src/`, `public/`, `build/`, `package.json`, `node_modules/`) are unused — the active frontend is in `frontend/`.
+Legacy CRA dirs at root (`src/`, `public/`, `build/`, `node_modules/`) are gitignored — not tracked.
 
 ## Build & Run
 
@@ -23,6 +23,8 @@ npx astro check      # type checking
 ```
 Requires: Node >= 22.12.0
 
+Frontend env var: `PUBLIC_API_URL` (injected at build, see `frontend/.env.example`)
+
 ### API (Go)
 ```bash
 cd api
@@ -35,11 +37,45 @@ Requires: Go 1.26+
 
 **API env vars:** `PORT`, `ALLOWED_ORIGINS`, `GEMINI_API_KEY`, `RATE_LIMIT_RPM`
 
+## API Routes
+
+- `GET  /health`    — health check
+- `POST /api/chat`  — AI chat (Google Gemini via `internal/chat/`)
+- `POST /api/game`  — Tic-Tac-Toe AI move (minimax, `internal/game/`)
+
+## Frontend Architecture
+
+- **Pages:** `src/pages/` — `index.astro`, `playground.astro`, `project/[slug].astro`, `success.astro`
+- **Islands (React):** `src/islands/` — `ParticleHero.tsx`, `ChatWidget.tsx`, `GameBoard.tsx`, `MobileNav.tsx`
+- **Content collections:** `src/content/projects/*.md` — schema in `content.config.ts`
+- **Path aliases:** `@components`, `@islands`, `@layouts`, `@styles` (defined in `tsconfig.json`)
+- **Global styles/tokens:** `src/styles/global.css` (Tailwind v4 theme)
+
 ## Deployment
 
 - **Frontend:** Netlify (static deploy via `nwtgck/actions-netlify@v3`). Triggered on push to `main` when `frontend/**` changes.
 - **API:** Fly.io (Docker). Triggered on push to `main` when `api/**` changes.
 - **CI:** Runs `astro check` + `npm run build` (frontend) and `go vet` + `go test` + `go build` (API) on every PR to `main`.
+
+## Phase 2 Status
+
+Roadmap: `docs/phase2-roadmap.md`
+
+- [x] P1: Interactive Particle Hero (PR #8)
+- [x] P2: AI Playground (PR #9)
+- [x] V1 Cleanup (PR #10)
+- [ ] P3: Kubernetes Migration (needs cloud account)
+- [ ] P4: Expanded Project Case Studies
+- [ ] P5: Privacy Analytics
+- [ ] P6: Blog/Writing Section
+- [ ] P7: Dark/Light Theme Toggle
+- [ ] P8: Testimonials (blocked on content)
+
+## Docs Workflow
+
+Each feature follows: design spec → implementation plan → feature branch → PR
+- Specs: `docs/superpowers/specs/`
+- Plans: `docs/superpowers/plans/`
 
 ## Branching
 
@@ -51,7 +87,10 @@ Requires: Go 1.26+
 ## Key Conventions
 
 - **Astro components** are `.astro` files; interactive islands use React (`.tsx`) with `client:load`
+- **Islands pattern:** only interactive components hydrate (`client:load`); everything else is static Astro
 - **Styling:** Tailwind CSS v4 with custom theme tokens in `frontend/src/styles/global.css`
 - **Go API:** stdlib `net/http` with `http.NewServeMux()` — no frameworks
+- **API architecture:** `internal/<domain>/handler.go` + `engine.go` or `provider.go`
 - **Contact form:** Netlify Forms (`data-netlify="true"`) — not handled by Go API
 - **No email exposure:** Contact is form-only, never display email addresses publicly
+- **Accessibility:** respect `prefers-reduced-motion`; use semantic HTML and ARIA labels
