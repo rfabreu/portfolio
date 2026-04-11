@@ -3,8 +3,8 @@ title: "FPTV"
 description: "Toronto-based TV channel website with glassmorphism dashboard and live broadcasting features."
 image: "/images/fptv_website.png"
 tags: ["HTML", "CSS", "JavaScript", "Weebly"]
-category: "Full-Stack"
-featured: true
+category: "Frontend"
+featured: false
 order: 4
 github: "https://github.com/rfabreu/FPTV-WebFeatures"
 ---
