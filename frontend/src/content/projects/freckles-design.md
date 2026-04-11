@@ -5,7 +5,7 @@ image: "/images/freckles_design_website.png"
 tags: ["React", "Bootstrap", "JavaScript", "Netlify"]
 category: "Full-Stack"
 featured: true
-order: 2
+order: 3
 github: "https://github.com/rfabreu/frecklesDesign"
 demo: "https://frecklesdesign.ca/"
 ---
