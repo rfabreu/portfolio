@@ -9,7 +9,7 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 
 ---
 
-### P1: Interactive Particle Hero
+### ~~P1: Interactive Particle Hero~~ ✅ Done (PR #8)
 
 **What:** Replace the static gradient hero background with a canvas-based particle mesh that reacts to cursor movement — interconnected dots forming a neural network pattern.
 
@@ -28,7 +28,7 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 
 ---
 
-### P2: AI Playground (`/playground`)
+### ~~P2: AI Playground (`/playground`)~~ ✅ Done (PR #9)
 
 **What:** A dedicated page with an AI-powered strategy game where visitors play against the Go API. Primary candidate: Tic-Tac-Toe with difficulty scaling (minimax/alpha-beta pruning).
 
@@ -65,7 +65,7 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 
 ---
 
-### P4: Expanded Project Case Studies
+### ~~P4: Expanded Project Case Studies~~ ✅ Done (PR #20, #22)
 
 **What:** Add more projects as they become ready, with full case study detail.
 
@@ -80,7 +80,7 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 
 ---
 
-### P5: Privacy-Respecting Analytics
+### ~~P5: Privacy-Respecting Analytics~~ ✅ Done (PR #19)
 
 **What:** Add Plausible or Umami analytics to understand visitor behavior without tracking individuals.
 
@@ -112,7 +112,7 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 
 ---
 
-### P7: Dark/Light Theme Toggle
+### ~~P7: Dark/Light Theme Toggle~~ ✅ Done (PR #17)
 
 **What:** Add a theme toggle allowing visitors to switch between dark and light modes.
 
