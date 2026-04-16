@@ -16,9 +16,9 @@
 .DS_Store
 Thumbs.db
 
-# IDE
-/.vscode/
-/.idea/
+# IDE — bare so they match at any depth (e.g. frontend/.vscode/)
+.vscode/
+.idea/
 *.swp
 *.swo
 
@@ -26,19 +26,13 @@ Thumbs.db
 /api/tmp/
 /api/server
 
-# Astro
-/.astro/
+# Tool dirs — bare so they match at any depth (e.g. frontend/.astro/)
+.astro/
+.claude/
+.superpowers/
+.netlify
 
-# Claude Code (local config)
-/.claude/
-
-# Superpowers (brainstorm sessions)
-/.superpowers/
-
-# Legacy CRA (removed in V1 cleanup — root-relative to avoid blocking frontend/src/)
+# Legacy CRA (root-relative to avoid blocking Tailwind v4 scanning of frontend/src/)
 /build/
 /src/
 /public/
-
-# Local Netlify folder
-/.netlify

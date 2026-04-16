@@ -85,7 +85,7 @@ Each feature follows: design spec → implementation plan → feature branch →
 - **ALL work happens on feature branches** (`feature/<name>`, `fix/<name>`). Merge to `main` only via PR.
 - **No "safe" exceptions.** Docs, dependency patches, config changes — everything triggers CI/CD. There is no safe push to main.
 - **Verify locally before any merge.** Run `npm run build` (frontend) and `go test ./...` (API) and visually confirm in the browser.
-- **`.gitignore` patterns must be root-relative** (`/src/` not `src/`) to avoid blocking Tailwind v4's source scanning of `frontend/src/`. Bare patterns match recursively and will silently break utility class generation.
+- **`.gitignore` pattern rules:** Patterns that could shadow real source directories (`src/`, `build/`, `public/`, `node_modules/`) **must be root-relative** (`/src/` not `src/`) to avoid blocking Tailwind v4's scanning of `frontend/src/`. Tool/IDE directories that legitimately appear at any depth (`.vscode/`, `.astro/`, `.netlify`, `.claude/`) **must stay bare** so they match recursively (e.g. `frontend/.vscode/`).
 
 ## Branching
 
