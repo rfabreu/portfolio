@@ -65,7 +65,7 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 
 ---
 
-### P4: Expanded Project Case Studies
+### ~~P4: Expanded Project Case Studies~~ ✅ Done (PR #20, #22)
 
 **What:** Add more projects as they become ready, with full case study detail.
 
@@ -80,7 +80,7 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 
 ---
 
-### P5: Privacy-Respecting Analytics
+### ~~P5: Privacy-Respecting Analytics~~ ✅ Done (PR #19)
 
 **What:** Add Plausible or Umami analytics to understand visitor behavior without tracking individuals.
 

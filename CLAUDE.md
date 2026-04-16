@@ -65,8 +65,8 @@ Roadmap: `docs/phase2-roadmap.md`
 - [x] P2: AI Playground (PR #9)
 - [x] V1 Cleanup (PR #10)
 - [ ] P3: Kubernetes Migration (on hold — needs $0 hosting option)
-- [ ] P4: Expanded Project Case Studies
-- [ ] P5: Privacy Analytics
+- [x] P4: Expanded Project Case Studies (PR #20, #22)
+- [x] P5: Privacy Analytics (PR #19)
 - [ ] P6: Blog/Writing Section (needs article content)
 - [x] P7: Dark/Light Theme Toggle (PR #17)
 - [ ] P8: Testimonials (blocked on content)
