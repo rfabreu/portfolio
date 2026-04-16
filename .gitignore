@@ -24,13 +24,13 @@ Thumbs.db
 
 # Go
 api/tmp/
-api/server
+/api/server
 
 # Astro
 .astro/
 
 # Claude Code (local config)
-.claude/
+/.claude/
 
 # Superpowers (brainstorm sessions)
 .superpowers/
