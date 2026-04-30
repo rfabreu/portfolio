@@ -1,0 +1,27 @@
+---
+// frontend/src/components/resume/Education.astro
+interface Entry {
+  school: string;
+  program: string;
+  dates: string;
+}
+interface Props {
+  entries: Entry[];
+}
+const { entries } = Astro.props;
+---
+
+{entries.length > 0 && (
+  <section class="resume-section resume-education" aria-label="Education">
+    <h2 class="resume-heading">Education</h2>
+    <ul class="resume-list">
+      {entries.map((entry) => (
+        <li>
+          <span class="resume-edu-school">{entry.school}</span>
+          <span class="resume-edu-program"> — {entry.program}</span>
+          <span class="resume-edu-dates"> ({entry.dates})</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
