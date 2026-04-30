@@ -1,0 +1,31 @@
+---
+// frontend/src/components/resume/Skills.astro
+interface Props {
+  skills: {
+    leadership: string[];
+    technical: string[];
+    domain: string[];
+  };
+}
+const { skills } = Astro.props;
+
+const buckets: Array<{ key: keyof typeof skills; label: string }> = [
+  { key: 'leadership', label: 'Leadership' },
+  { key: 'technical', label: 'Technical' },
+  { key: 'domain', label: 'Domain' },
+];
+---
+
+<section class="resume-section resume-skills" aria-label="Skills">
+  <h2 class="resume-heading">Skills</h2>
+  {buckets.map(({ key, label }) => (
+    skills[key].length > 0 && (
+      <div class="resume-skill-bucket">
+        <h3 class="resume-skill-label">{label}</h3>
+        <ul class="resume-skill-list">
+          {skills[key].map((skill) => <li>{skill}</li>)}
+        </ul>
+      </div>
+    )
+  ))}
+</section>
