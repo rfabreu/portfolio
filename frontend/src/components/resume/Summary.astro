@@ -1,0 +1,10 @@
+---
+interface Props {
+  summary: string;
+}
+const { summary } = Astro.props;
+---
+
+<section class="resume-section resume-summary" aria-label="Summary">
+  <p class="text-text-secondary leading-relaxed">{summary}</p>
+</section>
