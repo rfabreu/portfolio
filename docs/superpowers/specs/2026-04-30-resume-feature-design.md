@@ -163,6 +163,8 @@ Pure Astro component using the native HTML `<dialog>` element. No React island. 
 
 The modal is included site-wide via `BaseLayout.astro`, **except on the `/resume` route** (which already renders the same content inline). The layout accepts an `includeResumeModal` prop that defaults to `true`; `resume.astro` sets it to `false`. Triggers across the site (Nav, MobileNav, hero CTA if added later) all use the `data-resume-trigger` attribute. Event delegation means the React-hydrated MobileNav button works the same as the static Astro Nav anchor — both add `data-resume-trigger` to their rendered button element.
 
+Because the modal isn't on `/resume`, the Resume button in Nav and MobileNav must also be suppressed there — clicking a `data-resume-trigger` element on `/resume` would be a no-op without the modal listener installed. Both `Nav.astro` and `MobileNav.tsx` accept the current pathname (via `Astro.url.pathname` for the former, a prop for the latter) and conditionally hide the Resume button when `pathname === '/resume'`. The Nav remains otherwise unchanged — visitors on the resume page have already arrived at the destination the button would have taken them to.
+
 ### Print Page — `frontend/src/pages/resume.astro`
 
 Standalone full-page route, A4 layout, print-stylesheet-aware. Same data as the modal, different shell. Two purposes:
@@ -200,11 +202,13 @@ import { createServer } from 'http';
 import handler from 'serve-handler';
 
 const server = createServer((req, res) => handler(req, res, { public: 'dist' }));
-await new Promise((r) => server.listen(4321, r));
+// Port 0 = OS-assigned free port. Avoids collision with Astro's default dev port (4321).
+await new Promise((resolve) => server.listen(0, resolve));
+const { port } = server.address();
 
 const browser = await chromium.launch();
 const page = await browser.newPage();
-await page.goto('http://localhost:4321/resume', { waitUntil: 'networkidle' });
+await page.goto(`http://localhost:${port}/resume`, { waitUntil: 'load' });
 await page.emulateMedia({ media: 'print' });
 await page.pdf({
   path: 'dist/Rafael_Abreu_Resume.pdf',
@@ -322,7 +326,7 @@ Both deploys complete within a few minutes of the push. Eventually consistent �
 | `embedded/` empty at API build | `go:embed` fails compile | Don't ship API with empty grounding |
 | Modal runtime exception | Native `<dialog>` is bulletproof — closes via ESC/click-outside regardless | No JS framework runtime to fail |
 | Resume PDF URL 404 in browser | Cannot happen post-fix; PDF is rebuilt every deploy | Fixes the existing bug |
-| Project markdown referenced by `selected_projects` slug doesn't exist | Build-time warning logged; entry rendered without link | Soft fail — better to ship a slightly-degraded resume than break the build over a typo |
+| Project markdown referenced by `selected_projects` slug doesn't exist | Build fails with a Zod error pointing at the bad slug | Hard fail via `reference('projects')` — consistent with the 100%-accuracy stance; a typo silently rendering a broken link is worse than a build break that takes ten seconds to fix |
 
 The pattern: **fail loudly at build time, silently never at runtime.** Bad data never reaches users.
 
@@ -368,9 +372,9 @@ Frontend job + API job + new E2E job all green before merge. PR cannot merge wit
 | `frontend/src/components/resume/Projects.astro` | New — section component |
 | `frontend/src/components/resume/ResumeBody.astro` | New — assembles all section components |
 | `frontend/src/pages/resume.astro` | New — print-styled standalone page |
-| `frontend/src/layouts/BaseLayout.astro` | Include `<ResumeModal />` once site-wide |
-| `frontend/src/components/Nav.astro` | Resume button → `data-resume-trigger`, no longer href to PDF |
-| `frontend/src/islands/MobileNav.tsx` | Resume button → trigger modal via shared event |
+| `frontend/src/layouts/BaseLayout.astro` | Include `<ResumeModal />` once site-wide; accept `includeResumeModal` prop (defaults `true`) for opt-out on `/resume` |
+| `frontend/src/components/Nav.astro` | Resume button → `data-resume-trigger`, no longer href to PDF; conditionally hidden when `Astro.url.pathname === '/resume'` |
+| `frontend/src/islands/MobileNav.tsx` | Resume button → `data-resume-trigger`; receives current pathname as prop, conditionally hidden on `/resume` |
 | `frontend/src/styles/global.css` | Add resume modal + print styles, theme-token-aware |
 | `frontend/scripts/generate-pdf.mjs` | New — Playwright PDF generator |
 | `frontend/package.json` | Add `playwright` and `serve-handler` as devDependencies |
