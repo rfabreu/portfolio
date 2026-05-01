@@ -10,7 +10,7 @@ const navItems = [
   { label: 'Contact', href: '/#contact' },
 ];
 
-const resumePath = '/Rafael_Abreu_Resume.pdf';
+const isResumePage = Astro.url.pathname === '/resume';
 ---
 
 <header class="sticky top-0 z-50 bg-base/80 backdrop-blur-md border-b border-surface-border">
@@ -32,14 +32,15 @@ const resumePath = '/Rafael_Abreu_Resume.pdf';
 
     <div class="hidden md:flex items-center gap-3">
       <ThemeToggle client:load />
-      <a
-        href={resumePath}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="px-4 py-1.5 border border-accent-indigo/40 rounded-btn text-accent-indigo text-xs tracking-wide hover:bg-accent-indigo/10 transition-colors duration-200"
-      >
-        RESUME
-      </a>
+      {!isResumePage && (
+        <a
+          href="/resume"
+          data-resume-trigger
+          class="px-4 py-1.5 border border-accent-indigo/40 rounded-btn text-accent-indigo text-xs tracking-wide hover:bg-accent-indigo/10 transition-colors duration-200"
+        >
+          RESUME
+        </a>
+      )}
       <a
         href="/#contact"
         class="px-4 py-1.5 bg-accent-indigo rounded-btn text-white text-xs tracking-wide hover:bg-accent-indigo/90 transition-colors duration-200"
@@ -48,6 +49,6 @@ const resumePath = '/Rafael_Abreu_Resume.pdf';
       </a>
     </div>
 
-    <MobileNav client:load navItems={navItems} resumePath={resumePath} />
+    <MobileNav client:load navItems={navItems} isResumePage={isResumePage} />
   </nav>
 </header>
