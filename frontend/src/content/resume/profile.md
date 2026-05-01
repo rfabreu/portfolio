@@ -14,17 +14,17 @@ work_history:
     location: "Toronto, Canada"
     tech_stack: []
     bullets:
-      - "Led a 10+ member operations team running 24/7 across multiple shifts, supporting 5,000+ concurrent real-time service streams across global clients."
+      - "Led a 16-person operations team running 24/7 across multiple shifts, supporting 5,000+ concurrent real-time service streams across global clients."
       - "Owned operational performance, incident response, and SLA execution — setting the standard for uptime and service reliability."
       - "Drove automation and systems improvements that expanded operational capacity and reduced manual intervention at scale."
-      - "Partnered with executive leadership and cross-functional stakeholders to align operations with company growth and evolving client demands."
+      - "Led cross-departmental alignment with executive leadership and stakeholder functions, scaling operations in step with company growth and evolving client demands."
   - company: "Nextologies"
     title: "VNOC Manager"
     dates: "Feb 2025 – Jan 2026"
     location: "Toronto, Canada"
     tech_stack: []
     bullets:
-      - "Managed end-to-end operations and team execution across all shifts, establishing performance benchmarks and accountability structures."
+      - "Led a 10-person team driving end-to-end operations and execution across all shifts, establishing performance benchmarks and accountability structures."
       - "Reduced open ticket backlog by 92%, materially improving response efficiency and service reliability across the client base."
       - "Served as the primary interface with clients, partners, and internal stakeholders during incidents and escalations."
       - "Drove operational strategy, tooling improvements, and performance optimization initiatives across the organization."
@@ -34,7 +34,7 @@ work_history:
     location: "Toronto, Canada"
     tech_stack: []
     bullets:
-      - "Oversaw real-time monitoring, fault detection, and shift coordination across a 24/7 high-availability operations environment."
+      - "Led a 9-person team overseeing real-time monitoring, fault detection, and shift coordination across a 24/7 high-availability operations environment."
       - "Designed and implemented SOPs, escalation frameworks, and training systems that improved operational clarity and team alignment."
       - "Established structured onboarding and knowledge transfer processes, increasing team capability and consistency across functions."
   - company: "Nextologies"
@@ -43,7 +43,7 @@ work_history:
     location: "Toronto, Canada"
     tech_stack: []
     bullets:
-      - "Directed real-time operations across live feeds, playout systems, and signal distribution in a high-availability environment."
+      - "Led an 8-person team directing real-time operations across live feeds, playout systems, and signal distribution in a high-availability environment."
       - "Managed escalations and coordinated troubleshooting across technical teams, minimizing impact to live service delivery."
       - "Developed internal documentation and onboarding processes that improved team efficiency and reduced time-to-resolution."
   - company: "Freelance"
