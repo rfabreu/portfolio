@@ -30,12 +30,16 @@ if (!resume) throw new Error('Resume entry not found at frontend/src/content/res
 <script>
   const modal = document.getElementById('resume-modal') as HTMLDialogElement | null;
 
-  // Event delegation handles both static Astro Nav anchors and React-hydrated MobileNav buttons.
+  // Event delegation handles both static Astro Nav anchors and React-hydrated
+  // MobileNav buttons that don't exist until after page load. Direct handlers
+  // attached at script-execution time would miss dynamic hydrated triggers.
+  // The `!modal.open` guard prevents InvalidStateError if showModal is called
+  // while already open (e.g., keyboard re-trigger).
   document.addEventListener('click', (e) => {
     const trigger = (e.target as HTMLElement)?.closest('[data-resume-trigger]');
-    if (trigger) {
+    if (trigger && modal && !modal.open) {
       e.preventDefault();
-      modal?.showModal();
+      modal.showModal();
     }
   });
 

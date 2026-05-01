@@ -3,6 +3,7 @@ package chat
 import (
 	"embed"
 	"io/fs"
+	"log"
 	"sort"
 	"strings"
 )
@@ -28,6 +29,7 @@ func SystemPrompt() string {
 func assembleProjects() string {
 	entries, err := fs.ReadDir(projectsFS, "embedded/projects")
 	if err != nil {
+		log.Printf("chat: failed to read embedded projects directory: %v", err)
 		return ""
 	}
 	sort.Slice(entries, func(i, j int) bool { return entries[i].Name() < entries[j].Name() })
@@ -36,6 +38,7 @@ func assembleProjects() string {
 	for _, entry := range entries {
 		content, err := fs.ReadFile(projectsFS, "embedded/projects/"+entry.Name())
 		if err != nil {
+			log.Printf("chat: failed to read embedded project %q: %v", entry.Name(), err)
 			continue
 		}
 		b.Write(content)

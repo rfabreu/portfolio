@@ -23,6 +23,34 @@ jobs:
       - run: npm ci
       - run: npx astro check
       - run: npm run build
+      - run: npm test
+
+  frontend-e2e:
+    name: Frontend E2E
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - run: npm run build
+
+      - name: Generate Resume PDF
+        run: npm run build:pdf
+
+      - run: npm run test:e2e
 
   api-check:
     name: API
