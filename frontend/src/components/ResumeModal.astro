@@ -1,0 +1,46 @@
+---
+// frontend/src/components/ResumeModal.astro
+import { getEntry } from 'astro:content';
+import ResumeBody from './resume/ResumeBody.astro';
+
+const resume = await getEntry('resume', 'profile');
+if (!resume) throw new Error('Resume entry not found at frontend/src/content/resume/profile.md');
+---
+
+<dialog id="resume-modal" class="resume-modal">
+  <header class="resume-modal-header">
+    <div class="resume-modal-title">
+      <span class="name">{resume.data.name}</span>
+      <span class="title">{resume.data.title}</span>
+    </div>
+    <div class="resume-modal-actions">
+      <a href="/Rafael_Abreu_Resume.pdf" download class="btn-download">Download PDF</a>
+      <button type="button" class="btn-close" aria-label="Close resume">×</button>
+    </div>
+  </header>
+  <div class="resume-modal-body">
+    <ResumeBody resume={resume} />
+  </div>
+  <footer class="resume-modal-footer">
+    Contact via <a href="/#contact">contact form</a> or
+    <a href={resume.data.links.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn →</a>
+  </footer>
+</dialog>
+
+<script>
+  const modal = document.getElementById('resume-modal') as HTMLDialogElement | null;
+
+  // Event delegation handles both static Astro Nav anchors and React-hydrated MobileNav buttons.
+  document.addEventListener('click', (e) => {
+    const trigger = (e.target as HTMLElement)?.closest('[data-resume-trigger]');
+    if (trigger) {
+      e.preventDefault();
+      modal?.showModal();
+    }
+  });
+
+  modal?.querySelector('.btn-close')?.addEventListener('click', () => modal.close());
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) modal.close();
+  });
+</script>
