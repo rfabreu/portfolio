@@ -6,7 +6,7 @@ links:
   linkedin: "https://www.linkedin.com/in/rfabreu/"
   github: "https://github.com/rfabreu"
   portfolio: "https://rafaelabreu.dev"
-summary: "Operations & Infrastructure Leader with a track record of scaling teams, owning high-availability environments at scale, and driving automation that expands operational capacity. Progressed from hands-on technical roles to leading multi-shift operations organizations supporting 5,000+ concurrent real-time service streams across global clients. Builds the organizational systems — processes, teams, tooling — that enable consistent SLA delivery in complex, high-stakes environments. Industry experience includes real-time media infrastructure, though the underlying disciplines — incident response, operational scaling, cross-functional stakeholder management, and automation — apply across any 24/7 mission-critical environment."
+summary: "Operations & Infrastructure Leader and hands-on software engineer. Scales 24/7 mission-critical environments — currently leads a 16-person team supporting 5,000+ concurrent real-time service streams across global clients — while continuously shipping the automation, tooling, and full-stack systems (Go, Python, React, Next.js) that run them. Builds both the organizational systems and the technical systems they depend on. The underlying disciplines — incident response, operational scaling, cross-functional leadership, and software automation — apply across any high-availability environment, in or out of broadcast."
 work_history:
   - company: "Nextologies"
     title: "Operations Manager (VNOC)"
@@ -50,13 +50,16 @@ work_history:
     title: "Software Engineer"
     dates: "Dec 2021 – Present"
     tech_stack:
-      - "Python"
       - "Go"
-      - "JavaScript"
+      - "Python"
+      - "TypeScript"
       - "React"
+      - "Next.js"
+      - "Astro"
     bullets:
-      - "Architected and delivered internal tools, dashboards, and automation systems for operations and media workflows."
-      - "Built integrations and automation scripts that eliminated manual processes and improved operational visibility across client environments."
+      - "Designed and shipped the EBU R128 loudness analyzer: parallel Python analyzer + serverless API + React dashboard automating compliance across dozens of real-time streams."
+      - "Built a workforce coordination platform in Go and Next.js with hierarchical role-based workflows, multi-level approval chains, and an immutable audit trail."
+      - "Architected this portfolio as a full-stack monorepo (Astro frontend + Go API + Gemini AI integration + CI/CD), shipping production-grade infrastructure as a public artifact."
   - company: "FPtv Festival Portuguese Television"
     title: "Broadcast Operations Manager"
     dates: "Jun 2021 – Aug 2023"
@@ -115,7 +118,7 @@ skills:
     - "SOPs, Escalation Frameworks & Process Design"
     - "Performance Management & Team Development"
   technical:
-    - "Full Stack Development (Go, Python, JavaScript, React)"
+    - "Full Stack Development (Go, Python, JavaScript, React, Astro, Next.js)"
     - "Systems Automation & Workflow Optimization"
     - "Containerization (Docker, Kubernetes)"
     - "CI/CD & Infrastructure as Code"
