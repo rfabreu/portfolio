@@ -15,7 +15,9 @@ if (!resume) throw new Error('Resume entry not found at frontend/src/content/res
     </div>
     <div class="resume-modal-actions">
       <a href="/Rafael_Abreu_Resume.pdf" download class="btn-download">Download PDF</a>
-      <button type="button" class="btn-close" aria-label="Close resume">×</button>
+      <form method="dialog" class="btn-close-form">
+        <button type="submit" class="btn-close" aria-label="Close resume">×</button>
+      </form>
     </div>
   </header>
   <div class="resume-modal-body">
@@ -43,7 +45,10 @@ if (!resume) throw new Error('Resume entry not found at frontend/src/content/res
     }
   });
 
-  modal?.querySelector('.btn-close')?.addEventListener('click', () => modal.close());
+  // Close button uses native <form method="dialog"> — no JS needed.
+  // This handler dismisses the modal when the user clicks the backdrop:
+  // a click whose target is the dialog itself (rather than any child)
+  // is, in practice, a click on the ::backdrop pseudo-element.
   modal?.addEventListener('click', (e) => {
     if (e.target === modal) modal.close();
   });
