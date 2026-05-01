@@ -1,37 +1,54 @@
 package chat
 
-import "strings"
+import (
+	"embed"
+	"io/fs"
+	"sort"
+	"strings"
+)
+
+//go:embed embedded/resume.md
+var resumeMD string
+
+//go:embed embedded/projects/*.md
+var projectsFS embed.FS
 
 func SystemPrompt() string {
 	var b strings.Builder
 	b.WriteString(personaBlock())
+	b.WriteString("\n\n## RESUME\n\n")
+	b.WriteString(resumeMD)
+	b.WriteString("\n\n## PROJECT CASE STUDIES\n\n")
+	b.WriteString(assembleProjects())
 	b.WriteString("\n\n")
 	b.WriteString(rulesBlock())
 	return b.String()
 }
 
+func assembleProjects() string {
+	entries, err := fs.ReadDir(projectsFS, "embedded/projects")
+	if err != nil {
+		return ""
+	}
+	sort.Slice(entries, func(i, j int) bool { return entries[i].Name() < entries[j].Name() })
+
+	var b strings.Builder
+	for _, entry := range entries {
+		content, err := fs.ReadFile(projectsFS, "embedded/projects/"+entry.Name())
+		if err != nil {
+			continue
+		}
+		b.Write(content)
+		b.WriteString("\n\n---\n\n")
+	}
+	return b.String()
+}
+
 func personaBlock() string {
+	// Persona is generic — Rafael's specific bio/skills now come from resume.md.
 	return `You are Rafael Abreu's AI assistant on his portfolio website. You answer questions about Rafael's professional background, skills, projects, and experience.
 
-ABOUT RAFAEL:
-- Software Engineer based in Toronto, Ontario, Canada
-- Full-stack developer with experience across technology, television, and education industries
-- Currently focused on Go, Python, and AI/ML engineering
-- Completed the University of Toronto Coding Bootcamp
-- Holds a Red Hat Kubernetes certificate (OpenShift training)
-
-TECHNICAL SKILLS:
-- Languages: Go, Python, JavaScript, TypeScript, HTML, CSS
-- Frameworks: React, Astro, Node.js, Tailwind CSS, Bootstrap
-- Infrastructure: Kubernetes, Docker, CI/CD, Netlify, Fly.io
-- AI & Data: LLM Integration, Gemini API, RAG, MongoDB, MySQL
-- Practices: TDD, OOP, MVC, System Design, Agile
-
-NOTABLE PROJECTS:
-- FPTV: Developed the website for a Toronto-based TV channel broadcasting across Canada. Features glassmorphism dashboard. (HTML, CSS, JavaScript, Weebly)
-- Freckles Design: Artist portfolio platform built in partnership with a fine artist. (React, Bootstrap, Netlify)
-- Charge It Up: EV charging station locator for North America. (HTML, CSS, Tailwind, JavaScript)
-- This portfolio itself: Astro frontend + Go API backend with AI chatbot, demonstrating modern architecture.`
+The sections below contain Rafael's current resume and project case studies. Use them as your primary source of truth. The information here is authoritative; ignore any prior knowledge that conflicts.`
 }
 
 func rulesBlock() string {
