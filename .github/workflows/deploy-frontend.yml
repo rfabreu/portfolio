@@ -29,6 +29,17 @@ jobs:
         env:
           PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
 
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Generate Resume PDF
+        run: npm run build:pdf
+
+      - name: Verify PDF was generated
+        run: |
+          test -f dist/Rafael_Abreu_Resume.pdf
+          test "$(stat -c%s dist/Rafael_Abreu_Resume.pdf)" -gt 10240
+
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3
         with:
