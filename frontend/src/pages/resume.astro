@@ -6,12 +6,12 @@ import ResumeBody from '../components/resume/ResumeBody.astro';
 
 const resume = await getEntry('resume', 'profile');
 if (!resume) throw new Error('Resume entry not found at frontend/src/content/resume/profile.md');
-// TODO(task-4.2): add includeResumeModal={false} to BaseLayout once the prop is defined there
 ---
 
 <BaseLayout
   title={`${resume.data.name} — Resume`}
   description={`Resume for ${resume.data.name}, ${resume.data.title}.`}
+  includeResumeModal={false}
 >
   <main class="resume-page">
     <header class="resume-page-header">
