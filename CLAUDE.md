@@ -35,6 +35,8 @@ go build ./cmd/server
 ```
 Requires: Go 1.26+
 
+**First-time clone:** run `make sync-content` (or `make dev`) before any `go` command — `internal/chat/embedded/` is gitignored and populated from `frontend/src/content/` at build time. `make dev` and `make test` invoke `sync-content` automatically.
+
 **API env vars:** `PORT`, `ALLOWED_ORIGINS`, `GEMINI_API_KEY`, `RATE_LIMIT_RPM`
 
 ## API Routes
