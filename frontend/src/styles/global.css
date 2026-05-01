@@ -287,6 +287,10 @@ html[data-theme="light"] .gradient-divider {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  /* Native <dialog> centering relies on margin:auto + inset:0; setting
+     display:flex above overrides the user-agent default, so restore it. */
+  margin: auto;
+  inset: 0;
 }
 .resume-modal::backdrop {
   background: rgba(0, 0, 0, 0.6);
