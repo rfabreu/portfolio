@@ -1,0 +1,36 @@
+---
+// frontend/src/components/resume/ResumeBody.astro
+import type { CollectionEntry } from 'astro:content';
+import Summary from './Summary.astro';
+import Skills from './Skills.astro';
+import WorkHistory from './WorkHistory.astro';
+import Education from './Education.astro';
+import Certifications from './Certifications.astro';
+import Awards from './Awards.astro';
+import Speaking from './Speaking.astro';
+import Languages from './Languages.astro';
+import Projects from './Projects.astro';
+
+interface Props {
+  resume: CollectionEntry<'resume'>;
+}
+const { resume } = Astro.props;
+const data = resume.data;
+
+const projectEntries = data.selected_projects.map((p) => ({
+  slug: p.slug.id,
+  headline: p.headline,
+}));
+---
+
+<div class="resume-body">
+  <Summary summary={data.summary} />
+  <Skills skills={data.skills} />
+  <WorkHistory entries={data.work_history} />
+  <Education entries={data.education} />
+  <Certifications entries={data.certifications} />
+  <Awards entries={data.awards_recognition} />
+  <Speaking entries={data.speaking_writing} />
+  <Languages entries={data.languages_spoken} />
+  <Projects entries={projectEntries} />
+</div>
