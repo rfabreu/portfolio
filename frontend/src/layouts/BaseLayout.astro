@@ -1,14 +1,17 @@
 ---
 import '../styles/global.css';
+import ResumeModal from '../components/ResumeModal.astro';
 
 interface Props {
   title?: string;
   description?: string;
+  includeResumeModal?: boolean;
 }
 
 const {
   title = 'Rafael Abreu | Software Engineer',
   description = 'Software Engineer building intelligent systems across the full stack. Go, Python, React, and the infrastructure that connects them.',
+  includeResumeModal = true,
 } = Astro.props;
 ---
 
@@ -36,6 +39,8 @@ const {
   </head>
   <body>
     <slot />
+
+    {includeResumeModal && <ResumeModal />}
 
     <script>
       const observer = new IntersectionObserver(

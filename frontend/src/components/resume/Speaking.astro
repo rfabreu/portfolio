@@ -1,0 +1,29 @@
+---
+interface Entry {
+  type: 'talk' | 'article' | 'podcast' | 'panel';
+  title: string;
+  venue: string;
+  year: string;
+  url?: string;
+}
+interface Props { entries: Entry[]; }
+const { entries } = Astro.props;
+---
+
+{entries.length > 0 && (
+  <section class="resume-section resume-speaking" aria-label="Speaking & Writing">
+    <h2 class="resume-heading">Speaking &amp; Writing</h2>
+    <ul class="resume-list">
+      {entries.map((entry) => (
+        <li>
+          {entry.url ? (
+            <a href={entry.url} class="resume-speaking-link">{entry.title}</a>
+          ) : (
+            <span>{entry.title}</span>
+          )}
+          <span class="resume-speaking-meta"> — {entry.venue} ({entry.year})</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

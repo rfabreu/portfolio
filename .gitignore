@@ -5,6 +5,10 @@
 /frontend/dist/
 /api/bin/
 
+# Playwright test artifacts
+/frontend/test-results/
+/frontend/playwright-report/
+
 # Environment variables — NEVER commit these
 .env
 .env.local

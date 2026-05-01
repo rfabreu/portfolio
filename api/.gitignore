@@ -1,0 +1,2 @@
+# Build artifacts mirroring frontend content (populated by `make sync-content`)
+internal/chat/embedded/

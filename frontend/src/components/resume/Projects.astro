@@ -1,0 +1,20 @@
+---
+interface Entry { slug: string; headline: string; }
+interface Props { entries: Entry[]; }
+const { entries } = Astro.props;
+---
+
+{entries.length > 0 && (
+  <section class="resume-section resume-projects" aria-label="Selected projects">
+    <h2 class="resume-heading">Selected Projects</h2>
+    <ul class="resume-list">
+      {entries.map((entry) => (
+        <li>
+          <a href={`/project/${entry.slug}`} class="resume-project-link">
+            {entry.headline}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

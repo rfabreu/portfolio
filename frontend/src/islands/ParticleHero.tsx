@@ -116,11 +116,13 @@ const LIGHT_PALETTE = [
 const DARK_LINE_COLOR: [number, number, number] = [0.389, 0.4, 0.945];
 const LIGHT_LINE_COLOR: [number, number, number] = [0.310, 0.275, 0.898];
 
+type Palette = readonly (readonly [number, number, number])[];
+
 function isLightTheme(): boolean {
   return document.documentElement.dataset.theme === 'light';
 }
 
-function initParticles(width: number, height: number, isMobile: boolean, palette: typeof DARK_PALETTE): Particle[] {
+function initParticles(width: number, height: number, isMobile: boolean, palette: Palette): Particle[] {
   const count = Math.max(60, Math.min(120, Math.floor(width / 15)));
   const speedMultiplier = isMobile ? 1.5 : 1.0;
   const particles: Particle[] = [];

@@ -9,9 +9,14 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build:pdf": "node scripts/generate-pdf.mjs",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.9",
     "@astrojs/react": "^5.0.2",
     "@tailwindcss/vite": "^4.2.2",
     "@types/react": "^19.2.14",
@@ -19,6 +24,14 @@
     "astro": "^6.1.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "tailwindcss": "^4.2.2"
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.6.0",
+    "playwright": "^1.59.1",
+    "serve-handler": "^6.1.7",
+    "vitest": "^4.1.5"
   }
 }

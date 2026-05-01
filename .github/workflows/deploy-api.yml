@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'api/**'
+      - 'frontend/src/content/resume/**'
+      - 'frontend/src/content/projects/**'
 
 jobs:
   deploy:
@@ -19,6 +21,9 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: '1.26'
+
+      - name: Sync content for embedding
+        run: make sync-content
 
       - name: Run tests
         run: go test ./... -v

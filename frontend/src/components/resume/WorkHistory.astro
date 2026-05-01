@@ -1,0 +1,45 @@
+---
+// frontend/src/components/resume/WorkHistory.astro
+interface Entry {
+  company: string;
+  title: string;
+  dates: string;
+  location?: string;
+  tech_stack: string[];
+  bullets: string[];
+}
+
+interface Props {
+  entries: Entry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<section class="resume-section resume-work-history" aria-label="Work history">
+  <h2 class="resume-heading">Experience</h2>
+  {entries.map((entry) => (
+    <article class="resume-job">
+      <header class="resume-job-header">
+        <div class="resume-job-title-row">
+          <span class="resume-job-title">{entry.title}</span>
+          <span class="resume-job-company">{entry.company}</span>
+        </div>
+        <div class="resume-job-meta">
+          <span class="resume-job-dates">{entry.dates}</span>
+          {entry.location && <span class="resume-job-location"> · {entry.location}</span>}
+        </div>
+      </header>
+      {entry.bullets.length > 0 && (
+        <ul class="resume-job-bullets">
+          {entry.bullets.map((b) => <li>{b}</li>)}
+        </ul>
+      )}
+      {entry.tech_stack.length > 0 && (
+        <div class="resume-job-tech">
+          {entry.tech_stack.map((tech) => <span class="resume-tech-tag">{tech}</span>)}
+        </div>
+      )}
+    </article>
+  ))}
+</section>

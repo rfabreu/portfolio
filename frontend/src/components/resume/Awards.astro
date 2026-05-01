@@ -1,0 +1,19 @@
+---
+interface Entry { name: string; org: string; year: string; }
+interface Props { entries: Entry[]; }
+const { entries } = Astro.props;
+---
+
+{entries.length > 0 && (
+  <section class="resume-section resume-awards" aria-label="Awards & Recognition">
+    <h2 class="resume-heading">Awards &amp; Recognition</h2>
+    <ul class="resume-list">
+      {entries.map((entry) => (
+        <li>
+          <span class="resume-award-name">{entry.name}</span>
+          <span class="resume-award-meta"> — {entry.org} ({entry.year})</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

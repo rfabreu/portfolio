@@ -8,10 +8,10 @@ interface NavItem {
 
 interface Props {
   navItems: NavItem[];
-  resumePath: string;
+  isResumePage: boolean;
 }
 
-export default function MobileNav({ navItems, resumePath }: Props) {
+export default function MobileNav({ navItems, isResumePage }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -50,14 +50,16 @@ export default function MobileNav({ navItems, resumePath }: Props) {
             </a>
           ))}
           <div className="flex gap-4 mt-4">
-            <a
-              href={resumePath}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-2 border border-accent-indigo/40 rounded-lg text-accent-indigo text-sm"
-            >
-              RESUME
-            </a>
+            {!isResumePage && (
+              <a
+                href="/resume"
+                data-resume-trigger
+                onClick={() => setIsOpen(false)}
+                className="px-6 py-2 border border-accent-indigo/40 rounded-lg text-accent-indigo text-sm"
+              >
+                RESUME
+              </a>
+            )}
             <a
               href="/#contact"
               onClick={() => setIsOpen(false)}

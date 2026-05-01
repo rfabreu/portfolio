@@ -1,0 +1,11 @@
+---
+interface Props { entries: string[]; }
+const { entries } = Astro.props;
+---
+
+{entries.length > 0 && (
+  <section class="resume-section resume-languages" aria-label="Languages">
+    <h2 class="resume-heading">Languages</h2>
+    <p class="resume-languages-list">{entries.join(' · ')}</p>
+  </section>
+)}
