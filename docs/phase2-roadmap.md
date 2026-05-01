@@ -146,6 +146,27 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 
 ---
 
+### P9: Resume Feature
+
+**What:** A markdown-driven resume rendered as an in-site modal, downloadable PDF, and chatbot grounding source — replacing the previously broken Resume button.
+
+**Why:** The Resume button on the portfolio was a 404. Rather than dropping a static PDF that goes stale, this establishes a single-source-of-truth model: edit one markdown file, three artifacts (modal, PDF, chatbot prompt) regenerate deterministically. Also fixes a latent staleness bug where the chatbot's project knowledge drifted from the actual portfolio.
+
+**Scope:**
+- New Astro content collection at `frontend/src/content/resume/profile.md` with full Zod schema
+- 9 section components rendering structured data into HTML
+- ResumeModal using the native `<dialog>` element (no React island)
+- /resume standalone page (also serves as Playwright's PDF print source)
+- Build-time PDF generation via Playwright in CI
+- Chatbot system prompt assembled from resume + project markdown via `go:embed`
+- E2E coverage for the modal flow
+
+**Estimated effort:** 1-2 sessions
+
+**Out of scope (deferred):** AI-driven LinkedIn ingestion, GitHub-based skill auto-extraction, AI-generated bullets. Considered during brainstorming and rejected as overkill for an artifact that changes 4–6 times per year.
+
+---
+
 ## Dependency Map
 
 ```
@@ -157,6 +178,7 @@ P5 (Analytics)         — independent, one script tag
 P6 (Blog)              — independent, new content collection
 P7 (Theme Toggle)      — independent, CSS + React island
 P8 (Testimonials)      — blocked on collecting testimonial content
+P9 (Resume Feature)    — independent, replaces broken Resume button
 ```
 
 All features are independent. Recommended order follows priority numbering, but any can be built at any time.
