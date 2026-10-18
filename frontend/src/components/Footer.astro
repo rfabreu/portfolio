@@ -1,5 +1,9 @@
 ---
 const currentYear = new Date().getFullYear();
+
+const ORANGECAT_URL = 'https://orangecatlabs.ca';
+// Set to the logo path once the asset is added, e.g. '/images/orangecat-labs-logo.svg'
+const ORANGECAT_LOGO: string | null = null;
 ---
 
 <footer class="border-t border-surface-border py-8 px-6">
@@ -7,6 +11,20 @@ const currentYear = new Date().getFullYear();
     <div class="font-mono text-text-muted text-xs">
       &copy; {currentYear} Rafael Abreu
     </div>
+
+    <a
+      href={ORANGECAT_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="oc-credit inline-flex items-center gap-2 text-text-muted text-xs"
+      aria-label="Built by OrangeCat Labs (opens orangecatlabs.ca in a new tab)"
+    >
+      {ORANGECAT_LOGO && (
+        <img src={ORANGECAT_LOGO} alt="" width="16" height="16" class="oc-logo h-4 w-4" />
+      )}
+      <span>Built by <span class="font-semibold">OrangeCat Labs</span></span>
+    </a>
+
     <div class="flex gap-6">
       <a href="https://github.com/rfabreu" target="_blank" rel="noopener noreferrer" class="text-text-muted text-xs hover:text-accent-indigo transition-colors">
         GitHub
@@ -17,3 +35,34 @@ const currentYear = new Date().getFullYear();
     </div>
   </div>
 </footer>
+
+<style>
+  .oc-credit {
+    /* TODO: replace with the exact orange sampled from orangecatlabs.ca */
+    --oc-orange: #f97316;
+    transition: color 300ms ease;
+  }
+  .oc-credit:hover,
+  .oc-credit:focus-visible {
+    color: var(--oc-orange);
+  }
+  .oc-logo {
+    opacity: 0.7;
+    transition: opacity 300ms ease, transform 300ms ease;
+  }
+  .oc-credit:hover .oc-logo,
+  .oc-credit:focus-visible .oc-logo {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .oc-credit,
+    .oc-logo {
+      transition: none;
+    }
+    .oc-credit:hover .oc-logo,
+    .oc-credit:focus-visible .oc-logo {
+      transform: none;
+    }
+  }
+</style>
