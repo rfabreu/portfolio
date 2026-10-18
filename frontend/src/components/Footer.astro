@@ -1,5 +1,8 @@
 ---
 const currentYear = new Date().getFullYear();
+
+const ORANGECAT_URL = 'https://orangecatlabs.ca';
+const ORANGECAT_LOGO: string | null = '/images/orangecat-labs-mark-1.png';
 ---
 
 <footer class="border-t border-surface-border py-8 px-6">
@@ -7,6 +10,28 @@ const currentYear = new Date().getFullYear();
     <div class="font-mono text-text-muted text-xs">
       &copy; {currentYear} Rafael Abreu
     </div>
+
+    <a
+      href={ORANGECAT_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="oc-credit inline-flex items-center gap-2 text-text-muted text-xs"
+      aria-label="Built by OrangeCat Labs (opens orangecatlabs.ca in a new tab)"
+    >
+      {ORANGECAT_LOGO && (
+        <img
+          src={ORANGECAT_LOGO}
+          alt=""
+          width="20"
+          height="20"
+          loading="lazy"
+          decoding="async"
+          class="oc-logo h-5 w-5 rounded-md bg-white object-contain p-0.5"
+        />
+      )}
+      <span>Built by <span class="font-semibold">OrangeCat Labs</span></span>
+    </a>
+
     <div class="flex gap-6">
       <a href="https://github.com/rfabreu" target="_blank" rel="noopener noreferrer" class="text-text-muted text-xs hover:text-accent-indigo transition-colors">
         GitHub
@@ -17,3 +42,38 @@ const currentYear = new Date().getFullYear();
     </div>
   </div>
 </footer>
+
+<style>
+  .oc-credit {
+    /* Brand orange sampled from the OrangeCat Labs logo */
+    --oc-orange: #f65203;
+    transition: color 300ms ease;
+  }
+  /* Darker orange keeps text contrast on the light theme background */
+  :global(html[data-theme='light']) .oc-credit {
+    --oc-orange: #d94400;
+  }
+  .oc-credit:hover,
+  .oc-credit:focus-visible {
+    color: var(--oc-orange);
+  }
+  .oc-logo {
+    opacity: 0.85;
+    transition: opacity 300ms ease, transform 300ms ease;
+  }
+  .oc-credit:hover .oc-logo,
+  .oc-credit:focus-visible .oc-logo {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .oc-credit,
+    .oc-logo {
+      transition: none;
+    }
+    .oc-credit:hover .oc-logo,
+    .oc-credit:focus-visible .oc-logo {
+      transform: none;
+    }
+  }
+</style>
