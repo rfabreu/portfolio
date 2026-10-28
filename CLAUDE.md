@@ -72,6 +72,7 @@ Roadmap: `docs/phase2-roadmap.md`
 - [ ] P6: Blog/Writing Section (needs article content)
 - [x] P7: Dark/Light Theme Toggle (PR #17)
 - [ ] P8: Testimonials (blocked on content)
+- [x] P9: Resume Feature (PR #26, #27)
 
 ## Docs Workflow
 

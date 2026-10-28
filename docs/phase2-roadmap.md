@@ -146,7 +146,7 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 
 ---
 
-### P9: Resume Feature
+### ~~P9: Resume Feature~~ ✅ Done (PR #26, #27)
 
 **What:** A markdown-driven resume rendered as an in-site modal, downloadable PDF, and chatbot grounding source — replacing the previously broken Resume button.
 
