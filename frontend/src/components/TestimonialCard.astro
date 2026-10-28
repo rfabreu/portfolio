@@ -1,0 +1,79 @@
+---
+interface Props {
+  name: string;
+  role: string;
+  company: string;
+  relationship: string;
+  avatar?: string;
+  linkedin?: string;
+  quote?: string;
+}
+
+const { name, role, company, relationship, avatar, linkedin, quote } = Astro.props;
+
+function getInitials(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+const initials = getInitials(name);
+---
+
+<div class="bg-surface border border-surface-border rounded-card p-6 flex flex-col justify-between h-full transition-all duration-300 hover:border-accent-indigo/40">
+  <div>
+    <!-- Decorative Quote Icon -->
+    <div class="text-accent-indigo/30 mb-4" aria-hidden="true">
+      <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+      </svg>
+    </div>
+
+    <!-- Quote Body -->
+    <blockquote class="text-text-secondary text-sm leading-relaxed mb-6 italic">
+      <slot>{quote}</slot>
+    </blockquote>
+  </div>
+
+  <!-- Author Attribution -->
+  <div class="pt-4 border-t border-surface-border/60 flex items-center gap-3">
+    {avatar ? (
+      <img
+        src={avatar}
+        alt={name}
+        class="w-11 h-11 rounded-full object-cover border border-surface-border shrink-0"
+        loading="lazy"
+      />
+    ) : (
+      <div
+        class="w-11 h-11 rounded-full bg-surface-border/50 border border-accent-indigo/30 flex items-center justify-center font-mono font-bold text-accent-indigo text-xs tracking-wider shrink-0"
+        aria-hidden="true"
+      >
+        {initials}
+      </div>
+    )}
+
+    <div class="min-w-0 flex-1">
+      <div class="flex items-center gap-2">
+        <span class="font-semibold text-text-primary text-sm truncate">{name}</span>
+        {linkedin && (
+          <a
+            href={linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-text-muted hover:text-accent-indigo transition-colors shrink-0"
+            aria-label={`${name}'s LinkedIn profile`}
+          >
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+            </svg>
+          </a>
+        )}
+      </div>
+      <p class="text-xs text-text-muted truncate">{role} · {company}</p>
+      <span class="inline-block mt-1 font-mono text-[10px] tracking-wider uppercase text-accent-indigo bg-accent-indigo/10 px-2 py-0.5 rounded-tag">
+        {relationship}
+      </span>
+    </div>
+  </div>
+</div>
