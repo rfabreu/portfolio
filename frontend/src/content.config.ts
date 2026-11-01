@@ -71,4 +71,22 @@ const resume = defineCollection({
   }),
 });
 
-export const collections = { projects, resume };
+export const testimonialSchema = z.object({
+  name: z.string(),
+  role: z.string(),
+  company: z.string(),
+  relationship: z.string(),
+  avatar: z.string().optional(),
+  linkedin: z.string().url().optional(),
+  order: z.number().default(99),
+  featured: z.boolean().default(false),
+});
+
+export type Testimonial = ReturnType<typeof testimonialSchema.parse>;
+
+const testimonials = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/testimonials' }),
+  schema: testimonialSchema,
+});
+
+export const collections = { projects, resume, testimonials };
