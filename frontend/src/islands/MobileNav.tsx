@@ -61,11 +61,13 @@ export default function MobileNav({ navItems, isResumePage }: Props) {
               </a>
             )}
             <a
-              href="/#contact"
+              href="https://orangecatlabs.ca"
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setIsOpen(false)}
               className="px-6 py-2 bg-accent-indigo rounded-lg text-white text-sm"
             >
-              LET'S TALK
+              WORK WITH US
             </a>
           </div>
         </div>

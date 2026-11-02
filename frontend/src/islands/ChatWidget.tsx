@@ -26,15 +26,6 @@ export default function ChatWidget() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  useEffect(() => {
-    const trigger = document.getElementById('hero-chat-trigger');
-    if (trigger) {
-      const handler = () => setIsOpen(true);
-      trigger.addEventListener('click', handler);
-      return () => trigger.removeEventListener('click', handler);
-    }
-  }, []);
-
   async function sendMessage(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = input.trim();

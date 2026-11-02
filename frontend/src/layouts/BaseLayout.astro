@@ -9,8 +9,8 @@ interface Props {
 }
 
 const {
-  title = 'Rafael Abreu | Software Engineer',
-  description = 'Software Engineer building intelligent systems across the full stack. Go, Python, React, and the infrastructure that connects them.',
+  title = 'Rafael Abreu | Co-Founder, OrangeCat Labs',
+  description = 'Rafael Abreu — Co-Founder of OrangeCat Labs. Full-stack engineering, cloud infrastructure, and AI solutions for businesses ready to scale.',
   includeResumeModal = true,
 } = Astro.props;
 ---
@@ -24,6 +24,14 @@ const {
     <meta name="theme-color" content="#050508" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <title>{title}</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/images/portfolio_website.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="/images/portfolio_website.png" />
     <script is:inline>
       (function() {
         var theme = localStorage.getItem('theme');
