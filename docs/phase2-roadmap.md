@@ -129,7 +129,7 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 
 ---
 
-### P8: Testimonials Section
+### ~~P8: Testimonials Section~~ ✅ Architecture done (PR #31)
 
 **What:** Reactivate the testimonials section with real testimonial data.
 
@@ -140,9 +140,9 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 - Testimonials component on main page between Skills and Contact
 - Carousel or grid layout
 
-**Prerequisites:** Collect real testimonials
+**Status:** The content collection, card and section components, and unit tests shipped in PR #31 (Issue #16 closed). The section renders nothing until at least one testimonial exists in `frontend/src/content/testimonials/`.
 
-**Estimated effort:** 1 session (once content is ready)
+**Remaining:** Collect real testimonials and add them as content files.
 
 ---
 
@@ -167,6 +167,28 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 
 ---
 
+### P10: Reposition for OrangeCat Labs 🚧 In progress (Issue #30)
+
+**What:** Shift the portfolio from an individual employment pitch to presenting Rafael as a successful professional and Co-Founder of OrangeCat Labs, with the site driving qualified leads to the studio. Experience stays as credibility.
+
+**Why:** The site is the most visible asset for the studio. Its first screen, calls to action, and contact path should send business to https://orangecatlabs.ca instead of recruiting an employee.
+
+**Status:**
+- Phase 1: positioning, CTAs, nav, footer credit, SEO and social tags — ✅ Done (PR #32)
+- Phase 2: services section, business-inquiry contact form, Freckles Design attribution, resume headline alignment — planned
+- Phase 3: chatbot grounding (design spec first), analytics events, section order — planned
+- Follow-ups: absolute `og:image` and `og:url`, GitHub repo description
+
+**Constraints:**
+- No budget or pricing language anywhere (copy, form fields, chatbot)
+- No Upwork link on the portfolio
+- Only Freckles Design is attributed to OrangeCat Labs
+- Contact paths remain the Netlify form and LinkedIn; no public email
+
+See Issue #30 for the full checklist.
+
+---
+
 ## Dependency Map
 
 ```
@@ -177,8 +199,9 @@ P4 (Case Studies)      — independent, content-only
 P5 (Analytics)         — independent, one script tag
 P6 (Blog)              — independent, new content collection
 P7 (Theme Toggle)      — independent, CSS + React island
-P8 (Testimonials)      — blocked on collecting testimonial content
+P8 (Testimonials)      — architecture done; section hidden until testimonials are collected
 P9 (Resume Feature)    — independent, replaces broken Resume button
+P10 (OrangeCat Labs)   — Phase 1 done; Phase 2 and 3 build on it (chatbot work needs a spec first)
 ```
 
 All features are independent. Recommended order follows priority numbering, but any can be built at any time.
