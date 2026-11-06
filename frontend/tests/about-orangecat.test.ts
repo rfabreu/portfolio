@@ -16,7 +16,13 @@ describe('P10: About section copy', () => {
     expect(html).toContain('target="_blank"');
     expect(html).toContain('rel="noopener noreferrer"');
     expect(html).toContain('a Canadian software studio');
-    expect(html.split('orangecatlabs.ca').length - 1).toBe(1);
+    expect(html.split('orangecatlabs.ca').length - 1).toBe(2);
+  });
+
+  it('tells assistive tech that the link opens in a new tab', async () => {
+    const html = await renderAbout();
+
+    expect(html).toContain('aria-label="OrangeCat Labs (opens orangecatlabs.ca in a new tab)"');
   });
 
   it('uses the approved founder-voice copy', async () => {
