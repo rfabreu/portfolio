@@ -1,0 +1,108 @@
+---
+import SectionHeader from './SectionHeader.astro';
+
+const services = [
+  {
+    title: 'Full-Stack Software Development',
+    tag: 'WEB & PLATFORMS',
+    color: 'text-accent-indigo',
+    borderColor: 'hover:border-accent-indigo/50',
+    description: 'High-performance web applications, tailored internal tools, and robust API architectures built with Go, Python, React, and modern TypeScript.',
+    capabilities: [
+      'Responsive, accessible web applications',
+      'High-throughput Go & Python microservices',
+      'Database architecture & schema design',
+      'Type-safe end-to-end APIs',
+    ],
+  },
+  {
+    title: 'Cloud Architecture & DevOps',
+    tag: 'INFRASTRUCTURE & SCALE',
+    color: 'text-accent-purple',
+    borderColor: 'hover:border-accent-purple/50',
+    description: 'Resilient cloud infrastructure, Kubernetes orchestration, CI/CD pipeline automation, and containerized deployments engineered for 24/7 reliability.',
+    capabilities: [
+      'Kubernetes & container orchestration',
+      'Automated CI/CD build & deployment pipelines',
+      'Zero-downtime release workflows',
+      'Infrastructure as code & observability',
+    ],
+  },
+  {
+    title: 'AI Integration & Automation',
+    tag: 'INTELLIGENT SYSTEMS',
+    color: 'text-accent-pink',
+    borderColor: 'hover:border-accent-pink/50',
+    description: 'Practical LLM integrations, retrieval-augmented generation (RAG), intelligent agents, and automated data processing that eliminate manual bottlenecks.',
+    capabilities: [
+      'LLM integration (Gemini, OpenAI, Claude)',
+      'Grounding & domain-specific RAG systems',
+      'Intelligent workflow & process automation',
+      'Privacy-first data handling pipelines',
+    ],
+  },
+  {
+    title: 'Systems Modernization & Optimization',
+    tag: 'PERFORMANCE & RELIABILITY',
+    color: 'text-accent-indigo',
+    borderColor: 'hover:border-accent-indigo/50',
+    description: 'Refactoring legacy codebases, database performance tuning, reducing technical debt, and migrating monolithic applications to scalable microservices.',
+    capabilities: [
+      'Monolith to microservice decomposition',
+      'PostgreSQL & database query optimization',
+      'Incident recovery & SLA stabilization',
+      'Technical debt elimination & code refactoring',
+    ],
+  },
+];
+---
+
+<section id="services" class="py-20 px-6">
+  <div class="container mx-auto max-w-6xl reveal">
+    <SectionHeader number="01" label="SERVICES" title="What We Build" />
+
+    <p class="text-text-secondary text-base max-w-2xl mb-12 -mt-4">
+      OrangeCat Labs partners with businesses to engineer scalable software, resilient infrastructure, and practical AI solutions that drive measurable outcomes.
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      {services.map((service) => (
+        <div class={`bg-surface border border-surface-border rounded-card p-7 transition-all duration-300 ${service.borderColor} flex flex-col justify-between`}>
+          <div>
+            <div class={`font-mono text-xs font-bold tracking-wider mb-2 ${service.color}`}>
+              {service.tag}
+            </div>
+            <h3 class="text-xl font-bold text-text-primary mb-3" style="letter-spacing: -0.03em;">
+              {service.title}
+            </h3>
+            <p class="text-text-secondary text-sm leading-relaxed mb-6">
+              {service.description}
+            </p>
+          </div>
+
+          <div class="pt-5 border-t border-surface-border/60">
+            <div class="font-mono text-[11px] text-text-muted tracking-wider uppercase mb-3">Core Deliverables</div>
+            <ul class="space-y-2">
+              {service.capabilities.map((cap) => (
+                <li class="text-xs text-text-secondary flex items-start gap-2">
+                  <span class={`font-mono ${service.color} shrink-0`}>→</span>
+                  <span>{cap}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-12 text-center">
+      <a
+        href="#contact"
+        class="inline-flex items-center gap-2 text-accent-indigo hover:text-accent-indigo/80 text-sm font-semibold transition-colors"
+      >
+        <span>Have a project in mind? Submit a brief below</span>
+        <span>↓</span>
+      </a>
+    </div>
+  </div>
+</section>

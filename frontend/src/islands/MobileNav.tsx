@@ -49,26 +49,26 @@ export default function MobileNav({ navItems, isResumePage }: Props) {
               {item.label}
             </a>
           ))}
-          <div className="flex gap-4 mt-4">
-            {!isResumePage && (
-              <a
-                href="/resume"
-                data-resume-trigger
-                onClick={() => setIsOpen(false)}
-                className="px-6 py-2 border border-accent-indigo/40 rounded-lg text-accent-indigo text-sm"
-              >
-                RESUME
-              </a>
-            )}
+          <div className="flex flex-col items-center gap-4 mt-4">
             <a
               href="https://orangecatlabs.ca"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setIsOpen(false)}
-              className="px-6 py-2 bg-accent-indigo rounded-lg text-white text-sm"
+              className="px-6 py-2.5 bg-accent-indigo rounded-lg text-white text-sm font-semibold"
             >
               WORK WITH US
             </a>
+            {!isResumePage && (
+              <a
+                href="/resume"
+                data-resume-trigger
+                onClick={() => setIsOpen(false)}
+                className="text-text-muted hover:text-accent-indigo text-xs tracking-wider uppercase transition-colors"
+              >
+                RESUME
+              </a>
+            )}
           </div>
         </div>
       )}
