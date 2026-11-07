@@ -345,6 +345,23 @@ html[data-theme="light"] .gradient-divider {
 }
 .resume-modal-footer a { color: var(--color-accent-indigo); }
 
+/* ===== OrangeCat Labs credit link =====
+   Brand orange hover glow sampled from the OrangeCat Labs logo —
+   same pattern as Footer.astro's `oc-credit`. */
+a.oc-link {
+  --oc-orange: #f65203;
+  color: inherit;
+  text-decoration: none;
+  transition: color 300ms ease;
+}
+html[data-theme='light'] a.oc-link {
+  --oc-orange: #d94400;
+}
+a.oc-link:hover,
+a.oc-link:focus-visible {
+  color: var(--oc-orange);
+}
+
 /* Print stylesheet — used by Playwright when generating the PDF */
 @media print {
   /* Hide site chrome on the /resume page when printing */
