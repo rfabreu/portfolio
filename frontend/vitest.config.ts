@@ -8,5 +8,5 @@ export default getViteConfig(
       environment: 'node',
       include: ['tests/**/*.test.ts'],
     },
-  }),
+  }) as any,
 );
