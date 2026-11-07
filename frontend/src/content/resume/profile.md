@@ -3,9 +3,9 @@ name: "Rafael Abreu"
 title: "Co-Founder, OrangeCat Labs | Full-Stack & Infrastructure Leader"
 location: "Toronto, Ontario, Canada"
 links:
-  linkedin: "https://www.linkedin.com/in/rfabreu/"
+  linkedin: "https://linkedin.com/in/rafael-a-gomes"
   github: "https://github.com/rfabreu"
-  portfolio: "https://rafaelabreu.dev"
+  portfolio: "https://rafaelabreu.netlify.app"
 summary: "Operations & Infrastructure Leader and hands-on software engineer. Scales 24/7 mission-critical environments — currently leads a 16-person team supporting 5,000+ concurrent real-time service streams across global clients — while continuously shipping the automation, tooling, and full-stack systems (Go, Python, React, Next.js) that run them. Builds both the organizational systems and the technical systems they depend on. The underlying disciplines — incident response, operational scaling, cross-functional leadership, and software automation — apply across any high-availability environment, in or out of broadcast."
 work_history:
   - company: "Nextologies"
