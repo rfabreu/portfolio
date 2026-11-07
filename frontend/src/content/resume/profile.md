@@ -1,6 +1,6 @@
 ---
 name: "Rafael Abreu"
-title: "Operations & Infrastructure Leader"
+title: "Co-Founder, OrangeCat Labs | Full-Stack & Infrastructure Leader"
 location: "Toronto, Ontario, Canada"
 links:
   linkedin: "https://linkedin.com/in/rafael-a-gomes"

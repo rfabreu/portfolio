@@ -20,9 +20,9 @@ function count(haystack: string, needle: string) {
 }
 
 const APPROVED_INTRO =
-  "Whether you're planning a new system or trying to stabilize an existing one, tell me what you're working on. Send a message through the form, or connect with me on LinkedIn.";
+  "We partner with growing teams and enterprises to design, develop, and scale production systems. Tell us about your goals and we will respond within 1 business day.";
 const APPROVED_PLACEHOLDER =
-  "Tell me about your project, your team, or the problem you're trying to solve...";
+  "Tell us about your project, current architecture, key goals, or challenges...";
 
 describe('P10: Contact section copy', () => {
   it('uses the approved business-inquiry intro', async () => {
@@ -66,7 +66,7 @@ describe('P10: Contact section copy', () => {
     // form-name (hidden), bot-field (honeypot), name, email
     expect(count(form, '<input')).toBe(4);
     expect(count(form, '<textarea')).toBe(1);
-    expect(count(form, '<select')).toBe(0);
+    expect(count(form, '<select')).toBe(2);
   });
 
   it('keeps the GitHub and LinkedIn links', async () => {
