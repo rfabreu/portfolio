@@ -5,7 +5,7 @@
 
 ## Priority Order
 
-Features are ordered by impact and dependency. Each is independent and can be built as a standalone PR.
+Features are ordered by impact and dependency. P1–P9 are independent and can each be built as a standalone PR; P10 and P11 are sequenced (see the Dependency Map).
 
 ---
 
@@ -173,7 +173,7 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 
 **Why:** The site is the most visible asset for the studio. Its first screen, calls to action, and contact path should send business to https://orangecatlabs.ca instead of recruiting an employee.
 
-**Status** (verified against `main` on 2026-11-07):
+**Status** (checked against `main`, Issue #30, and owner decisions on 2026-11-07):
 - Phase 1: positioning, CTAs, nav, footer credit, SEO and social tags — ✅ Done (PR #32); absolute `og:image` and `og:url` — ✅ Done (PR #35)
 - Phase 2:
   - About copy in founder voice with one OrangeCat Labs link — ✅ Done (PR #36)
@@ -182,7 +182,8 @@ Features are ordered by impact and dependency. Each is independent and can be bu
   - Contact form fields (company, project type; never a budget field) — deferred, undecided
   - Freckles Design case study credits OrangeCat Labs — planned (the owner confirmed the credit is accurate)
   - Resume headline alignment — planned, delivered through P11 (Issue #37)
-- Phase 3: chatbot grounding (design spec first), analytics events (only `chat-opened` and `game-started` exist today), page section order — planned
+  - `projects/portfolio.md` `demo` link corrected to the production URL — planned, no issue or PR yet; it can share a PR with the Freckles credit because both change projects content
+- Phase 3: chatbot grounding (design spec first), chat widget greeting, analytics events (only `chat-opened` and `game-started` exist today), page section order — planned
 - Follow-ups: GitHub repo description (repo settings, owner)
 
 **Constraints:**
@@ -206,8 +207,10 @@ See Issue #30 for the full checklist.
 - Audit every bullet for a factual result or scale figure; metrics must come from Rafael, none invented
 - Decide how OrangeCat Labs appears in the work history
 - Reconcile the Red Hat certification wording with the About section
-- Correct `links.linkedin` to `https://linkedin.com/in/rafael-a-gomes` and `links.portfolio` to `https://rafaelabreu.netlify.app` (both owner-confirmed 2026-11-07)
+- Correct `links.linkedin` to `https://linkedin.com/in/rafael-a-gomes` and `links.portfolio` to `https://rafaelabreu.netlify.app` (both owner-confirmed 2026-11-07; Issue #37 still lists the portfolio URL as a question)
 - Regenerate the PDF and check the modal and `/resume` page
+
+**Constraints:** no email address on the resume; no budget or pricing language; how the resume describes the co-founder role is a decision for Issue #37.
 
 **Impact:** `profile.md` feeds the resume modal, the `/resume` page, the PDF, and the chatbot's grounding. Merging a change under `frontend/src/content/resume/**` deploys both the frontend and the API.
 
@@ -225,16 +228,16 @@ P6 (Blog)              — independent, new content collection
 P7 (Theme Toggle)      — independent, CSS + React island
 P8 (Testimonials)      — architecture done; section hidden until testimonials are collected
 P9 (Resume Feature)    — independent, replaces broken Resume button
-P10 (OrangeCat Labs)   — Phase 1 done; Phase 2 and 3 build on it (chatbot work needs a spec first)
-P11 (Resume Positioning) — builds on P10; delivers P10's resume headline item
+P10 (OrangeCat Labs)   — Phase 1, About copy, and Contact copy done; the remaining Phase 2 and Phase 3 items build on it (chatbot work needs a spec first)
+P11 (Resume)           — builds on P10; delivers P10's resume headline item
 ```
 
 P1–P9 are independent. P10 and P11 are sequenced as described above. Recommended order follows priority numbering.
 
 ## V1 Cleanup (Optional)
 
-Minor improvements to the current V1 that can be addressed alongside Phase 2 work:
+Minor items from the V1 review that can be addressed alongside Phase 2 work (some are now resolved):
 
-- **Dependabot alerts** — the 88 alerts on the legacy CRA dependencies were removed together with the CRA files (PR #10). Alerts on the current frontend dependencies are triaged in Issue #39.
+- **Dependabot alerts** — PR #10 removed the legacy CRA files that the original 88 alerts referred to. The alerts open now are on the current frontend dependencies and are triaged in Issue #39.
 - **GitHub Pages** — disabled in repo settings (`has_pages` is false, checked 2026-11-07); nothing further to do.
 - **go.sum** — the Go API has no external dependencies yet, so no `go.sum` exists. CI cache warnings about missing `go.sum` are harmless but will resolve once an external dependency is added.

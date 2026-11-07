@@ -23,24 +23,24 @@ portfolio/
 |-----------|------|------------|
 | Frontend | Astro 6, React 19, Tailwind CSS v4, TypeScript | Netlify |
 | API | Go, Google Gemini API | Fly.io (Docker) |
-| CI/CD | GitHub Actions (path-filtered) | Auto-deploy on push to `main` |
+| CI/CD | GitHub Actions | PR checks; auto-deploy on push to `main` (path-filtered) |
 
 ## Features
 
-- **Static-first frontend** — Astro ships zero JS by default; only interactive components (chat widget, mobile nav) hydrate as React islands
+- **Static-first frontend** — Astro ships zero JS by default; only interactive components (particle hero, chat widget, tic-tac-toe board, mobile nav, theme toggle) hydrate as React islands
 - **AI chatbot** — floating widget powered by a Go backend proxying Google Gemini, constrained to professional Q&A
 - **Content collections** — projects defined as Markdown files with typed frontmatter; add a project by dropping a `.md` file
 - **Project case studies** — individual detail pages generated from Markdown (overview, problem, approach, tech stack, outcome)
 - **Design system** — dark base with indigo/purple/pink accents, bold typography, scroll reveal animations, gradient orbs
 - **Responsive** — mobile-first with hamburger nav overlay
-- **CI/CD pipeline** — PR validation (lint, test, build), auto-deploy frontend to Netlify, auto-deploy API to Fly.io
+- **CI/CD pipeline** — PR validation (type check, vet, tests, build), auto-deploy frontend to Netlify, auto-deploy API to Fly.io
 
 ## Local Development
 
 ### Prerequisites
 
 - Node.js >= 22.12.0
-- Go >= 1.26
+- Go >= 1.26.1
 - A [Google Gemini API key](https://aistudio.google.com/apikey) (free tier)
 
 ### Frontend
@@ -57,7 +57,7 @@ npm run dev                 # http://localhost:4321
 ```bash
 cd api
 cp .env.example .env       # Set GEMINI_API_KEY
-go run ./cmd/server         # http://localhost:8080
+make dev                    # copies content into internal/chat/embedded/, then runs http://localhost:8080
 ```
 
 ### Both together
@@ -125,7 +125,7 @@ Set `featured: true` for large cards on the main page, `false` for the compact g
 feature/*  ──PR──►  main  ──auto-deploy──►  production
 ```
 
-No `develop` branch. PRs to `main` trigger CI checks; merges trigger production deploys. Preview URLs generated on PRs via Netlify.
+No `develop` branch. PRs to `main` trigger CI checks; merges trigger production deploys. Netlify's PR preview checks currently report failures (Issue #34).
 
 ## License
 

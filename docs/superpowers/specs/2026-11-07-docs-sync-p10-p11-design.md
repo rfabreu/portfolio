@@ -17,7 +17,7 @@
 | Fact | Source |
 |---|---|
 | `main` is at `9010b48` (PR #38). P10 Phase 1 (#32), og follow-up (#35), About copy (#36), and Contact copy (#38) are merged. | `git log`, GitHub PR list |
-| Open PRs: none. Open issues: #11, #14, #30, #34, #37, #39. | GitHub issues API |
+| Open PRs at verification time: none (this PR was opened afterwards). Open issues: #11, #14, #30, #34, #37, #39. | GitHub issues and pulls API |
 | `deploy-api.yml` triggers on `api/**`, `frontend/src/content/resume/**`, and `frontend/src/content/projects/**`. `deploy-frontend.yml` triggers on `frontend/**`. | workflow files |
 | `ci.yml` runs three jobs on every PR to `main`: Frontend (`astro check`, build, Vitest), Frontend E2E (build, resume PDF, Playwright), API (`make sync-content`, `go vet`, `go test`, `go build`). | `ci.yml` |
 | `main` is protected. Required status checks: `Frontend` and `API` (not `Frontend E2E`). Enforcement level: `non_admins`. | GitHub branches API |
@@ -45,23 +45,25 @@
 
 ### `CLAUDE.md`
 - **Frontend Architecture:** add `resume.astro` to Pages and `ThemeToggle.tsx` to Islands.
-- **Deployment:** list the three API trigger paths and note that a resume or projects content change deploys both frontend and API. Describe all three CI jobs. Record the branch-protection facts and the known-failing Netlify checks (#34).
-- **Phase 2 Status:** update the P10 entry (done: #32, #35, #36, #38; open: Freckles credit, resume headline via P11, chatbot, analytics events, page order, repo description) and add P11 (#37).
+- **Deployment:** list the three API trigger paths and note that a resume or projects content change deploys both frontend and API. Describe all three CI jobs. Record the branch-protection facts (and that the other settings are not readable) and the known-failing Netlify checks (#34). Go requirement stated as `1.26.1+`, matching `go.mod`.
+- **Phase 2 Status:** update the P10 entry (done: #32, #35, #36, #38; open: Freckles credit, resume headline via P11, optional contact fields (deferred), chatbot, chat widget greeting, analytics events, page order, repo description) and add P11 (#37).
 - **Docs Workflow:** every change follows spec, plan, branch, PR.
 - **New "Canonical Facts" section:** production URL, LinkedIn URL, and the note that `rafaelabreu.dev` references in `profile.md` and `projects/portfolio.md` are known mismatches awaiting correction.
 - **Positioning Constraints:** note that the Freckles Design attribution is owner-confirmed as accurate.
 - **New "Working Rules" section:** the never-assume rule.
 
 ### `docs/phase2-roadmap.md`
-- **P10 section:** rewrite Status to match section 2; mark the Services section as dropped and why; contact fields as deferred; resume headline as delivered through P11.
-- **P11 section (new):** summary, scope, and impact notes taken from issue #37, plus the two URL corrections decided on 2026-11-07.
-- **Dependency Map:** add P11; replace "All features are independent" with an accurate statement.
-- **V1 Cleanup:** replace the stale Dependabot bullet with a pointer to #39; mark GitHub Pages as already disabled.
+- **Priority Order:** replace "each is independent" with a statement that covers P10 and P11.
+- **P10 section:** rewrite Status (checked against `main`, Issue #30 and owner decisions); mark the Services section as dropped and why; contact fields as deferred; resume headline as delivered through P11; add the `projects/portfolio.md` `demo` fix (no issue or PR yet) and the chat widget greeting.
+- **P11 section (new):** summary, scope, constraints, and impact notes taken from issue #37, plus the two URL corrections decided on 2026-11-07.
+- **Dependency Map:** add P11 with a consistent label; bring the P10 row up to date.
+- **V1 Cleanup:** replace the stale Dependabot bullet with accurate wording and a pointer to #39; mark GitHub Pages as already disabled; adjust the intro to say some items are resolved.
 
 ### `README.md`
-- Go prerequisite: `>= 1.26`.
-- CI/CD table: correct the `deploy-api.yml` trigger and name the `frontend/**` trigger.
+- Go prerequisite: `>= 1.26.1` (the `go` directive in `go.mod`).
+- Tech table and CI/CD table: CI is not path-filtered (only the deploys are); correct the `deploy-api.yml` trigger and name the `frontend/**` trigger.
 - Required GitHub Secrets: remove `GEMINI_API_KEY` (no workflow reads it) and add one line saying it is an API runtime variable, not read by any workflow.
+- Stale statements in the same file: the island list (five islands, not two), "lint" (CI runs `astro check` and `go vet`), the API quick start (use `make dev`, because `internal/chat/embedded/` is gitignored and `go:embed` needs it), and "Preview URLs generated on PRs via Netlify" (the preview checks currently fail, #34).
 
 ---
 
@@ -79,7 +81,8 @@
 
 - Where `GEMINI_API_KEY` is stored (GitHub or Fly.io secret): not verifiable from the repo or API; owner to confirm with `fly secrets list` (names only).
 - The cause of the Netlify preview failures: requires the Netlify deploy log.
-- Whether the pending Freckles and `portfolio.md` `demo` URL fixes ship in one projects-content PR (they deploy frontend and API together).
+- The Freckles credit and the `portfolio.md` `demo` fix have no issue or PR yet. Whether they ship in one projects-content PR (they deploy frontend and API together) is for the owner to decide.
+- Local verification: `CLAUDE.md` asks for a local `npm run build` before merge, which this environment cannot run (no package installs). CI runs the build and tests on the PR head; an owner waiver is requested for this docs-only PR.
 
 ---
 
