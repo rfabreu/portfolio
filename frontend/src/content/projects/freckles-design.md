@@ -10,6 +10,8 @@ github: "https://github.com/rfabreu/frecklesDesign"
 demo: "https://frecklesdesign.ca/"
 ---
 
+**Built by <a href="https://orangecatlabs.ca" target="_blank" rel="noopener noreferrer" class="oc-link">OrangeCat Labs</a>**
+
 ## Overview
 
 A web platform developed in partnership with fine artist and graphic designer Carla Antunes to promote her brand and showcase her art.

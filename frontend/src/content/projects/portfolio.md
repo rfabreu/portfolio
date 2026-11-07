@@ -7,7 +7,7 @@ category: "Full-Stack"
 featured: true
 order: 1
 github: "https://github.com/rfabreu/portfolio"
-demo: "https://rafaelabreu.dev"
+demo: "https://rafaelabreu.netlify.app"
 ---
 
 ## Overview
