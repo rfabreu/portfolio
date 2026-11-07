@@ -40,7 +40,7 @@ portfolio/
 ### Prerequisites
 
 - Node.js >= 22.12.0
-- Go >= 1.22
+- Go >= 1.26
 - A [Google Gemini API key](https://aistudio.google.com/apikey) (free tier)
 
 ### Frontend
@@ -104,9 +104,9 @@ Set `featured: true` for large cards on the main page, `false` for the compact g
 
 | Workflow | Trigger | Action |
 |----------|---------|--------|
-| `ci.yml` | PR to `main` | Lint, test, build (frontend + API) |
-| `deploy-frontend.yml` | Push to `main` (frontend changes) | Build Astro, deploy to Netlify |
-| `deploy-api.yml` | Push to `main` (API changes) | Test, build Docker, deploy to Fly.io |
+| `ci.yml` | PR to `main` | Frontend (type check, build, unit tests), Frontend E2E, API (vet, test, build) |
+| `deploy-frontend.yml` | Push to `main` (`frontend/**` changes) | Build Astro, generate the resume PDF, deploy to Netlify |
+| `deploy-api.yml` | Push to `main` (`api/**`, resume or projects content changes) | Test, build Docker, deploy to Fly.io |
 
 ### Required GitHub Secrets
 
@@ -116,7 +116,8 @@ Set `featured: true` for large cards on the main page, `false` for the compact g
 | `NETLIFY_SITE_ID` | Target Netlify site |
 | `FLY_API_TOKEN` | Fly.io deploy authentication |
 | `PUBLIC_API_URL` | Go API URL injected at build time |
-| `GEMINI_API_KEY` | Google Gemini API for chatbot |
+
+`GEMINI_API_KEY` and the other API variables in `api/.env.example` are read by the API at runtime; no workflow uses them.
 
 ## Branching Strategy
 

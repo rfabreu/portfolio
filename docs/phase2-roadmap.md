@@ -173,11 +173,17 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 
 **Why:** The site is the most visible asset for the studio. Its first screen, calls to action, and contact path should send business to https://orangecatlabs.ca instead of recruiting an employee.
 
-**Status:**
-- Phase 1: positioning, CTAs, nav, footer credit, SEO and social tags — ✅ Done (PR #32)
-- Phase 2: services section, business-inquiry contact form, Freckles Design attribution, resume headline alignment — planned
-- Phase 3: chatbot grounding (design spec first), analytics events, section order — planned
-- Follow-ups: absolute `og:image` and `og:url`, GitHub repo description
+**Status** (verified against `main` on 2026-11-07):
+- Phase 1: positioning, CTAs, nav, footer credit, SEO and social tags — ✅ Done (PR #32); absolute `og:image` and `og:url` — ✅ Done (PR #35)
+- Phase 2:
+  - About copy in founder voice with one OrangeCat Labs link — ✅ Done (PR #36)
+  - Contact section copy for business inquiries — ✅ Done (PR #38, copy only)
+  - Services section — dropped: the studio's own site covers services, and the hero, nav, and footer already link to it
+  - Contact form fields (company, project type; never a budget field) — deferred, undecided
+  - Freckles Design case study credits OrangeCat Labs — planned (the owner confirmed the credit is accurate)
+  - Resume headline alignment — planned, delivered through P11 (Issue #37)
+- Phase 3: chatbot grounding (design spec first), analytics events (only `chat-opened` and `game-started` exist today), page section order — planned
+- Follow-ups: GitHub repo description (repo settings, owner)
 
 **Constraints:**
 - No budget or pricing language anywhere (copy, form fields, chatbot)
@@ -186,6 +192,24 @@ Features are ordered by impact and dependency. Each is independent and can be bu
 - Contact paths remain the Netlify form and LinkedIn; no public email
 
 See Issue #30 for the full checklist.
+
+---
+
+### P11: Resume for Executive and Technical Leadership Audiences 📋 Planned (Issue #37)
+
+**What:** Rework the resume content (`frontend/src/content/resume/profile.md`) so it reads as credible to C-level, VP, and senior technical audiences, with business framing (scope, outcomes, risk, scale) alongside the technical depth.
+
+**Why:** The resume is the secondary link behind the OrangeCat Labs call to action. Its headline and summary should match the co-founder voice the rest of the site now has.
+
+**Scope** (see Issue #37 for the full checklist):
+- Decide the target audiences and the headline title; rewrite the summary in executive voice
+- Audit every bullet for a factual result or scale figure; metrics must come from Rafael, none invented
+- Decide how OrangeCat Labs appears in the work history
+- Reconcile the Red Hat certification wording with the About section
+- Correct `links.linkedin` to `https://linkedin.com/in/rafael-a-gomes` and `links.portfolio` to `https://rafaelabreu.netlify.app` (both owner-confirmed 2026-11-07)
+- Regenerate the PDF and check the modal and `/resume` page
+
+**Impact:** `profile.md` feeds the resume modal, the `/resume` page, the PDF, and the chatbot's grounding. Merging a change under `frontend/src/content/resume/**` deploys both the frontend and the API.
 
 ---
 
@@ -202,14 +226,15 @@ P7 (Theme Toggle)      — independent, CSS + React island
 P8 (Testimonials)      — architecture done; section hidden until testimonials are collected
 P9 (Resume Feature)    — independent, replaces broken Resume button
 P10 (OrangeCat Labs)   — Phase 1 done; Phase 2 and 3 build on it (chatbot work needs a spec first)
+P11 (Resume Positioning) — builds on P10; delivers P10's resume headline item
 ```
 
-All features are independent. Recommended order follows priority numbering, but any can be built at any time.
+P1–P9 are independent. P10 and P11 are sequenced as described above. Recommended order follows priority numbering.
 
 ## V1 Cleanup (Optional)
 
 Minor improvements to the current V1 that can be addressed alongside Phase 2 work:
 
-- **Dependabot alerts** — GitHub reports 88 vulnerabilities on the old CRA dependencies at root level. These are from the legacy `node_modules/` and `package.json` that are no longer used. Consider removing old root-level CRA files (`src/`, `public/`, `package.json`, `postcss.config.js`, `tailwind.config.js`) once the new frontend is stable.
-- **GitHub Pages** — the `pages-build-deployment` workflow fails because we use Netlify, not GitHub Pages. Consider disabling GitHub Pages in repo settings.
+- **Dependabot alerts** — the 88 alerts on the legacy CRA dependencies were removed together with the CRA files (PR #10). Alerts on the current frontend dependencies are triaged in Issue #39.
+- **GitHub Pages** — disabled in repo settings (`has_pages` is false, checked 2026-11-07); nothing further to do.
 - **go.sum** — the Go API has no external dependencies yet, so no `go.sum` exists. CI cache warnings about missing `go.sum` are harmless but will resolve once an external dependency is added.
