@@ -80,7 +80,7 @@ Both resume surfaces read the URL from `profile.md`; the attribute is tied to th
 ### Intentionally untracked
 - GitHub and live-demo links.
 - Third-party LinkedIn links in `TestimonialCard.astro` (section is hidden; those are the testimonial authors' profiles, not Rafael's).
-- `#contact` anchors (Services card, chat widget). Internal navigation, covered by pageviews.
+- `#contact` anchors (Services card, chat widget). Internal navigation, covered by pageviews. **Superseded 2026-11-18:** now tracked as `brief-cta-click` (`2026-11-18-track-brief-cta-design.md`).
 
 ---
 
@@ -133,6 +133,6 @@ Not verifiable here: production analytics. The owner must open the Umami dashboa
 2. **Same-tab LinkedIn links on `/resume`.** The two LinkedIn anchors in `resume.astro` have no `target="_blank"`, so Umami intercepts the click and navigates after the event request settles (a short delay; none if Umami is blocked). Adding `target="_blank"` would avoid it but is a visible behaviour change, so it is not done here. Decide whether the delay is acceptable.
 3. **`/success` over-counting.** The event fires on every load of `/success`, including refreshes and direct visits. No de-duplication (e.g. `sessionStorage`) is added; compare against Netlify Forms submissions for ground truth.
 4. **Undercounting.** Visitors using an ad/tracker blocker send nothing, so counts are a lower bound.
-5. **Services "Discuss a project →" link** points to `#contact`, not `orangecatlabs.ca`, so it is untracked. Say if an internal-CTA event is wanted.
+5. **Services "Discuss a project →" link** points to `#contact`, not `orangecatlabs.ca`, so it is untracked. Say if an internal-CTA event is wanted. **Resolved 2026-11-18:** `brief-cta-click`.
 6. **Testimonial and GitHub links** are untracked by design (section 3). Say if either should be added.
 7. **Deploy previews and local test traffic report to the production Umami site.** Previews are production builds without `data-domains`, so clicks on a preview (including reviewing this PR's preview) create events tagged with the `*.netlify.app` hostname. **Resolved in orchestrator review:** both layouts' script tags now set `data-domains="rafaelabreu.netlify.app"`, so the tracker only reports on the production hostname (`site` in `astro.config.mjs`). Previews, `localhost` and any other host load the script but send nothing. Every page with a tracked element uses `BaseLayout` or `ProjectLayout`, so coverage is unchanged in production. Consequence: events can no longer be checked on a deploy preview; verify them in production after deploy (item 1).

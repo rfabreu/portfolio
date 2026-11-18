@@ -8,6 +8,7 @@ import Nav from '../src/components/Nav.astro';
 import Footer from '../src/components/Footer.astro';
 import About from '../src/components/About.astro';
 import Contact from '../src/components/Contact.astro';
+import Services from '../src/components/Services.astro';
 import ProjectLayout from '../src/layouts/ProjectLayout.astro';
 
 const SRC = path.resolve(__dirname, '../src');
@@ -328,8 +329,85 @@ describe('P10 Phase 3: source-level guards', () => {
     }
 
     expect([...names].sort()).toEqual(
-      ['chat-opened', 'contact-form-submit', 'contact-form-success', 'game-started', 'view-projects-click'].sort(),
+      ['brief-cta-click', 'chat-opened', 'contact-form-submit', 'contact-form-success', 'game-started', 'view-projects-click'].sort(),
     );
+  });
+});
+
+describe('brief-cta-click: in-page links to the contact form', () => {
+  const read = (file: string) => fs.readFileSync(path.join(SRC, file), 'utf-8');
+  // The script block that owns the hook, so unrelated scripts in the same file (e.g. the resume modal opener) don't count.
+  const scriptOf = (file: string, location: string) =>
+    [...read(file).matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]).find((body) => body.includes(`"${location}"`)) ?? '';
+
+  /** Astro links carry a `data-brief-cta` hook and a listener that never prevents default. */
+  function expectListener(file: string, location: string) {
+    const script = scriptOf(file, location);
+    expect(script, `${file} listener selector`).toContain(`[data-brief-cta="${location}"]`);
+    expect(script, `${file} track call`).toMatch(
+      new RegExp(`typeof umami !== 'undefined'\\) umami\\.track\\('brief-cta-click', \\{ location: '${location}' \\}\\)`),
+    );
+    expect(script, `${file} must not delay navigation`).not.toContain('preventDefault');
+  }
+
+  it('Services "Submit a brief" link is tracked as services', async () => {
+    const container = await createContainerWithReact();
+    const html = await container.renderToString(Services);
+    const [tag, ...rest] = anchorsWithHref(html, '#contact');
+
+    expect(rest).toHaveLength(0);
+    expect(attr(tag, 'data-brief-cta')).toBe('services');
+    expect(tag).not.toContain('data-umami-event');
+    expectListener('components/Services.astro', 'services');
+  });
+
+  it('desktop nav Contact is tracked as nav; no other nav link carries the hook', async () => {
+    const container = await createContainerWithReact();
+    const html = await container.renderToString(Nav);
+    const hooked = anchorTags(html).filter((tag) => tag.includes('data-brief-cta'));
+    const [tag, ...rest] = anchorsWithHref(html, '/#contact');
+
+    expect(rest).toHaveLength(0);
+    expect(hooked).toEqual([tag]);
+    expect(attr(tag, 'data-brief-cta')).toBe('nav');
+    expect(tag).not.toContain('data-umami-event');
+    expectListener('components/Nav.astro', 'nav');
+  });
+
+  it('resume modal and resume page footer "contact form" links are tracked', () => {
+    for (const [file, location] of [
+      ['components/ResumeModal.astro', 'resume-modal'],
+      ['pages/resume.astro', 'resume-page-footer'],
+    ]) {
+      const [tag, ...rest] = anchorsWithHref(read(file), '/#contact');
+      expect(rest).toHaveLength(0);
+      expect(attr(tag, 'data-brief-cta')).toBe(location);
+      expect(tag).not.toContain('data-umami-event');
+      expectListener(file, location);
+    }
+  });
+
+  it('ChatWidget "Leave a message instead" link tracks chat-error and still closes the chat', () => {
+    const [tag, ...rest] = anchorTags(read('islands/ChatWidget.tsx')).filter((t) => t.includes('href="#contact"'));
+
+    expect(rest).toHaveLength(0);
+    expect(tag).toContain('onClick={trackBriefFromChat}');
+    expect(read('islands/ChatWidget.tsx')).toMatch(
+      /function trackBriefFromChat\(\) \{\s*if \(typeof umami !== 'undefined'\) umami\.track\('brief-cta-click', \{ location: 'chat-error' \}\);\s*setIsOpen\(false\);\s*\}/,
+    );
+  });
+
+  it('every in-page link to #contact in src is a known tracked placement', () => {
+    const found = sourceFiles().flatMap((file) =>
+      anchorTags(fs.readFileSync(file, 'utf-8'))
+        .filter((tag) => /href=["']?\/?#contact/.test(tag))
+        .map((tag) => path.relative(SRC, file)),
+    );
+    // Nav's `/#contact` lives in a data array, and MobileNav reuses it; both are covered above and below.
+    expect(found.sort()).toEqual(
+      ['components/ResumeModal.astro', 'components/Services.astro', 'islands/ChatWidget.tsx', 'pages/resume.astro'].sort(),
+    );
+    expect(read('components/Nav.astro').match(/href: '\/?#contact'/g)).toHaveLength(1);
   });
 });
 

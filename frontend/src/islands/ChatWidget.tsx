@@ -14,6 +14,11 @@ export default function ChatWidget() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  function trackBriefFromChat() {
+    if (typeof umami !== 'undefined') umami.track('brief-cta-click', { location: 'chat-error' });
+    setIsOpen(false);
+  }
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -114,7 +119,7 @@ export default function ChatWidget() {
             {error && (
               <div className="text-red-400 text-xs text-center">
                 {error}{' '}
-                <a href="#contact" onClick={() => setIsOpen(false)} className="underline">
+                <a href="#contact" onClick={trackBriefFromChat} className="underline">
                   Leave a message instead
                 </a>
               </div>
