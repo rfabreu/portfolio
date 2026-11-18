@@ -10,8 +10,25 @@ updates:
     open-pull-requests-limit: 5
     commit-message:
       prefix: "chore(deps)"
+    # TypeScript 7 is not supported by `@astrojs/check` (peer range
+    # `^5.0.0 || ^6.0.0`). Revisit when an `@astrojs/check` release lists ^7 in
+    # its typescript peer range. `versions` (not `update-types`) lets 6.x through.
+    ignore:
+      - dependency-name: typescript
+        versions:
+          - ">=7.0.0"
+    # Both packages must share one version, so this group has no
+    # `update-types` and also takes majors. `npm-minor-patch` excludes them
+    # explicitly so the result does not depend on group order.
     groups:
+      playwright:
+        patterns:
+          - playwright
+          - "@playwright/test"
       npm-minor-patch:
+        exclude-patterns:
+          - playwright
+          - "@playwright/test"
         update-types:
           - minor
           - patch
@@ -36,8 +53,10 @@ updates:
     open-pull-requests-limit: 5
     commit-message:
       prefix: "chore(ci)"
+    # Majors are grouped too: action bumps touch `.github/` only and never deploy.
     groups:
-      actions-minor-patch:
+      actions:
         update-types:
+          - major
           - minor
           - patch
