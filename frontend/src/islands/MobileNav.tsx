@@ -54,6 +54,8 @@ export default function MobileNav({ navItems, isResumePage }: Props) {
               href="https://orangecatlabs.ca"
               target="_blank"
               rel="noopener noreferrer"
+              data-umami-event="orangecat-click"
+              data-umami-event-location="mobile-nav"
               onClick={() => setIsOpen(false)}
               className="px-6 py-2.5 bg-accent-indigo rounded-lg text-white text-sm font-semibold"
             >

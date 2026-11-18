@@ -19,14 +19,14 @@ if (!resume) throw new Error('Resume entry not found at frontend/src/content/res
       <p class="resume-page-title">{resume.data.title}</p>
       <p class="resume-page-location">{resume.data.location}</p>
       <p class="resume-page-links">
-        <a href={resume.data.links.linkedin}>LinkedIn</a>
+        <a href={resume.data.links.linkedin} data-umami-event="linkedin-click" data-umami-event-location="resume-page-header">LinkedIn</a>
         {resume.data.links.github && <> · <a href={resume.data.links.github}>GitHub</a></>}
         {resume.data.links.portfolio && <> · <a href={resume.data.links.portfolio}>Portfolio</a></>}
       </p>
     </header>
     <ResumeBody resume={resume} />
     <footer class="resume-page-footer">
-      <p>Contact via <a href="/#contact">contact form</a> or <a href={resume.data.links.linkedin}>LinkedIn</a>.</p>
+      <p>Contact via <a href="/#contact">contact form</a> or <a href={resume.data.links.linkedin} data-umami-event="linkedin-click" data-umami-event-location="resume-page-footer">LinkedIn</a>.</p>
     </footer>
   </main>
 </BaseLayout>

@@ -41,6 +41,8 @@ const ORANGECAT_LOGO = '/images/orangecat-labs-mark-1.svg';
         href={ORANGECAT_URL}
         target="_blank"
         rel="noopener noreferrer"
+        data-umami-event="orangecat-click"
+        data-umami-event-location="hero"
         class="inline-flex items-center gap-2.5 px-6 py-2.5 bg-accent-indigo rounded-btn text-white text-sm font-semibold hover:bg-accent-indigo/90 transition-colors duration-200"
       >
         <img
@@ -56,6 +58,7 @@ const ORANGECAT_LOGO = '/images/orangecat-labs-mark-1.svg';
       </a>
       <a
         href="#projects"
+        data-view-projects
         class="px-6 py-2.5 border border-surface-border rounded-btn text-text-secondary text-sm font-medium hover:border-accent-indigo/40 hover:text-accent-indigo transition-colors duration-200"
       >
         View Projects
@@ -63,3 +66,9 @@ const ORANGECAT_LOGO = '/images/orangecat-labs-mark-1.svg';
     </div>
   </div>
 </section>
+
+<script>
+  document.querySelector('[data-view-projects]')?.addEventListener('click', () => {
+    if (typeof umami !== 'undefined') umami.track('view-projects-click', { location: 'hero' });
+  });
+</script>

@@ -23,3 +23,10 @@ import Footer from '../components/Footer.astro';
   </main>
   <Footer />
 </BaseLayout>
+
+<script>
+  // Umami loads async, which delays `load`, so `umami` is defined by now when it loaded at all.
+  window.addEventListener('load', () => {
+    if (typeof umami !== 'undefined') umami.track('contact-form-success');
+  });
+</script>

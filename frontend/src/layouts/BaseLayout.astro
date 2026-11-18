@@ -48,7 +48,7 @@ const pageUrl = Astro.site ? toAbsoluteUrl(Astro.url.pathname, Astro.site) : und
         if (meta) meta.setAttribute('content', theme === 'light' ? '#F8F7F4' : '#050508');
       })();
     </script>
-    {import.meta.env.PROD && <script is:inline async src="https://cloud.umami.is/script.js" data-website-id="f17cb708-288b-471b-989f-d7115bfcbec4"></script>}
+    {import.meta.env.PROD && <script is:inline async src="https://cloud.umami.is/script.js" data-website-id="f17cb708-288b-471b-989f-d7115bfcbec4" data-domains="rafaelabreu.netlify.app"></script>}
   </head>
   <body>
     <slot />
