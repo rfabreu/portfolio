@@ -14,7 +14,7 @@ Goals:
 3. Track contact form attempts and successes so the funnel (visit → click / attempt → success) can be read from one dashboard.
 4. Send no personal data, change nothing visible (copy, layout, styling, targets), and break nothing when Umami is absent. The one behavioural difference is the same-tab LinkedIn links on `/resume` (open question 2).
 
-Non-goals: Playwright funnel E2E specs (separate follow-up PR), GitHub/demo outbound links, internal anchor links (`#contact`), new copy, new analytics vendors, changes to the Umami script tags.
+Non-goals: Playwright funnel E2E specs (separate follow-up PR), GitHub/demo outbound links, internal anchor links (`#contact`), new copy, new analytics vendors, other changes to the Umami script tags (the one exception, `data-domains`, is in open question 7).
 
 ---
 
@@ -135,4 +135,4 @@ Not verifiable here: production analytics. The owner must open the Umami dashboa
 4. **Undercounting.** Visitors using an ad/tracker blocker send nothing, so counts are a lower bound.
 5. **Services "Discuss a project →" link** points to `#contact`, not `orangecatlabs.ca`, so it is untracked. Say if an internal-CTA event is wanted.
 6. **Testimonial and GitHub links** are untracked by design (section 3). Say if either should be added.
-7. **Deploy previews and local test traffic report to the production Umami site.** Previews are production builds without `data-domains`, so clicks on a preview (including reviewing this PR's preview) create events tagged with the `*.netlify.app` hostname. Filter the dashboard on hostname `rafaelabreu.netlify.app`. Restricting reporting would mean adding `data-domains="rafaelabreu.netlify.app"` to both layouts' script tags; that is outside this PR's scope (script tags are listed as a non-goal), so it is left to the owner.
+7. **Deploy previews and local test traffic report to the production Umami site.** Previews are production builds without `data-domains`, so clicks on a preview (including reviewing this PR's preview) create events tagged with the `*.netlify.app` hostname. **Resolved in orchestrator review:** both layouts' script tags now set `data-domains="rafaelabreu.netlify.app"`, so the tracker only reports on the production hostname (`site` in `astro.config.mjs`). Previews, `localhost` and any other host load the script but send nothing. Every page with a tracked element uses `BaseLayout` or `ProjectLayout`, so coverage is unchanged in production. Consequence: events can no longer be checked on a deploy preview; verify them in production after deploy (item 1).

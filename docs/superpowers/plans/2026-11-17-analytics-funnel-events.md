@@ -39,6 +39,7 @@
 - [ ] **Step 2:** Add `data-umami-event="linkedin-click"` + `data-umami-event-location` to the five LinkedIn anchors (footer, contact, resume-modal, resume-page-header, resume-page-footer).
 - [ ] **Step 3:** Add optional `slug` prop to `ProjectLayout.astro`, pass `slug={project.id}` from `[slug].astro`, render `data-umami-event-project={slug}` on the project CTA.
 - [ ] **Step 4:** Do not touch classes, text, `href`, `target`, `rel` or `aria-label`.
+- [ ] **Step 5 (added in orchestrator review):** Add `data-domains="rafaelabreu.netlify.app"` to the Umami script tags in `BaseLayout.astro` and `ProjectLayout.astro` so previews and local builds do not report to production (spec open question 7).
 
 ---
 
