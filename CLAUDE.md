@@ -3,7 +3,7 @@
 ## Project Structure
 
 ```
-frontend/          Astro 6 site (static output, islands architecture)
+frontend/          Astro 7 site (static output, islands architecture)
 api/               Go API server (chat + game endpoints)
 docs/              Roadmap, design specs, implementation plans
 .github/           CI + deploy workflows, dependabot.yml, scripts/ (npm audit gate)
@@ -21,7 +21,7 @@ npm run dev          # dev server on :4321
 npm run build        # static build → frontend/dist/
 npx astro check      # type checking
 ```
-Requires: Node >= 22.12.0
+Requires: Node >= 22.23.4 (Astro 7.4's `engines`; CI and the Netlify deploy workflow use Node 22)
 
 Frontend env var: `PUBLIC_API_URL` (injected at build, see `frontend/.env.example`)
 
@@ -57,10 +57,10 @@ Requires: Go 1.26.1+
 
 ## Deployment
 
-- **Frontend:** Netlify (static deploy via `nwtgck/actions-netlify@v3`). Triggered on push to `main` when `frontend/**` changes.
+- **Frontend:** Netlify (static deploy via `nwtgck/actions-netlify@v4`). Triggered on push to `main` when `frontend/**` changes.
 - **API:** Fly.io (Docker). Triggered on push to `main` when `api/**`, `frontend/src/content/resume/**`, or `frontend/src/content/projects/**` changes (the chatbot embeds that content). A resume or project content change therefore deploys both the frontend and the API.
 - **CI:** Three jobs on every PR to `main`: `Frontend` (`astro check`, build, Vitest, then the npm audit gate), `Frontend E2E` (build, resume PDF, Playwright) and `API` (`make sync-content`, `go vet`, `go test`, `go build`, then pinned `govulncheck`). The audit gate runs its own unit tests, then `npm audit --json` checked by `.github/scripts/npm-audit-gate.mjs`: high and critical advisories fail unless allowlisted there with a reason and an expiry date. Currently allowlisted: GHSA-fc5q-39xc-vjpf (picomatch ReDoS; no patched release, 4.0.7 was still the latest on npm, checked 2026-11-18), until 2027-01-31. An expired entry fails the gate. `govulncheck` is pinned to `v1.9.0` in `ci.yml`; bump it by hand.
-- **Playwright runner pin:** the `Frontend E2E` job and the `Deploy to Netlify` job (`deploy-frontend.yml`) run on `ubuntu-24.04`, not `ubuntu-latest` (Ubuntu 26.04), because the locked Playwright 1.59.1 cannot install Chromium there (PR #48). Remove both pins after upgrading Playwright to 1.61 or later.
+- **Playwright runner pin:** the `Frontend E2E` job and the `Deploy to Netlify` job (`deploy-frontend.yml`) run on `ubuntu-24.04`, not `ubuntu-latest` (Ubuntu 26.04), because Playwright 1.59.1 could not install Chromium there (PR #48). Playwright is now 1.65.1, but the pins are still in place until a follow-up confirms Chromium installs on 26.04.
 - **Dependency updates:** `.github/dependabot.yml` opens weekly PRs for `frontend/` (npm), `api/` (Go modules) and GitHub Actions. npm and Go group minor and patch updates; GitHub Actions group major, minor and patch (merging an action bump does not deploy, but `nwtgck/actions-netlify` only runs in `deploy-frontend.yml`, so CI does not exercise a bump of it). `playwright` and `@playwright/test` form their own npm group, excluded from `npm-minor-patch`, so they always move together. `typescript` `>=7.0.0` is ignored because `@astrojs/check` peers `typescript ^5.0.0 || ^6.0.0`; revisit when an `@astrojs/check` release includes `^7`. Every `frontend/**` merge is a production deploy, so when several npm PRs conflict on `package-lock.json`, combine them into one PR. Nothing auto-merges; each PR needs CI and owner approval.
 - **Analytics:** Umami loads in production builds only, with `data-domains="rafaelabreu.netlify.app"`, so previews and localhost report nothing. Events: `chat-opened`, `game-started`, `orangecat-click`, `linkedin-click`, `view-projects-click`, `contact-form-submit`, `contact-form-success`. New OrangeCat Labs or Rafael LinkedIn links must carry `data-umami-event` (enforced by `frontend/tests/analytics-funnel-events.test.ts`). Catalogue: `docs/superpowers/specs/2026-11-17-analytics-funnel-events-design.md`.
 - **Branch protection (checked 2026-11-17):** `main` requires the `Frontend`, `API` and `Frontend E2E` checks, with strict mode (branch must be up to date) on. Admin enforcement is off, so the rules bind non-admins only. Force pushes and deletions are disallowed. Required reviews: the protection endpoint returns no review rule, but the dedicated `required_pull_request_reviews` endpoint returns 1 approving review, so the owner should confirm which applies.
@@ -86,7 +86,7 @@ Roadmap: `docs/phase2-roadmap.md`
 
 ## Known Follow-ups
 
-- Upgrade Playwright to 1.61 or later, confirm Chromium installs on Ubuntu 26.04, then remove the `ubuntu-24.04` pins in `ci.yml` and `deploy-frontend.yml`.
+- Playwright is now 1.65.1 (frontend deps batch). Confirm Chromium installs on Ubuntu 26.04, then remove the `ubuntu-24.04` pins in `ci.yml` and `deploy-frontend.yml`.
 - Review the GHSA-fc5q-39xc-vjpf allowlist entry before 2027-01-31: drop it if a patched picomatch exists, otherwise renew it with a fresh assessment.
 
 ## Docs Workflow
