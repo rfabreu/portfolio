@@ -10,7 +10,7 @@ github: "https://github.com/rfabreu/frecklesDesign"
 demo: "https://frecklesdesign.ca/"
 ---
 
-**Built by <a href="https://orangecatlabs.ca" target="_blank" rel="noopener noreferrer" class="oc-link">OrangeCat Labs</a>**
+**Built by <a href="https://orangecatlabs.ca" target="_blank" rel="noopener noreferrer" data-umami-event="orangecat-click" data-umami-event-location="freckles-credit" class="oc-link">OrangeCat Labs</a>**
 
 ## Overview
 
