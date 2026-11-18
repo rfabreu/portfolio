@@ -17,15 +17,18 @@ updates:
       - dependency-name: typescript
         versions:
           - ">=7.0.0"
-    # A dependency joins the first group it matches, so `playwright` stays
-    # above `npm-minor-patch`. Both packages must share one version, so this
-    # group has no `update-types` and also takes majors.
+    # Both packages must share one version, so this group has no
+    # `update-types` and also takes majors. `npm-minor-patch` excludes them
+    # explicitly so the result does not depend on group order.
     groups:
       playwright:
         patterns:
           - playwright
           - "@playwright/test"
       npm-minor-patch:
+        exclude-patterns:
+          - playwright
+          - "@playwright/test"
         update-types:
           - minor
           - patch

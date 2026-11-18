@@ -21,5 +21,5 @@
 ## Task 2: Verify and open the PR
 
 - [x] **Step 1:** Validate YAML against the SchemaStore dependabot schema.
-- [ ] **Step 2:** Adversarial review of the diff by a reviewer subagent; fix findings.
+- [x] **Step 2:** Adversarial review of the diff by a reviewer subagent (Opus); findings applied: `exclude-patterns` on `npm-minor-patch`, corrected spec claims, deploy-only action risk recorded.
 - [ ] **Step 3:** Push the branch, open a PR to `main`, check `gh pr checks`.
