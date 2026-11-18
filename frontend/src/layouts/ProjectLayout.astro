@@ -12,9 +12,10 @@ interface Props {
   category: string;
   github?: string;
   demo?: string;
+  slug?: string;
 }
 
-const { title, description, image, tags, category, github, demo } = Astro.props;
+const { title, description, image, tags, category, github, demo, slug } = Astro.props;
 
 const tagColorClasses = [
   'bg-accent-indigo/10 border-accent-indigo/25 text-accent-indigo-light',
@@ -95,6 +96,9 @@ const tagColorClasses = [
           href="https://orangecatlabs.ca"
           target="_blank"
           rel="noopener noreferrer"
+          data-umami-event="orangecat-click"
+          data-umami-event-location="project-cta"
+          data-umami-event-project={slug}
           class="shrink-0 px-6 py-3 bg-accent-indigo rounded-btn text-white text-sm font-semibold hover:bg-accent-indigo/90 transition-colors"
         >
           Start a Project with Us →

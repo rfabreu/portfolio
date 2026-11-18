@@ -80,12 +80,12 @@ const ORANGECAT_URL = 'https://orangecatlabs.ca';
         </div>
 
         <div class="space-y-3 pt-2">
-          <a href={ORANGECAT_URL} target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 text-text-primary text-sm hover:text-accent-indigo transition-colors group">
+          <a href={ORANGECAT_URL} target="_blank" rel="noopener noreferrer" data-umami-event="orangecat-click" data-umami-event-location="contact" class="flex items-center gap-3 text-text-primary text-sm hover:text-accent-indigo transition-colors group">
             <span class="font-mono text-accent-indigo group-hover:translate-x-0.5 transition-transform">→</span>
             <span>orangecatlabs.ca</span>
             <span class="text-text-muted text-xs">(Studio Site)</span>
           </a>
-          <a href="https://linkedin.com/in/rafael-a-gomes" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 text-text-secondary text-sm hover:text-accent-purple transition-colors group">
+          <a href="https://linkedin.com/in/rafael-a-gomes" target="_blank" rel="noopener noreferrer" data-umami-event="linkedin-click" data-umami-event-location="contact" class="flex items-center gap-3 text-text-secondary text-sm hover:text-accent-purple transition-colors group">
             <span class="font-mono text-accent-purple/60 group-hover:text-accent-purple">→</span>
             <span>linkedin.com/in/rafael-a-gomes</span>
           </a>
@@ -103,3 +103,10 @@ const ORANGECAT_URL = 'https://orangecatlabs.ca';
     </div>
   </div>
 </section>
+
+<script>
+  // `submit` only fires once native validation passes, so this counts real attempts.
+  document.querySelector('form[name="contact"]')?.addEventListener('submit', () => {
+    if (typeof umami !== 'undefined') umami.track('contact-form-submit');
+  });
+</script>
