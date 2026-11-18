@@ -17,14 +17,14 @@ const ORANGECAT_URL = 'https://orangecatlabs.ca';
 
         <div class="grid sm:grid-cols-2 gap-4">
           <div>
-            <label for="name" class="font-mono text-xs text-text-muted tracking-wider block mb-2">NAME *</label>
+            <label for="name" class="font-mono text-xs text-text-muted tracking-wider block mb-2 uppercase field-required">Name</label>
             <input type="text" id="name" name="name" required
               class="w-full bg-surface border border-surface-border rounded-btn px-4 py-2.5 text-text-primary text-sm focus:border-accent-indigo/60 focus:ring-1 focus:ring-accent-indigo/30 outline-none transition-colors"
               placeholder="Your name" />
           </div>
 
           <div>
-            <label for="email" class="font-mono text-xs text-text-muted tracking-wider block mb-2">EMAIL *</label>
+            <label for="email" class="font-mono text-xs text-text-muted tracking-wider block mb-2 uppercase field-required">Email</label>
             <input type="email" id="email" name="email" required
               class="w-full bg-surface border border-surface-border rounded-btn px-4 py-2.5 text-text-primary text-sm focus:border-accent-indigo/60 focus:ring-1 focus:ring-accent-indigo/30 outline-none transition-colors"
               placeholder="your@company.com" />
@@ -32,7 +32,7 @@ const ORANGECAT_URL = 'https://orangecatlabs.ca';
         </div>
 
         <div>
-          <label for="project_type" class="font-mono text-xs text-text-muted tracking-wider block mb-2">PROJECT TYPE *</label>
+          <label for="project_type" class="font-mono text-xs text-text-muted tracking-wider block mb-2 uppercase field-required">Project type</label>
           <select id="project_type" name="project_type" required
             class="w-full bg-surface border border-surface-border rounded-btn px-4 py-2.5 text-text-primary text-sm focus:border-accent-indigo/60 focus:ring-1 focus:ring-accent-indigo/30 outline-none transition-colors">
             <option value="" disabled selected>Select project category...</option>
@@ -45,7 +45,7 @@ const ORANGECAT_URL = 'https://orangecatlabs.ca';
         </div>
 
         <div>
-          <label for="timeline" class="font-mono text-xs text-text-muted tracking-wider block mb-2">TARGET TIMELINE</label>
+          <label for="timeline" class="font-mono text-xs text-text-muted tracking-wider block mb-2 uppercase">Target timeline</label>
           <select id="timeline" name="timeline"
             class="w-full bg-surface border border-surface-border rounded-btn px-4 py-2.5 text-text-primary text-sm focus:border-accent-indigo/60 focus:ring-1 focus:ring-accent-indigo/30 outline-none transition-colors">
             <option value="Flexible">Flexible</option>
@@ -56,7 +56,7 @@ const ORANGECAT_URL = 'https://orangecatlabs.ca';
         </div>
 
         <div>
-          <label for="message" class="font-mono text-xs text-text-muted tracking-wider block mb-2">PROJECT BRIEF *</label>
+          <label for="message" class="font-mono text-xs text-text-muted tracking-wider block mb-2 uppercase field-required">Project brief</label>
           <textarea id="message" name="message" required rows="4"
             class="w-full bg-surface border border-surface-border rounded-btn px-4 py-3 text-text-primary text-sm focus:border-accent-indigo/60 focus:ring-1 focus:ring-accent-indigo/30 outline-none transition-colors resize-none"
             placeholder="Tell us about your project, current architecture, key goals, or challenges..."></textarea>

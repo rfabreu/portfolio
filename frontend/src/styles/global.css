@@ -146,6 +146,9 @@ html[data-theme="light"] .gradient-divider {
   transform: translateY(0);
 }
 
+/* Required marker drawn here, not in the label text: Netlify builds notification field names from label text. */
+.field-required::after { content: " *"; }
+
 /* ===== Resume ===== */
 
 /* Page (used standalone at /resume and as the print source for the PDF) */
