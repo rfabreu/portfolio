@@ -6,7 +6,7 @@
 
 ## 1. Overview & Goals
 
-The first Dependabot run produced eight open PRs (#51–#58, since then #54 has merged) plus one closed (#59). Three problems:
+The first Dependabot run produced eight open PRs (#51–#58; #51–#54, the four action PRs, have since merged) plus one closed (#59). Three problems:
 
 - **Action bumps arrive one PR per action.** Major bumps are not grouped, so #51–#54 were four separate PRs. They touch `.github/` only.
 - **TypeScript 7 PR (#59) cannot work.** `@astrojs/check` declares the peer range `typescript ^5.0.0 || ^6.0.0` (0.9.12, the latest, still does).
@@ -38,7 +38,7 @@ Related, and recorded in CLAUDE.md: when several npm PRs conflict on `frontend/p
 
 ## 5. Open Questions
 
-1. **Existing action PRs.** #51 (setup-go 6), #52 (setup-node 7) and #53 (actions-netlify 4) are single-dependency PRs. With majors grouped, the next run will likely open one `actions` PR that overlaps them. The options reference does not say whether Dependabot closes the singles; the owner may need to close duplicates by hand.
-2. **Deploy-only actions.** `nwtgck/actions-netlify` is used only in `deploy-frontend.yml`; no CI job runs it. A grouped major bump can pass all three required checks and still break the next production deploy. The owner decides whether to ignore majors of that action or review its bumps by reading the release notes.
+1. **Existing action PRs.** #51–#54 (setup-go 6, setup-node 7, actions-netlify 4, checkout 7) were merged one by one before this change, so there are no single-action PRs left to duplicate; the next grouped `actions` PR will only carry later bumps.
+2. **Deploy-only actions.** `nwtgck/actions-netlify` is used only in `deploy-frontend.yml`; no CI job runs it. A grouped major bump can pass all three required checks and still break the next production deploy; this has already happened in principle with `actions-netlify@v4` (#53), which first runs in the deploy that follows the combined frontend dependency PR. The owner decides whether to ignore majors of that action or review its bumps by reading the release notes.
 3. **Ignore semantics.** If a TypeScript 7 PR appears after the next run, the `versions` form was not honoured.
 4. **gomod** is intentionally unchanged (still minor and patch only).
