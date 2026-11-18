@@ -25,6 +25,12 @@ jobs:
       - run: npm run build
       - run: npm test
 
+      # Last so a failing audit does not hide the check/build/test results.
+      # Includes dev dependencies on purpose: the build and test toolchain
+      # runs on this runner and on Netlify's build machine.
+      - name: Audit npm dependencies
+        run: npm audit --audit-level=high
+
   frontend-e2e:
     name: Frontend E2E
     runs-on: ubuntu-latest
@@ -71,3 +77,8 @@ jobs:
       - run: go vet ./...
       - run: go test ./... -v
       - run: go build ./cmd/server
+
+      # Needs the embed directory from `make sync-content` above. Pinned to a
+      # released version, not @latest; bump it deliberately.
+      - name: Scan Go dependencies for known vulnerabilities
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...
