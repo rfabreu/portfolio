@@ -18,6 +18,6 @@
 
 ## Task 2: Verify and open the PR
 
-- [ ] **Step 1:** Validate workflow YAML; grep for leftover `ubuntu-24.04` / 1.59 references.
-- [ ] **Step 2:** Adversarial review of the diff by a reviewer subagent; apply findings.
-- [ ] **Step 3:** Push the branch, open a PR, read the `Frontend E2E` log (runner image, install, `build:pdf`, `test:e2e`), put the lines in the PR body.
+- [x] **Step 1:** Validate workflow YAML; grep for leftover `ubuntu-24.04` / 1.59 references.
+- [x] **Step 2:** Adversarial review of the diff by a reviewer subagent; apply findings.
+- [x] **Step 3:** Push the branch, open a PR, read the `Frontend E2E` log (runner image, install, `build:pdf`, `test:e2e`), put the lines in the PR body.
