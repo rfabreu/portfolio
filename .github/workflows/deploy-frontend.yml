@@ -43,7 +43,7 @@ jobs:
           test "$(stat -c%s dist/Rafael_Abreu_Resume.pdf)" -gt 10240
 
       - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v3
+        uses: nwtgck/actions-netlify@v4
         with:
           publish-dir: frontend/dist
           production-deploy: true
