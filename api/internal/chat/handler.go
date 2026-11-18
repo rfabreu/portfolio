@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"unicode/utf8"
+
+	"github.com/rfabreu/portfolio-api/internal/middleware"
 )
 
 const maxMessages = 20
@@ -109,6 +111,11 @@ func NewHandler(provider Provider) http.Handler {
 
 		response, err := provider.GenerateResponse(r.Context(), SystemPrompt(), req.Messages)
 		if err != nil {
+			var capErr *CapExceededError
+			if errors.As(err, &capErr) {
+				middleware.WriteJSONError(w, http.StatusServiceUnavailable, "chat is unavailable right now (daily limit reached)", capErr.RetryAfter)
+				return
+			}
 			log.Printf("Chat error: %v", err)
 			http.Error(w, `{"error":"failed to generate response"}`, http.StatusInternalServerError)
 			return
