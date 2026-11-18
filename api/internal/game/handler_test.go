@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/rfabreu/portfolio-api/internal/game"
@@ -137,5 +138,20 @@ func TestHandler_NegativeSessionValues(t *testing.T) {
 
 	if rec.Code != http.StatusBadRequest {
 		t.Errorf("expected 400, got %d", rec.Code)
+	}
+}
+
+func TestHandler_RejectsOversizedBody(t *testing.T) {
+	handler := game.NewHandler()
+
+	body := []byte(`{"board":["X","","","","","","","",""],"session":{"wins":0},"pad":"` + strings.Repeat("a", game.MaxBodyBytes) + `"}`)
+	req := httptest.NewRequest(http.MethodPost, "/api/game", bytes.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	rec := httptest.NewRecorder()
+
+	handler.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusRequestEntityTooLarge {
+		t.Errorf("expected 413, got %d: %s", rec.Code, rec.Body.String())
 	}
 }
