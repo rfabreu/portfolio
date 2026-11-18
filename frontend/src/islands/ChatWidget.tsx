@@ -5,6 +5,9 @@ interface Message {
   content: string;
 }
 
+// Must match MaxUserContentRunes in api/internal/chat/handler.go.
+const MAX_INPUT_LENGTH = 2000;
+
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -126,6 +129,7 @@ export default function ChatWidget() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              maxLength={MAX_INPUT_LENGTH}
               placeholder="Ask something..."
               className="flex-1 bg-surface border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent-indigo/50"
               disabled={isLoading}
