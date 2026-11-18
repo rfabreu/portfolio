@@ -26,10 +26,10 @@ One imperative event, `brief-cta-click`, with `location` ∈ `nav`, `mobile-nav`
 - [x] `npx vitest run` passes.
 
 ### Task 3: Verify
-- [ ] In `frontend/`: `npm ci`, `npx astro check`, `npm run build`, `npm test`, `npm run build:pdf && npm run test:e2e`.
-- [ ] Inspect `dist/` for the hooks and handlers.
+- [x] In `frontend/`: `npm ci`, `npx astro check`, `npm run build`, `npm test`, `npm run build:pdf && npm run test:e2e`.
+- [x] Inspect `dist/` for the hooks and handlers.
 
 ### Task 4: Review and PR
-- [ ] Adversarial review of the diff vs `origin/main` by a reviewer subagent; fix findings.
-- [ ] Push `feature/track-brief-cta`, open the PR to `main`, check `gh pr checks`.
-- [ ] CLAUDE.md follow-ups (listed in the PR body, not edited here): add `brief-cta-click` to the Analytics events list.
+- [x] Adversarial review of the diff vs `origin/main` by a reviewer subagent; fix findings.
+- [x] Push `feature/track-brief-cta`, open the PR to `main`, check `gh pr checks`.
+- [x] CLAUDE.md follow-ups (listed in the PR body, not edited here): add `brief-cta-click` to the Analytics events list.
