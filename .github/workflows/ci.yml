@@ -37,9 +37,7 @@ jobs:
 
   frontend-e2e:
     name: Frontend E2E
-    # Pinned: Playwright 1.59 cannot install Chromium on Ubuntu 26.04 (ubuntu-latest).
-    # Remove once Playwright is upgraded (1.61+ lists 26.04).
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend
