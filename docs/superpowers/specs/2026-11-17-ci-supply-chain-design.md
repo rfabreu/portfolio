@@ -3,7 +3,7 @@
 File: docs/superpowers/specs/2026-11-17-ci-supply-chain-design.md
 Related: none (new work; no tracking issue)
 Created: 2026-11-17
-Status: Ready for owner review. Blocked on one finding, see "Finding: npm audit fails today".
+Status: Ready for owner review. The picomatch finding is handled by a time-boxed allowlist (orchestrator decision, owner approves at merge); see "Decision: time-boxed allowlist".
 
 ---
 
@@ -61,10 +61,13 @@ New last step in `frontend-check`:
 
 ```yaml
 - name: Audit npm dependencies
-  run: npm audit --audit-level=high
+  run: |
+    npm audit --json > "$RUNNER_TEMP/npm-audit.json" || true
+    node ../.github/scripts/npm-audit-gate.mjs "$RUNNER_TEMP/npm-audit.json"
 ```
 
-- **Threshold.** `--audit-level=high` fails on high and critical and passes on low and moderate.
+- **Threshold.** The gate (`.github/scripts/npm-audit-gate.mjs`, plain Node, no dependencies) fails on any high or critical advisory that is not in its allowlist, and passes on low and moderate. It also fails if the audit report is missing, unreadable or carries an `error` (for example a registry outage).
+- **Allowlist.** Each entry is keyed by GHSA id and must carry a reason and an expiry date. An expired entry fails the gate, so an exception cannot be forgotten. An entry whose advisory is no longer reported prints a notice to remove it.
 - **Dev dependencies are included** (no `--omit=dev`). Justification:
   1. This is a static site. Almost nothing runs in production from `node_modules`; Astro, Vite, Tailwind and React are bundled at build time. The `dependencies` / `devDependencies` split in `package.json` therefore does not track what matters, which is what executes on the build machine.
   2. The packages that execute with the most trust are build and CI tooling: `astro`, `vite`, `esbuild`, `vitest`, `playwright`. `deploy-frontend.yml` runs `npm ci`, the build, Playwright and the PDF generator from the same dependency tree and then publishes `frontend/dist` to Netlify. A compromised build-time or dev dependency can therefore alter what ships to production, even though it is not a runtime dependency of the site.
@@ -83,7 +86,19 @@ Run locally on this branch's base (`aaebfa5`, equal to `origin/main`) with `npm 
 - **No fix exists upstream.** The advisory's vulnerable range is `<= 4.0.7` with `first_patched_version: null`. `4.0.7` is the newest picomatch on npm (`dist-tags.latest`), and `2.3.2`, used by `anymatch` under `unstorage`, is the newest 2.x. So the dependency-bump route (`npm update`, `overrides`) cannot resolve it. `npm audit fix --force` offers only breaking changes (it names `vitest@3.1.4` and `astro@5.3.0`, multi-major downgrades from `vitest` 4.x and `astro` 7.x). That is not a small bump, so it was not applied or evaluated here.
 - **Practical exposure** (assessment, not verified exploitability): picomatch is used here by build-time file globbing in Astro, Vite and Vitest. The advisory describes a ReDoS triggered by crafted glob patterns, so exploitation would need an attacker-influenced pattern, and the shipped site is static output. This is an assessment from reading the advisory, not a tested conclusion, and it has not been checked against how each tool in the tree builds its patterns. It is the owner's call, not this PR's.
 
-Consequence: with the audit step enforcing as specified, the `Frontend` check fails on this PR. This is deliberate. The failure is real, not a configuration error. The step is not weakened, skipped or allowed to fail. Merging is blocked (for non-admins) until the owner decides one of the options under "Open questions".
+Consequence: a plain `npm audit --audit-level=high` step fails on every PR until upstream ships a patch, which would also hold back the Dependabot and govulncheck parts of this PR.
+
+## Decision: time-boxed allowlist
+
+Added in orchestrator review (2026-11-17), as option E under "Open questions"; the owner approves it at merge:
+
+- `GHSA-fc5q-39xc-vjpf` is allowlisted in the gate script until **2027-01-31**, with the exposure reasoning above as its recorded reason.
+- Every other high or critical advisory still fails `Frontend`, so the gate keeps its value for new findings.
+- When picomatch ships a fix, Dependabot's grouped PR (or `npm update picomatch`) picks it up; the gate then prints a notice to remove the entry. If no fix exists by the expiry date, the gate fails and forces a re-review.
+- The gate's logic is an exported `evaluate()` function covered by `.github/scripts/npm-audit-gate.test.mjs` (`node --test`, run in the `Frontend` step before the audit). Cases: allowlisted advisory, unlisted high/critical in any casing, advisory without a GHSA url, moderate-only with a stale-entry notice, expired entry, missing or malformed `reason`/`expires`, npm `error` payload, malformed reports, a dependency on a package missing from the report, and metadata totals with no advisory.
+- The CLI was also run against the real report (passes, picomatch allowed) and against an adversarial reviewer's 12 crafted reports; all fail except a forged advisory URL, which would need npm itself to emit fabricated data and is not defended against.
+- **Exposure evidence** (assessed, not tested): the only glob patterns in the repo are literals in `src/content.config.ts`; there is no `import.meta.glob` in `src`, and `astro.config.mjs` sets no glob options. picomatch is also used inside Astro's cache and remote-image pattern handling, both driven by config, not visitor input; those paths were not traced.
+- **Expiry cost:** from 2027-02-01 every PR, including Dependabot's, fails `Frontend` until the entry is re-reviewed. There is no scheduled warning beforehand.
 
 govulncheck, run locally from `api/` after `make sync-content`, with both v1.9.0 and v1.10.0: `No vulnerabilities found.` (exit 0).
 
@@ -116,18 +131,20 @@ CI impact: the `API` job gains a govulncheck download, compile and run (about 13
 
 1. `.github/dependabot.yml` covers `npm` at `/frontend`, `gomod` at `/api` and `github-actions` at `/`, weekly, grouped minor/patch, limit 5, with no auto-merge.
 2. `API` job runs govulncheck at a pinned version after `make sync-content`, and it passes.
-3. `Frontend` job runs `npm audit --audit-level=high` including dev dependencies.
+3. `Frontend` job runs `npm audit` including dev dependencies, gated by `npm-audit-gate.mjs` (fails on unallowlisted high/critical advisories, expired entries and audit errors).
 4. Job names `Frontend`, `Frontend E2E` and `API` are unchanged and no job was added or removed.
 5. Findings are reported, not silenced: the npm audit failure is documented here and in the PR body.
 6. Adversarial review covers required-check names, directories, unpinned tools, step order, and PR-noise and security problems.
-7. CI: `API` and `Frontend E2E` pass. `Frontend` fails only on the audit step, and only on GHSA-fc5q-39xc-vjpf, until the owner decides.
+7. CI: `Frontend` and `API` pass, with the gate log showing GHSA-fc5q-39xc-vjpf allowed until 2027-01-31. `Frontend E2E` passes once this branch includes the runner pin from PR #48.
 
 ## Files Changed (expected)
 
 | File | Change |
 |------|--------|
 | `.github/dependabot.yml` | New: weekly grouped updates for npm, gomod, github-actions |
-| `.github/workflows/ci.yml` | New last step in `Frontend` (npm audit) and `API` (govulncheck) |
+| `.github/workflows/ci.yml` | New last step in `Frontend` (npm audit + gate) and `API` (govulncheck) |
+| `.github/scripts/npm-audit-gate.mjs` | New: allowlist-aware gate over `npm audit --json` |
+| `.github/scripts/npm-audit-gate.test.mjs` | New: `node --test` unit tests for the gate |
 | `docs/superpowers/specs/2026-11-17-ci-supply-chain-design.md` | New: this spec |
 | `docs/superpowers/plans/2026-11-17-ci-supply-chain.md` | New: implementation plan |
 
@@ -135,11 +152,12 @@ Branch name: `chore/ci-supply-chain`
 
 ## Open questions
 
-1. **How to handle the unfixable picomatch advisory (owner decision, blocks merge).** Options, with a recommendation:
-   - **A (recommended): keep the gate as is, hold this PR until a patched picomatch ships**, then re-run CI. Dependabot's grouped PR or `npm update picomatch` will pick the patch up. Preserves the safety property. Cost: the PR waits for an upstream release of unknown date.
+1. **How to handle the unfixable picomatch advisory. Resolved: option E** (see "Decision: time-boxed allowlist"); the owner confirms at merge. Options considered:
+   - A (the original recommendation): keep the gate as is, hold this PR until a patched picomatch ships, then re-run CI. Dependabot's grouped PR or `npm update picomatch` will pick the patch up. Preserves the safety property. Cost: the PR waits for an upstream release of unknown date.
    - B: merge now with an admin override. Branch protection enforcement applies to non-admins only, so this is possible, but then every later PR, including Dependabot's, fails `Frontend` until the patch lands.
    - C: temporarily set `--audit-level=critical` in this PR. This weakens the gate. It is not done here because this PR's constraints rule out silencing a failing check; it is the owner's decision to take.
    - D: split into two PRs (Dependabot + govulncheck now, npm audit later). Not done: this work was scoped as a single PR.
+   - **E (chosen in orchestrator review): allowlist only this advisory, with a reason and an expiry date**, in a small gate script. See "Decision: time-boxed allowlist". Option A remains available if the owner prefers to hold.
 2. **govulncheck pinned to v1.9.0, not the newer v1.10.0.** v1.10.0 was published hours before this spec was written (2026-11-17). Pinning a brand-new release of a security tool defeats the point of a pin, so the previous release, five weeks old, was chosen. Both give the same result on this repo today. If the owner prefers current, change one version string. Dependabot does not update a version embedded in a `run:` command, so bumps are manual. An alternative that Dependabot's `gomod` ecosystem would track is a `tool` directive in `api/go.mod` (`go get -tool`), at the cost of adding govulncheck's dependency graph to `go.mod`/`go.sum`. Rejected for now to keep this PR out of the Go module graph.
 3. **Dependabot config not run against GitHub.** See "Not asserted".
 4. **`npm audit` depends on the npm registry's audit endpoint being reachable.** An outage fails the step. Accepted for now. If it proves flaky, a retry wrapper is a follow-up.
@@ -149,7 +167,7 @@ Branch name: `chore/ci-supply-chain`
 
 ## CLAUDE.md follow-ups (not edited in this PR)
 
-- CI section: the CI line lists the jobs' checks; add `npm audit --audit-level=high` to `Frontend` and `govulncheck` (pinned) to `API`.
+- CI section: the CI line lists the jobs' checks; add the npm audit gate (`npm audit --json` checked by `.github/scripts/npm-audit-gate.mjs`, with its unit tests) to `Frontend` and `govulncheck` (pinned) to `API`.
 - Add a "Dependency updates" note: `.github/dependabot.yml`, weekly, grouped, never auto-merged.
-- Known failing checks: record the picomatch advisory (GHSA-fc5q-39xc-vjpf) if it is still open when this merges.
+- Record the allowlisted picomatch advisory (GHSA-fc5q-39xc-vjpf, expires 2027-01-31) and where the allowlist lives (`.github/scripts/npm-audit-gate.mjs`).
 - Add `.github/` to the Project Structure block.

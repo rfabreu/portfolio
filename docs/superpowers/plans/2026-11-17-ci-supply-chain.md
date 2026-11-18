@@ -10,7 +10,7 @@ Branch: chore/ci-supply-chain
 
 ## Summary of Spec
 
-Add `.github/dependabot.yml` (weekly, grouped minor/patch, no auto-merge) for npm, gomod and github-actions. Add a pinned `govulncheck` step to the `API` job after `make sync-content`, and `npm audit --audit-level=high` (dev dependencies included) to the `Frontend` job. Required job names stay unchanged.
+Add `.github/dependabot.yml` (weekly, grouped minor/patch, no auto-merge) for npm, gomod and github-actions. Add a pinned `govulncheck` step to the `API` job after `make sync-content`, and an npm audit gate (`npm audit --json` checked by `.github/scripts/npm-audit-gate.mjs`, dev dependencies included, time-boxed allowlist) to the `Frontend` job. Required job names stay unchanged.
 
 ## Governance Note
 
@@ -39,7 +39,8 @@ Expected and observed: govulncheck exits 0 (`No vulnerabilities found.`); `npm a
 
 ### Step 3: Edit `.github/workflows/ci.yml` — steps only
 
-- `frontend-check` (name `Frontend`): append `npm audit --audit-level=high` as the last step.
+- `frontend-check` (name `Frontend`): append `npm audit --json` piped through `.github/scripts/npm-audit-gate.mjs` as the last step (orchestrator review replaced the plain `npm audit --audit-level=high`; see the spec's "Decision: time-boxed allowlist").
+- `.github/scripts/npm-audit-gate.mjs`: new gate; GHSA-fc5q-39xc-vjpf allowlisted until 2027-01-31.
 - `api-check` (name `API`): append `go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...` as the last step, after `make sync-content`, `go vet`, `go test` and `go build`.
 - Do not touch `name:` fields, job keys, triggers, or `frontend-e2e`.
 
@@ -62,7 +63,7 @@ Do not claim success from reasoning alone. Re-run, in this state of the tree, an
 - `git diff origin/main --stat` matches "Files Changed" in the spec (no stray files; `api/internal/chat/embedded/` stays untracked/gitignored).
 - Step 1 commands, again.
 - Step 4 validation, again.
-- After the PR is open: `gh pr checks <n>`. Compare each result to the spec's acceptance criteria. If `Frontend` fails, read the log and confirm it fails on the audit step for GHSA-fc5q-39xc-vjpf and nothing else.
+- After the PR is open: `gh pr checks <n>`. Compare each result to the spec's acceptance criteria. `Frontend` should pass, with the gate log showing GHSA-fc5q-39xc-vjpf allowed until 2027-01-31; any other blocking advisory is a real finding.
 
 ### Step 7: Commit, push feature branch, open PR
 
@@ -81,7 +82,7 @@ Commit contents:
 
 PR body should:
 - Reference spec and plan paths.
-- Lead with the npm audit finding (no patched picomatch), the decision needed, and the recommendation.
+- Lead with the npm audit finding (no patched picomatch) and the time-boxed allowlist chosen in orchestrator review, for the owner to confirm at merge.
 - Summarise the adversarial review.
 - List Open questions and "CLAUDE.md follow-ups".
 - State that nothing auto-merges and no deploy is triggered by this change.

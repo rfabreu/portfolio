@@ -28,8 +28,12 @@ jobs:
       # Last so a failing audit does not hide the check/build/test results.
       # Includes dev dependencies on purpose: the build and test toolchain
       # runs on this runner and on Netlify's build machine.
+      # Fails on high/critical advisories not allowlisted (with expiry) in the script.
       - name: Audit npm dependencies
-        run: npm audit --audit-level=high
+        run: |
+          node --test ../.github/scripts/
+          npm audit --json > "$RUNNER_TEMP/npm-audit.json" || true
+          node ../.github/scripts/npm-audit-gate.mjs "$RUNNER_TEMP/npm-audit.json"
 
   frontend-e2e:
     name: Frontend E2E
