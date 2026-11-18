@@ -40,7 +40,7 @@ Expected and observed: govulncheck exits 0 (`No vulnerabilities found.`); `npm a
 ### Step 3: Edit `.github/workflows/ci.yml` — steps only
 
 - `frontend-check` (name `Frontend`): append `npm audit --json` piped through `.github/scripts/npm-audit-gate.mjs` as the last step (orchestrator review replaced the plain `npm audit --audit-level=high`; see the spec's "Decision: time-boxed allowlist").
-- `.github/scripts/npm-audit-gate.mjs`: new gate; GHSA-fc5q-39xc-vjpf allowlisted until 2027-01-31.
+- `.github/scripts/npm-audit-gate.mjs`: new gate; GHSA-fc5q-39xc-vjpf allowlisted until 2027-01-31. `.github/scripts/npm-audit-gate.test.mjs`: unit tests, run first in the same step with `node --test ../.github/scripts/npm-audit-gate.test.mjs` (Node 22 needs the file path, not the directory).
 - `api-check` (name `API`): append `go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...` as the last step, after `make sync-content`, `go vet`, `go test` and `go build`.
 - Do not touch `name:` fields, job keys, triggers, or `frontend-e2e`.
 
@@ -49,6 +49,7 @@ Expected and observed: govulncheck exits 0 (`No vulnerabilities found.`); `npm a
 - Parse both YAML files. Validate `dependabot.yml` against the SchemaStore Dependabot 2.0 schema and `ci.yml` against the SchemaStore GitHub Workflow schema. PyYAML reads the bare key `on:` as boolean `True`; map it back to `"on"` before validating, otherwise the schema check gives a false failure.
 - Programmatically compare the job names to `Frontend`, `Frontend E2E` and `API`.
 - Use `actionlint` if installed (it was not available locally).
+- Run the gate's unit tests under Node 22 (the CI runtime): `npx -y node@22 --test .github/scripts/npm-audit-gate.test.mjs`.
 
 ### Step 5: Spec, plan, and adversarial review
 
@@ -77,6 +78,8 @@ chore(ci): add dependabot, govulncheck and npm audit
 Commit contents:
 - `.github/dependabot.yml` (new)
 - `.github/workflows/ci.yml`
+- `.github/scripts/npm-audit-gate.mjs` (new)
+- `.github/scripts/npm-audit-gate.test.mjs` (new)
 - `docs/superpowers/specs/2026-11-17-ci-supply-chain-design.md` (new)
 - `docs/superpowers/plans/2026-11-17-ci-supply-chain.md` (new)
 

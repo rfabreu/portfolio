@@ -17,7 +17,7 @@ The repo has no dependency automation and no vulnerability scanning in CI. Only 
 - Nothing auto-merges. Every Dependabot PR runs CI and needs the owner's approval. No auto-merge configuration is added.
 - Work follows spec → plan → feature branch → PR, adversarial review, green CI, owner approval (CLAUDE.md).
 - Never push to `main`; feature branch → PR only.
-- No failing check may be silenced to make this PR green (no `|| true`, `continue-on-error`, lowered threshold or ignore-list entry). A failure is reported with its evidence and the decision goes to the owner. This is a constraint set for this PR (2026-11-17), consistent with the "Never assume" working rule in CLAUDE.md.
+- No failing check may be silenced to make this PR green (no `continue-on-error`, lowered threshold or blanket ignore). A failure is reported with its evidence and the decision goes to the owner. This is a constraint set for this PR (2026-11-17), consistent with the "Never assume" working rule in CLAUDE.md. **One exception, added in orchestrator review:** a single time-boxed allowlist entry for an advisory with no patched release (see "Decision: time-boxed allowlist"), which the owner confirms at merge. The `|| true` after `npm audit --json` only discards npm's exit code; the gate script makes the pass/fail decision and fails closed.
 
 ## Scope
 
@@ -62,6 +62,7 @@ New last step in `frontend-check`:
 ```yaml
 - name: Audit npm dependencies
   run: |
+    node --test ../.github/scripts/npm-audit-gate.test.mjs
     npm audit --json > "$RUNNER_TEMP/npm-audit.json" || true
     node ../.github/scripts/npm-audit-gate.mjs "$RUNNER_TEMP/npm-audit.json"
 ```
@@ -131,7 +132,7 @@ CI impact: the `API` job gains a govulncheck download, compile and run (about 13
 
 1. `.github/dependabot.yml` covers `npm` at `/frontend`, `gomod` at `/api` and `github-actions` at `/`, weekly, grouped minor/patch, limit 5, with no auto-merge.
 2. `API` job runs govulncheck at a pinned version after `make sync-content`, and it passes.
-3. `Frontend` job runs `npm audit` including dev dependencies, gated by `npm-audit-gate.mjs` (fails on unallowlisted high/critical advisories, expired entries and audit errors).
+3. `Frontend` job runs the gate's unit tests, then `npm audit` including dev dependencies, gated by `npm-audit-gate.mjs` (fails on unallowlisted high/critical advisories, expired or malformed entries and audit errors).
 4. Job names `Frontend`, `Frontend E2E` and `API` are unchanged and no job was added or removed.
 5. Findings are reported, not silenced: the npm audit failure is documented here and in the PR body.
 6. Adversarial review covers required-check names, directories, unpinned tools, step order, and PR-noise and security problems.
