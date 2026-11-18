@@ -28,7 +28,7 @@ Source: https://umami.is/docs/track-events and the live tracker `https://cloud.u
   - `target="_blank"`, or a Ctrl/Shift/Meta/middle click: the tracker does **not** call `preventDefault`. It sends the event and the browser opens the tab as normal. Every OrangeCat Labs link on the site opens in a new tab.
   - Any other click (same tab): the tracker calls `preventDefault`, sends the event, and only after the request settles assigns `location.href`. Navigation is delayed by one network round trip.
 - Tracking is skipped entirely when the script has not loaded (`astro dev`, blockers). The site's script tags do not set `data-do-not-track`, so the tracker does not honour the browser's Do Not Track setting. No element needs a fallback.
-- Netlify deploy previews run the same production build (`netlify.toml`, `[context.deploy-preview]`) and the script tags set no `data-domains`, so previews load the tracker and report to the production Umami site, tagged with the preview hostname. This was already true for pageviews; the new events add to it (open question 7).
+- Netlify deploy previews run the same production build (`netlify.toml`, `[context.deploy-preview]`). Before this PR the script tags set no `data-domains`, so previews reported pageviews to the production Umami site. This PR sets `data-domains="rafaelabreu.netlify.app"`, which the live tracker applies to pageviews and custom events alike, so previews and `localhost` now send nothing (open question 7).
 - The script tag loads only when `import.meta.env.PROD`. This spec does not change that.
 
 Consequences for the design:

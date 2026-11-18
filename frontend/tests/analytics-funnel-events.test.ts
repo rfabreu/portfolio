@@ -332,3 +332,13 @@ describe('P10 Phase 3: source-level guards', () => {
     );
   });
 });
+
+describe('Umami reporting scope', () => {
+  it('every Umami script tag reports only from the production host', () => {
+    const tags = ['layouts/BaseLayout.astro', 'layouts/ProjectLayout.astro'].flatMap(
+      (file) => fs.readFileSync(path.join(SRC, file), 'utf-8').match(/<script[^>]*cloud\.umami\.is[^>]*>/g) ?? [],
+    );
+    expect(tags).toHaveLength(2);
+    for (const tag of tags) expect(tag).toContain('data-domains="rafaelabreu.netlify.app"');
+  });
+});
