@@ -1,7 +1,7 @@
 // Fails CI on high or critical npm advisories, except allowlisted ones.
 // Usage (from frontend/): npm audit --json > audit.json || true
 //                         node ../.github/scripts/npm-audit-gate.mjs audit.json
-// Tests: node --test ../.github/scripts/
+// Tests: node --test ../.github/scripts/npm-audit-gate.test.mjs (Node 22 needs the file path, not the directory)
 //
 // Allowlist entries must name a reason and an expiry date (YYYY-MM-DD). An
 // expired or malformed entry fails the gate so the exception is reviewed

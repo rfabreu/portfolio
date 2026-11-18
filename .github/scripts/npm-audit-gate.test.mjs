@@ -1,4 +1,4 @@
-// Run with: node --test .github/scripts/
+// Run with: node --test .github/scripts/npm-audit-gate.test.mjs
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { evaluate, ALLOWLIST } from './npm-audit-gate.mjs';

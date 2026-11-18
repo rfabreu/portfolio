@@ -31,7 +31,7 @@ jobs:
       # Fails on high/critical advisories not allowlisted (with expiry) in the script.
       - name: Audit npm dependencies
         run: |
-          node --test ../.github/scripts/
+          node --test ../.github/scripts/npm-audit-gate.test.mjs
           npm audit --json > "$RUNNER_TEMP/npm-audit.json" || true
           node ../.github/scripts/npm-audit-gate.mjs "$RUNNER_TEMP/npm-audit.json"
 
