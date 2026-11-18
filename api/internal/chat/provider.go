@@ -15,6 +15,18 @@ const defaultBaseURL = "https://generativelanguage.googleapis.com/v1beta"
 // RequestTimeout bounds each Gemini call. The server's WriteTimeout must exceed it.
 const RequestTimeout = 30 * time.Second
 
+// maxResponseBytes caps how much of a Gemini response is read into memory.
+const maxResponseBytes = 1 << 20
+
+// defaultHTTPClient refuses redirects: Go forwards custom headers such as
+// x-goog-api-key to the redirect target, even on another host.
+var defaultHTTPClient = &http.Client{
+	Timeout: RequestTimeout,
+	CheckRedirect: func(*http.Request, []*http.Request) error {
+		return http.ErrUseLastResponse
+	},
+}
+
 type Message struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
@@ -39,7 +51,7 @@ func NewGeminiProvider(apiKey, model string) *GeminiProvider {
 		APIKey:     apiKey,
 		Model:      model,
 		BaseURL:    defaultBaseURL,
-		HTTPClient: &http.Client{Timeout: RequestTimeout},
+		HTTPClient: defaultHTTPClient,
 	}
 }
 
@@ -74,7 +86,11 @@ func (g *GeminiProvider) GenerateResponse(ctx context.Context, systemPrompt stri
 	}
 
 	// The key goes in a header, never the URL: *url.Error includes the full URL and gets logged.
-	url := fmt.Sprintf("%s/models/%s:generateContent", g.BaseURL, g.Model)
+	baseURL := g.BaseURL
+	if baseURL == "" {
+		baseURL = defaultBaseURL
+	}
+	url := fmt.Sprintf("%s/models/%s:generateContent", baseURL, g.Model)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(jsonBody))
 	if err != nil {
 		return "", fmt.Errorf("create request: %w", err)
@@ -82,13 +98,17 @@ func (g *GeminiProvider) GenerateResponse(ctx context.Context, systemPrompt stri
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("x-goog-api-key", g.APIKey)
 
-	resp, err := g.HTTPClient.Do(req)
+	client := g.HTTPClient
+	if client == nil {
+		client = defaultHTTPClient
+	}
+	resp, err := client.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("gemini request: %w", err)
 	}
 	defer resp.Body.Close()
 
-	respBody, err := io.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(io.LimitReader(resp.Body, maxResponseBytes))
 	if err != nil {
 		return "", fmt.Errorf("read response: %w", err)
 	}

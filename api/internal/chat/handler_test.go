@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -76,8 +77,8 @@ func TestChatHandler_EnforcesMessageLimit(t *testing.T) {
 
 	handler.ServeHTTP(rec, req)
 
-	if rec.Code != http.StatusBadRequest {
-		t.Errorf("expected 400 for too many messages, got %d", rec.Code)
+	if rec.Code != http.StatusBadRequest || !strings.Contains(rec.Body.String(), "conversation limit exceeded") {
+		t.Errorf("expected 400 conversation limit, got %d: %s", rec.Code, rec.Body.String())
 	}
 }
 
@@ -164,5 +165,33 @@ func TestChatHandler_LimitsCountRunesNotBytes(t *testing.T) {
 	rec := postChat(t, marshalMessages(t, []chat.Message{msg}))
 	if rec.Code != http.StatusOK {
 		t.Errorf("expected 200, got %d: %s", rec.Code, rec.Body.String())
+	}
+}
+
+// A 1 MiB body of empty messages must be rejected without allocating every element.
+func TestChatHandler_RejectsManyMessagesCheaply(t *testing.T) {
+	n := (chat.MaxBodyBytes - 20) / 3
+	body := []byte(`{"messages":[` + strings.TrimSuffix(strings.Repeat("{},", n), ",") + `]}`)
+
+	var before, after runtime.MemStats
+	runtime.GC()
+	runtime.ReadMemStats(&before)
+	rec := postChat(t, body)
+	runtime.ReadMemStats(&after)
+
+	if rec.Code != http.StatusBadRequest || !strings.Contains(rec.Body.String(), "conversation limit exceeded") {
+		t.Errorf("expected 400 conversation limit, got %d: %s", rec.Code, rec.Body.String())
+	}
+	if alloc := after.TotalAlloc - before.TotalAlloc; alloc > 16<<20 {
+		t.Errorf("allocated %d MiB rejecting the request, want under 16 MiB", alloc>>20)
+	}
+}
+
+func TestChatHandler_RejectsNonArrayMessages(t *testing.T) {
+	for _, body := range []string{`{"messages":null}`, `{"messages":{}}`, `{"messages":"hi"}`} {
+		rec := postChat(t, []byte(body))
+		if rec.Code != http.StatusBadRequest {
+			t.Errorf("%s: expected 400, got %d", body, rec.Code)
+		}
 	}
 }

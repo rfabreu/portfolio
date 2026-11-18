@@ -80,7 +80,14 @@ Read https://docs.fly.io/networking/request-headers and https://docs.fly.io/mach
 
 ### Step 9: Adversarial review
 
-Run the `pr-review-toolkit:code-reviewer` subagent on `git diff origin/main...HEAD`. Ask it to try to bypass the limits, leak the key, break ChatWidget traffic, and find timeouts too short for Gemini, and to check CLAUDE.md conventions. Fix valid findings and re-verify.
+Run a code-reviewer subagent on `git diff origin/main...HEAD`. The brief named `pr-review-toolkit:code-reviewer`, which isn't installed here, so `feature-dev:code-reviewer` was used. Ask it to try to bypass the limits, leak the key, break ChatWidget traffic, and find timeouts too short for Gemini, and to check CLAUDE.md conventions. Fix valid findings test-first and re-verify.
+
+Review fixes applied (each with a failing test first):
+- Redirects: the default client refuses them (the key header was forwarded to a 307 target).
+- Message count enforced while decoding (`messageList.UnmarshalJSON`): 55 MiB allocated on a 1 MiB `{},{},...` body went down to 2 MiB.
+- `WriteTimeout` raised to `ReadTimeout + RequestTimeout + 15s` (60s), because the write deadline includes the body read.
+- Response read capped with `io.LimitReader` (1 MiB). A zero-value `GeminiProvider` uses the defaults.
+- The timeout test asserts a real `net.Error` timeout and `HTTPClient.Timeout == RequestTimeout`.
 
 ### Step 10: Commit, push the feature branch, open the PR
 
@@ -98,5 +105,5 @@ The PR body should cover: spec and plan paths, changes, the Fly.io deploy note (
 - [x] `go vet`, `go test`, `go build` pass
 - [x] `astro check`, `npm run build`, `npm test` pass
 - [x] Local smoke test done; no key in logs
-- [ ] Adversarial review complete
+- [x] Adversarial review complete; valid findings fixed and re-verified
 - [ ] CI green

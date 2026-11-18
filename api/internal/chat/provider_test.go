@@ -2,7 +2,9 @@ package chat_test
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -103,8 +105,8 @@ func TestGeminiProvider_ReturnsText(t *testing.T) {
 }
 
 func TestGeminiProvider_TimesOut(t *testing.T) {
-	if chat.NewGeminiProvider(testAPIKey, "").HTTPClient.Timeout <= 0 {
-		t.Fatal("default HTTP client must have a timeout")
+	if got := chat.NewGeminiProvider(testAPIKey, "").HTTPClient.Timeout; got != chat.RequestTimeout {
+		t.Fatalf("default HTTP client timeout = %v, want %v", got, chat.RequestTimeout)
 	}
 
 	release := make(chan struct{})
@@ -119,10 +121,42 @@ func TestGeminiProvider_TimesOut(t *testing.T) {
 	provider.HTTPClient = &http.Client{Timeout: 50 * time.Millisecond}
 
 	_, err := provider.GenerateResponse(context.Background(), "system", []chat.Message{{Role: "user", Content: "Hi"}})
-	if err == nil {
-		t.Fatal("expected a timeout error")
+	var netErr net.Error
+	if !errors.As(err, &netErr) || !netErr.Timeout() {
+		t.Fatalf("expected a timeout error, got %v", err)
 	}
 	if strings.Contains(err.Error(), testAPIKey) {
 		t.Errorf("error leaks the API key: %v", err)
+	}
+}
+
+func TestGeminiProvider_DoesNotFollowRedirects(t *testing.T) {
+	var leaked string
+	other := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		leaked = r.Header.Get("x-goog-api-key")
+	}))
+	defer other.Close()
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, other.URL, http.StatusTemporaryRedirect)
+	}))
+	defer srv.Close()
+
+	provider := chat.NewGeminiProvider(testAPIKey, "")
+	provider.BaseURL = srv.URL
+
+	_, err := provider.GenerateResponse(context.Background(), "system", []chat.Message{{Role: "user", Content: "Hi"}})
+	if err == nil {
+		t.Fatal("expected an error for a redirect response")
+	}
+	if leaked != "" {
+		t.Error("API key was sent to the redirect target")
+	}
+}
+
+func TestGeminiProvider_ZeroValueUsesDefaults(t *testing.T) {
+	provider := &chat.GeminiProvider{APIKey: testAPIKey, Model: "m", BaseURL: "http://127.0.0.1:1"}
+
+	if _, err := provider.GenerateResponse(context.Background(), "system", []chat.Message{{Role: "user", Content: "Hi"}}); err == nil {
+		t.Fatal("expected a connection error")
 	}
 }

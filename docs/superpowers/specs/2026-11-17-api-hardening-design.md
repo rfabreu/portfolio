@@ -31,8 +31,10 @@ gemini request: Post "http://127.0.0.1:59428/models/gemini-2.5-flash-lite:genera
 
 Fix:
 - Send the key in the `x-goog-api-key` header. Never put it in the URL.
-- Add `BaseURL` and `HTTPClient` fields on `GeminiProvider` for testability. `NewGeminiProvider` sets them to the real endpoint (`https://generativelanguage.googleapis.com/v1beta`) and a client with a timeout.
-- Tests: a refused connection, an HTTP 500 and a timeout each return an error that doesn't contain the key. The request carries the key in the header and not in the query.
+- Add `BaseURL` and `HTTPClient` fields on `GeminiProvider` for testability. `NewGeminiProvider` sets them to the real endpoint (`https://generativelanguage.googleapis.com/v1beta`) and a client with a timeout. A zero-value provider falls back to the same defaults, so it can't hit a nil client.
+- The default client refuses redirects (`CheckRedirect` returns `http.ErrUseLastResponse`). Go forwards custom headers such as `x-goog-api-key` to a redirect target, even on another host. Only `Authorization`, `Cookie` and a few others are stripped. With the key in a header, a redirect could otherwise forward it. A redirect is now reported as a non-200 error.
+- Responses are read through `io.LimitReader` (1 MiB) instead of an unbounded `io.ReadAll`.
+- Tests: a refused connection, an HTTP 500 and a timeout each return an error that doesn't contain the key. The request carries the key in the header and not in the query. A 307 to another server doesn't forward the key.
 
 Header support evidence:
 - Google documents `x-goog-api-key` as the way to pass an API key on REST calls: https://docs.cloud.google.com/docs/authentication/api-keys-use
@@ -43,7 +45,7 @@ Header support evidence:
 
 `http.DefaultClient` has no timeout, so a hung Gemini call held the handler goroutine until the client disconnected.
 
-Fix: `chat.RequestTimeout = 30 * time.Second`, used as the default `http.Client{Timeout: ...}`. The request still uses `r.Context()`, so a client disconnect also cancels the call. 30s is well above typical `gemini-2.5-flash-lite` latency for a reply capped at 1024 output tokens, and the prompt asks for under 200 words.
+Fix: `chat.RequestTimeout = 30 * time.Second`, used as the default `http.Client{Timeout: ...}`. The test asserts the default equals `RequestTimeout` and that a hanging server produces a `net.Error` with `Timeout() == true`. The request still uses `r.Context()`, so a client disconnect also cancels the call. 30s is well above typical `gemini-2.5-flash-lite` latency for a reply capped at 1024 output tokens, and the prompt asks for under 200 words.
 
 ### 3. No input size limits on POST /api/chat and POST /api/game
 
@@ -53,7 +55,7 @@ Fix: `chat.RequestTimeout = 30 * time.Second`, used as the default `http.Client{
 | Chat message role | `user` or `assistant` only | 400 `{"error":"invalid message role"}` |
 | Chat `user` message | `MaxUserContentRunes = 2000` runes | 400 `{"error":"message too long"}` |
 | Chat `assistant` message | `MaxAssistantContentRunes = 8000` runes | 400 `{"error":"message too long"}` |
-| Chat message count | 20 (unchanged) | 400 (unchanged) |
+| Chat message count | 20 (unchanged), now enforced while decoding | 400 (unchanged message) |
 | Game body (`http.MaxBytesReader`) | `MaxBodyBytes = 4 KiB` | 413 `{"error":"request body too large"}` |
 
 Errors use the existing ``http.Error(w, `{"error":"..."}`, status)`` style.
@@ -66,6 +68,8 @@ Why these values:
 
 `json.Decoder` only reads the first JSON value, so data after it is never decoded. The body cap still bounds anything read.
 
+The message count is enforced while decoding. `ChatRequest.Messages` is an unexported `messageList` type whose `UnmarshalJSON` decodes one element at a time and stops at element 21. Before this, a 1 MiB body of `{},{},...` decoded about 349k structs before the count check. A measurement showed 55 MiB allocated for one request on a 256 MB VM. After the change it's 2 MiB. `TestChatHandler_RejectsManyMessagesCheaply` asserts under 16 MiB. A literal `[]chat.Message{...}` is still assignable to the field.
+
 ### 4. No server timeouts
 
 `http.ListenAndServe` has no timeouts (slowloris exposure). Fix: `newServer(addr, handler)` returns an `http.Server` with:
@@ -74,10 +78,10 @@ Why these values:
 |-------|-------|--------|
 | `ReadHeaderTimeout` | 5s | Slow-header protection |
 | `ReadTimeout` | 15s | Enough to upload a 1 MiB body |
-| `WriteTimeout` | `chat.RequestTimeout + 15s` (45s) | Must outlast the Gemini call so its error still reaches the client |
+| `WriteTimeout` | `ReadTimeout + chat.RequestTimeout + 15s` (60s) | The write deadline starts once headers are read, so it covers the body read plus the Gemini call. This way the Gemini error still reaches even a slow client |
 | `IdleTimeout` | 120s | Keep-alive reuse without holding idle connections forever |
 
-`WriteTimeout` is derived from `chat.RequestTimeout`, and `TestNewServer_SetsTimeouts` asserts it's larger.
+`WriteTimeout` is derived from `ReadTimeout` and `chat.RequestTimeout`. `TestNewServer_SetsTimeouts` asserts `WriteTimeout > ReadTimeout + RequestTimeout`. The request context isn't cancelled by `ReadTimeout`: the read deadline covers headers and body only (Go issue https://github.com/golang/go/issues/70834).
 
 ### 5. Rate limiter client IP behind Fly.io (verified, not changed)
 
@@ -95,14 +99,15 @@ Decision: **no behaviour change.** If the proxy passes a client-supplied `Fly-Cl
 1. **Does Fly Proxy overwrite a client-supplied `Fly-Client-IP`?** It isn't stated in https://docs.fly.io/networking/request-headers. Needs confirmation from Fly support or an empirical test on a deployed Machine (for example a temporary debug log of `Fly-Client-IP` and `RemoteAddr` for a request sent with a forged header). If confirmed, trust `Fly-Client-IP` only when `FLY_APP_NAME` is set.
 2. **What does `r.RemoteAddr` hold on Fly?** It isn't stated in the docs read. If it's the proxy's address, all visitors share one 30 rpm bucket today. That's restrictive, not exploitable.
 3. **Real-key confirmation of header auth.** `x-goog-api-key` is confirmed against `generateContent` with a fake key only (Google returns `API_KEY_INVALID`, not "missing key"). After deploy, the owner should send one chat message in production to confirm.
-4. **Widget conversation length (pre-existing, out of scope).** `ChatWidget.tsx` has no 20-message cap, so the 11th user message gets the server's 400 and shows "Something went wrong." This PR doesn't change that.
+4. **Long pastes are now silently truncated at 2000 characters** by the widget's `maxLength`. There's no counter or hint. This is intended, and a visible counter could be a later UX tweak.
+5. **Widget conversation length (pre-existing, out of scope).** `ChatWidget.tsx` has no 20-message cap, so the 11th user message gets the server's 400 and shows "Something went wrong." This PR doesn't change that.
 
 ## Acceptance Criteria
 
 1. No error returned by `GeminiProvider` contains the API key (tests: refused connection, HTTP 500, timeout).
-2. The key is sent only in `x-goog-api-key`. The request URL has no query string.
+2. The key is sent only in `x-goog-api-key`. The request URL has no query string. Redirects are not followed.
 3. Gemini calls time out after `chat.RequestTimeout`.
-4. Chat: body > 1 MiB → 413; role other than `user`/`assistant` → 400; user content > 2000 runes or assistant > 8000 runes → 400; the largest widget conversation → 200.
+4. Chat: more than 20 messages → 400 without decoding them all; body > 1 MiB → 413; role other than `user`/`assistant` → 400; user content > 2000 runes or assistant > 8000 runes → 400; the largest widget conversation → 200.
 5. Game: body > 4 KiB → 413; a normal move → 200.
 6. The server sets all four timeouts, and `WriteTimeout > chat.RequestTimeout`.
 7. The widget input has `maxLength` equal to the server user cap, guarded by a Vitest test.
@@ -112,9 +117,9 @@ Decision: **no behaviour change.** If the proxy passes a client-supplied `Fly-Cl
 
 | File | Change |
 |------|--------|
-| `api/internal/chat/provider.go` | Key in header; `BaseURL`, `HTTPClient` fields; `RequestTimeout` |
-| `api/internal/chat/provider_test.go` | Key-leak, header, success and timeout tests |
-| `api/internal/chat/handler.go` | Body cap, role validation, per-message caps |
+| `api/internal/chat/provider.go` | Key in header; `BaseURL`, `HTTPClient` fields with defaults; `RequestTimeout`; no redirects; bounded response read |
+| `api/internal/chat/provider_test.go` | Key-leak, header, redirect, success, zero-value and timeout tests |
+| `api/internal/chat/handler.go` | Body cap, streaming message-count check, role validation, per-message caps |
 | `api/internal/chat/handler_test.go` | Limit tests, including the largest widget conversation |
 | `api/internal/game/handler.go` | Body cap |
 | `api/internal/game/handler_test.go` | Oversized body test |

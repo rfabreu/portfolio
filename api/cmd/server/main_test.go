@@ -13,7 +13,8 @@ func TestNewServer_SetsTimeouts(t *testing.T) {
 	if srv.ReadHeaderTimeout <= 0 || srv.ReadTimeout <= 0 || srv.WriteTimeout <= 0 || srv.IdleTimeout <= 0 {
 		t.Errorf("all server timeouts must be set, got %+v", srv)
 	}
-	if srv.WriteTimeout <= chat.RequestTimeout {
-		t.Errorf("WriteTimeout (%v) must exceed the Gemini timeout (%v)", srv.WriteTimeout, chat.RequestTimeout)
+	// The write deadline starts once headers are read, so it covers the body read and the Gemini call.
+	if srv.WriteTimeout <= srv.ReadTimeout+chat.RequestTimeout {
+		t.Errorf("WriteTimeout (%v) must exceed ReadTimeout (%v) plus the Gemini timeout (%v)", srv.WriteTimeout, srv.ReadTimeout, chat.RequestTimeout)
 	}
 }
