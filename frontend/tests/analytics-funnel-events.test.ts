@@ -42,9 +42,9 @@ function sourceFiles(dir = SRC): string[] {
   });
 }
 
-const ORANGECAT_HREF = /href=(?:"https:\/\/orangecatlabs\.ca\/?"|\{ORANGECAT_URL\})/;
-const LINKEDIN_HREF =
-  /href=(?:"https:\/\/linkedin\.com\/in\/rafael-a-gomes"|\{resume\.data\.links\.linkedin\})/;
+// Deliberately loose: any scheme, `www.`, path, query or quoting still counts as a funnel link.
+const ORANGECAT_HREF = /href=["']?[^\s>]*orangecatlabs\.ca|href=\{ORANGECAT_URL\}/;
+const LINKEDIN_HREF = /href=["']?[^\s>]*linkedin\.com\/in\/rafael|href=\{resume\.data\.links\.linkedin\}/;
 
 function funnelAnchors(pattern: RegExp) {
   return sourceFiles().flatMap((file) =>
@@ -287,6 +287,16 @@ describe('P10 Phase 3: source-level guards', () => {
     );
   });
 
+  it('has no Markdown-syntax links to OrangeCat Labs or Rafael\'s LinkedIn (they cannot carry tracking attributes)', () => {
+    const offenders = sourceFiles().flatMap((file) =>
+      [...fs.readFileSync(file, 'utf-8').matchAll(/\]\([^)]*(orangecatlabs\.ca|linkedin\.com\/in\/rafael)[^)]*\)/g)].map(
+        () => path.relative(SRC, file),
+      ),
+    );
+
+    expect(offenders).toEqual([]);
+  });
+
   it('the Freckles Design credit is attributed as freckles-credit', () => {
     const md = fs.readFileSync(path.join(SRC, 'content/projects/freckles-design.md'), 'utf-8');
     const [tag] = anchorsWithHref(md, 'https://orangecatlabs.ca');
@@ -311,11 +321,9 @@ describe('P10 Phase 3: source-level guards', () => {
     for (const file of sourceFiles()) {
       const source = fs.readFileSync(file, 'utf-8');
       const calls = [...source.matchAll(/umami\.track\('([\w-]+)'/g)];
-      const guards = source.match(/typeof umami !== 'undefined'/g) ?? [];
+      const guardedCalls = source.match(/typeof umami !== 'undefined'\) umami\.track\('/g) ?? [];
 
-      expect(guards.length, `${path.relative(SRC, file)} has unguarded umami.track`).toBeGreaterThanOrEqual(
-        calls.length,
-      );
+      expect(guardedCalls.length, `${path.relative(SRC, file)} has an unguarded umami.track`).toBe(calls.length);
       calls.forEach((call) => names.add(call[1]));
     }
 

@@ -12,7 +12,7 @@ Goals:
 1. Attribute every OrangeCat Labs click to the placement that produced it.
 2. Track the secondary CTA (View Projects) and LinkedIn outbound clicks.
 3. Track contact form attempts and successes so the funnel (visit → click / attempt → success) can be read from one dashboard.
-4. Send no personal data, change nothing visible, and break nothing when Umami is absent.
+4. Send no personal data, change nothing visible (copy, layout, styling, targets), and break nothing when Umami is absent. The one behavioural difference is the same-tab LinkedIn links on `/resume` (open question 2).
 
 Non-goals: Playwright funnel E2E specs (separate follow-up PR), GitHub/demo outbound links, internal anchor links (`#contact`), new copy, new analytics vendors, changes to the Umami script tags.
 
@@ -27,7 +27,8 @@ Source: https://umami.is/docs/track-events and the live tracker `https://cloud.u
 - For an `<a>` with an `href`:
   - `target="_blank"`, or a Ctrl/Shift/Meta/middle click: the tracker does **not** call `preventDefault`. It sends the event and the browser opens the tab as normal. Every OrangeCat Labs link on the site opens in a new tab.
   - Any other click (same tab): the tracker calls `preventDefault`, sends the event, and only after the request settles assigns `location.href`. Navigation is delayed by one network round trip.
-- Tracking is skipped entirely when the script has not loaded (dev builds, blockers, preview deploys). The site's script tags do not set `data-do-not-track`, so the tracker does not honour the browser's Do Not Track setting. No element needs a fallback.
+- Tracking is skipped entirely when the script has not loaded (`astro dev`, blockers). The site's script tags do not set `data-do-not-track`, so the tracker does not honour the browser's Do Not Track setting. No element needs a fallback.
+- Netlify deploy previews run the same production build (`netlify.toml`, `[context.deploy-preview]`) and the script tags set no `data-domains`, so previews load the tracker and report to the production Umami site, tagged with the preview hostname. This was already true for pageviews; the new events add to it (open question 7).
 - The script tag loads only when `import.meta.env.PROD`. This spec does not change that.
 
 Consequences for the design:
@@ -98,7 +99,7 @@ Add `data-umami-event` and `data-umami-event-location` to each anchor in the tab
 `Contact.astro` gets a small `<script>` that listens for the `submit` event on `form[name="contact"]` and calls `umami.track('contact-form-submit')` with **no data**, behind the `typeof umami` guard. The `submit` event only fires after native validation passes, so the count is real attempts. The tracker's request uses `fetch(..., { keepalive: true })`, so it survives the navigation to `/success`. The script never reads `FormData`, field values or `.value`.
 
 ### 4.5 Success page
-`success.astro` gets a small `<script>` that calls `umami.track('contact-form-success')` on `window.load`, behind the `typeof umami` guard. The Umami script tag is `async`; async scripts delay `window.load`, so waiting for `load` avoids running before `umami` is defined. The site's form posts to `/success` (Netlify Forms redirects the submit there), so this page load is the only client-side success signal.
+`success.astro` gets a small `<script>` that calls `umami.track('contact-form-success')` on `window.load`, behind the `typeof umami` guard. The Umami script tag is `async`; async scripts delay `window.load`, so waiting for `load` avoids running before `umami` is defined. The site's form posts to `/success` (Netlify Forms redirects the submit there), so this page load is the client-side success signal. Umami's automatic pageview already records `/success` visits; the named event makes the success count directly readable in Events and carries the same over-counting caveat (open question 3).
 
 ---
 
@@ -117,8 +118,8 @@ Add `data-umami-event` and `data-umami-event-location` to each anchor in the tab
 Vitest, matching `tests/reposition-hero-nav.test.ts` and `tests/contact-copy.test.ts`:
 - Each tracked element, rendered through the Astro container, carries the expected `data-umami-event` and `data-umami-event-location`.
 - MobileNav is rendered with its menu open (React `useState` mocked in its own test file) to assert its attributes, since the menu is not in the server-rendered HTML.
-- Source scan: every `<a>` whose `href` is the OrangeCat Labs URL (literal or `ORANGECAT_URL`) or Rafael's LinkedIn URL carries a `data-umami-event` in `src/**` (`.astro`, `.tsx`, `.md`). This catches CTAs added later.
-- Source scan: only `location` and `project` data keys exist; the imperative scripts reference no form values; every `umami.track` call is behind a `typeof umami !== 'undefined'` guard.
+- Source scan: every `<a>` under `src/**` (`.astro`, `.tsx`, `.md`) whose `href` points at `orangecatlabs.ca` (any scheme, `www.`, path or quoting, or `ORANGECAT_URL`) or at Rafael's LinkedIn profile carries a `data-umami-event`, and the set of locations equals the catalogue. Markdown-syntax links to either domain are rejected, since they cannot carry attributes. Limitation: the tag matcher stops at a bare `>` inside an attribute expression (`=>` is handled), so such an anchor would need a manual check.
+- Source scan: only `location` and `project` data keys exist; the imperative scripts reference no form values; every `umami.track` call sits directly behind its own `typeof umami !== 'undefined'` guard.
 
 Build verification (`frontend/`): `npm ci`, `npx astro check`, `npm run build`, `npm test`; then inspect `frontend/dist/` for the attributes on the home page, the Freckles Design case study, another case study (project slug), `/resume`, `/success`, and the bundled MobileNav chunk.
 
@@ -134,3 +135,4 @@ Not verifiable here: production analytics. The owner must open the Umami dashboa
 4. **Undercounting.** Visitors using an ad/tracker blocker send nothing, so counts are a lower bound.
 5. **Services "Discuss a project →" link** points to `#contact`, not `orangecatlabs.ca`, so it is untracked. Say if an internal-CTA event is wanted.
 6. **Testimonial and GitHub links** are untracked by design (section 3). Say if either should be added.
+7. **Deploy previews and local test traffic report to the production Umami site.** Previews are production builds without `data-domains`, so clicks on a preview (including reviewing this PR's preview) create events tagged with the `*.netlify.app` hostname. Filter the dashboard on hostname `rafaelabreu.netlify.app`. Restricting reporting would mean adding `data-domains="rafaelabreu.netlify.app"` to both layouts' script tags; that is outside this PR's scope (script tags are listed as a non-goal), so it is left to the owner.

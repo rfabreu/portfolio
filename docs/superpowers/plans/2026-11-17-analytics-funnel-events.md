@@ -4,7 +4,7 @@
 
 **Goal:** Add Umami custom events for the OrangeCat Labs funnel (Issue #30, P10 Phase 3): OrangeCat Labs clicks by placement, View Projects, LinkedIn clicks, contact form attempts and successes.
 
-**Architecture:** Declarative `data-umami-event` / `data-umami-event-location` attributes on existing anchors; three tiny guarded `umami.track` scripts (Hero, Contact, success page) where declarative tracking is wrong. No visible change.
+**Architecture:** Declarative `data-umami-event` / `data-umami-event-location` attributes on existing anchors; three tiny guarded `umami.track` scripts (Hero, Contact, success page) where declarative tracking is wrong. No visible change to copy, layout or styling (same-tab LinkedIn links on `/resume` wait for Umami's request; spec open question 2).
 
 **Tech Stack:** Astro 6, React islands, Umami Cloud, Vitest.
 
