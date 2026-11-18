@@ -25,6 +25,7 @@ const ORANGECAT_URL = 'https://orangecatlabs.ca';
       {navItems.map((item) => (
         <a
           href={item.href}
+          data-brief-cta={item.href === '/#contact' ? 'nav' : undefined}
           class="text-text-muted text-xs tracking-[1.5px] uppercase hover:text-accent-indigo transition-colors duration-200"
         >
           {item.label}
@@ -58,3 +59,9 @@ const ORANGECAT_URL = 'https://orangecatlabs.ca';
     <MobileNav client:load navItems={navItems} isResumePage={isResumePage} />
   </nav>
 </header>
+
+<script>
+  document.querySelector('[data-brief-cta="nav"]')?.addEventListener('click', () => {
+    if (typeof umami !== 'undefined') umami.track('brief-cta-click', { location: 'nav' });
+  });
+</script>

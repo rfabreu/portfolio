@@ -14,6 +14,11 @@ interface Props {
 export default function MobileNav({ navItems, isResumePage }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
+  function handleNavClick(href: string) {
+    if (href === '/#contact' && typeof umami !== 'undefined') umami.track('brief-cta-click', { location: 'mobile-nav' });
+    setIsOpen(false);
+  }
+
   return (
     <div className="md:hidden">
       <button
@@ -42,7 +47,7 @@ export default function MobileNav({ navItems, isResumePage }: Props) {
             <a
               key={item.label}
               href={item.href}
-              onClick={() => setIsOpen(false)}
+              onClick={() => handleNavClick(item.href)}
               className="text-text-primary text-2xl font-bold hover:text-accent-indigo transition-colors"
               style={{ letterSpacing: '-0.06em' }}
             >

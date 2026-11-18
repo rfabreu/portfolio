@@ -26,7 +26,13 @@ if (!resume) throw new Error('Resume entry not found at frontend/src/content/res
     </header>
     <ResumeBody resume={resume} />
     <footer class="resume-page-footer">
-      <p>Contact via <a href="/#contact">contact form</a> or <a href={resume.data.links.linkedin} data-umami-event="linkedin-click" data-umami-event-location="resume-page-footer">LinkedIn</a>.</p>
+      <p>Contact via <a href="/#contact" data-brief-cta="resume-page-footer">contact form</a> or <a href={resume.data.links.linkedin} data-umami-event="linkedin-click" data-umami-event-location="resume-page-footer">LinkedIn</a>.</p>
     </footer>
   </main>
 </BaseLayout>
+
+<script>
+  document.querySelector('[data-brief-cta="resume-page-footer"]')?.addEventListener('click', () => {
+    if (typeof umami !== 'undefined') umami.track('brief-cta-click', { location: 'resume-page-footer' });
+  });
+</script>
