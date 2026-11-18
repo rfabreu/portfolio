@@ -17,7 +17,7 @@ The repo has no dependency automation and no vulnerability scanning in CI. Only 
 - Nothing auto-merges. Every Dependabot PR runs CI and needs the owner's approval. No auto-merge configuration is added.
 - Work follows spec → plan → feature branch → PR, adversarial review, green CI, owner approval (CLAUDE.md).
 - Never push to `main`; feature branch → PR only.
-- No failing check may be silenced (no `|| true`, `continue-on-error`, lowered threshold or ignore-list entry) to make this PR green.
+- No failing check may be silenced to make this PR green (no `|| true`, `continue-on-error`, lowered threshold or ignore-list entry). A failure is reported with its evidence and the decision goes to the owner. This is a constraint set for this PR (2026-11-17), consistent with the "Never assume" working rule in CLAUDE.md.
 
 ## Scope
 
@@ -138,13 +138,14 @@ Branch name: `chore/ci-supply-chain`
 1. **How to handle the unfixable picomatch advisory (owner decision, blocks merge).** Options, with a recommendation:
    - **A (recommended): keep the gate as is, hold this PR until a patched picomatch ships**, then re-run CI. Dependabot's grouped PR or `npm update picomatch` will pick the patch up. Preserves the safety property. Cost: the PR waits for an upstream release of unknown date.
    - B: merge now with an admin override. Branch protection enforcement applies to non-admins only, so this is possible, but then every later PR, including Dependabot's, fails `Frontend` until the patch lands.
-   - C: temporarily set `--audit-level=critical` in this PR. This weakens the gate and is not done here because the task forbids silencing a failing check; it is the owner's decision to take.
-   - D: split into two PRs (Dependabot + govulncheck now, npm audit later). Not done: the task asked for one PR.
+   - C: temporarily set `--audit-level=critical` in this PR. This weakens the gate. It is not done here because this PR's constraints rule out silencing a failing check; it is the owner's decision to take.
+   - D: split into two PRs (Dependabot + govulncheck now, npm audit later). Not done: this work was scoped as a single PR.
 2. **govulncheck pinned to v1.9.0, not the newer v1.10.0.** v1.10.0 was published hours before this spec was written (2026-11-17). Pinning a brand-new release of a security tool defeats the point of a pin, so the previous release, five weeks old, was chosen. Both give the same result on this repo today. If the owner prefers current, change one version string. Dependabot does not update a version embedded in a `run:` command, so bumps are manual. An alternative that Dependabot's `gomod` ecosystem would track is a `tool` directive in `api/go.mod` (`go get -tool`), at the cost of adding govulncheck's dependency graph to `go.mod`/`go.sum`. Rejected for now to keep this PR out of the Go module graph.
 3. **Dependabot config not run against GitHub.** See "Not asserted".
 4. **`npm audit` depends on the npm registry's audit endpoint being reachable.** An outage fails the step. Accepted for now. If it proves flaky, a retry wrapper is a follow-up.
 5. **No scheduled scan.** CI only runs on pull requests, so a new advisory shows up on the next PR, not on its own. GitHub's default security alerts and the weekly Dependabot PRs cover the gap. A scheduled workflow is possible but would add a new workflow and is out of scope.
-6. **Out-of-scope hardening noticed, not changed:** `ci.yml` has no top-level `permissions:` block (default token scope), and actions are pinned by tag (`@v4`), not commit SHA. Both are possible follow-ups. The `github-actions` Dependabot entry will keep the tags current meanwhile.
+6. **0.x minor bumps land in the grouped PR.** Under semver, a `0.y` → `0.(y+1)` bump is a minor change, so for example `@astrojs/check` (`^0.9.9`) moving to 0.10 would arrive inside the weekly `npm-minor-patch` PR even though 0.x minors can be breaking. Nothing auto-merges and CI runs on the group, so it is reviewed, but a breaking change could hide in a routine PR. Not changed here; a separate group or an `ignore` rule for 0.x packages is a follow-up if it becomes a problem.
+7. **Out-of-scope hardening noticed, not changed:** `ci.yml` has no top-level `permissions:` block (default token scope), and actions are pinned by tag (`@v4`), not commit SHA. Both are possible follow-ups. The `github-actions` Dependabot entry will keep the tags current meanwhile.
 
 ## CLAUDE.md follow-ups (not edited in this PR)
 

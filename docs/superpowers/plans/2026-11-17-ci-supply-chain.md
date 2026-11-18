@@ -52,7 +52,7 @@ Expected and observed: govulncheck exits 0 (`No vulnerabilities found.`); `npm a
 ### Step 5: Spec, plan, and adversarial review
 
 - Write this plan and the spec.
-- Start a `pr-review-toolkit:code-reviewer` subagent on `git diff origin/main...HEAD`. Ask it to hunt for: broken required-check names, wrong directories, unpinned tools, steps that run before content sync, PR-noise problems (grouping, limits) and security problems (permissions, auto-merge, secrets).
+- Start a reviewer subagent on `git diff origin/main...HEAD`. The planned type `pr-review-toolkit:code-reviewer` was not installed in this environment; the review ran as a `general-purpose` agent with the same reviewer brief (the closest installed reviewer type, `feature-dev:code-reviewer`, has no shell access to re-run the checks). Ask it to hunt for: broken required-check names, wrong directories, unpinned tools, steps that run before content sync, PR-noise problems (grouping, limits) and security problems (permissions, auto-merge, secrets).
 - Fix valid findings; record the review outcome in the PR body.
 
 ### Step 6: Verification before completion
