@@ -44,7 +44,7 @@
 
 ## 4. Out of Scope
 
-- `README.md` line 128 still says Netlify previews report failures (Issue #34). Not touched here (scope is CLAUDE.md and the roadmap); see section 5.
+- `README.md` line 128 said Netlify previews report failures (Issue #34); corrected by the orchestrator during review.
 - Editing Issue #30 (a proposed body is in the PR description for the owner), repo settings, branch deletion.
 - Unmerged work by other agents (API hardening, CI supply-chain checks, analytics events, PR #45).
 
@@ -54,7 +54,6 @@
 
 - Was reinstating the Services section (PR #42) intended, given Issue #30's "dropped from the plan" text? Only the owner can say; the docs state the facts and the question.
 - Repo description names OrangeCat Labs, but Issue #30 still has it unticked; owner to tick it if final.
-- `README.md` line 128 is stale for the same reason as CLAUDE.md's Netlify line; owner to say whether to fix it in this PR or separately.
 - Branch protection: `GET .../protection` has no `required_pull_request_reviews` key, while `GET .../protection/required_pull_request_reviews` returns 1 approving review. Owner to confirm which applies. Force pushes and deletions are disallowed.
 - The `superpowers:verification-before-completion` skill is not installed in this environment; verification was done manually (every claim re-run with `gh`/`git`, plus an independent reviewer).
 
