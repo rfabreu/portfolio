@@ -39,9 +39,11 @@ Requires: Go 1.26.1+
 
 **First-time clone:** run `make sync-content` (or `make dev`) before any `go` command — `internal/chat/embedded/` is gitignored and populated from `frontend/src/content/` at build time. `make dev` and `make test` invoke `sync-content` automatically.
 
-**API env vars:** `PORT`, `ALLOWED_ORIGINS`, `GEMINI_API_KEY`, `RATE_LIMIT_RPM`
+**API env vars:** `PORT`, `ALLOWED_ORIGINS`, `GEMINI_API_KEY`, `CHAT_RATE_LIMIT_RPM` (default 10), `GAME_RATE_LIMIT_RPM` (default 60), `CHAT_CLIENT_DAILY_LIMIT` (default 50), `CHAT_DAILY_CAP` (default 500), `TRUST_FLY_CLIENT_IP` (`1` in `fly.toml`). `RATE_LIMIT_RPM` is deprecated: when set it is the game default and can only tighten the chat default. Invalid or non-positive values log a warning and fall back to the default.
 
 **API limits** (PR #50): `/api/chat` body 1 MiB (413), roles `user`/`assistant` only, at most 20 messages, `user` content 2000 runes (must match `MAX_INPUT_LENGTH` in `ChatWidget.tsx`, guarded by `frontend/tests/chat-input-limit.test.ts`), `assistant` 8000 runes (400). `/api/game` body 4 KiB (413). Gemini calls time out after 30s (`chat.RequestTimeout`); the key is sent in the `x-goog-api-key` header, never the URL, and the client refuses redirects. Server timeouts are set in `newServer` in `api/cmd/server/main.go`.
+
+**API rate limits** (`api/internal/middleware/ratelimit.go`, `api/internal/chat/cap.go`): per client and per route (`/api/chat`, `/api/game`; `/health` is unlimited), fixed one-minute windows that reset on their own, 429 JSON with `Retry-After`. The client key is `Fly-Client-IP` when `TRUST_FLY_CLIENT_IP=1` (never `X-Forwarded-For`), otherwise the `RemoteAddr` host; IPv6 is keyed by /64. At most 10,000 clients are tracked per limiter (the oldest window is dropped when full). `/api/chat` also has a per-client limit of `CHAT_CLIENT_DAILY_LIMIT` per 24h. `/api/chat` also draws from a process-wide budget of `CHAT_DAILY_CAP` Gemini calls per 24h window; once spent it returns 503 JSON with `Retry-After`. The budget is in memory and per machine, so it resets when the machine stops. `fly.toml` sets request concurrency to soft 20 / hard 25. Spec: `docs/superpowers/specs/2026-11-18-api-rate-limiter-design.md`.
 
 ## API Routes
 
