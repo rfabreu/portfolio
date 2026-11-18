@@ -1,26 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 
-function getInitialTheme(): string {
-  if (typeof document !== 'undefined') {
-    return document.documentElement.dataset.theme || 'dark';
-  }
+function getTheme(): string {
+  return document.documentElement.dataset.theme || 'dark';
+}
+
+// The server has no document, so it and React's hydration pass use 'dark'
+// (getServerSnapshot). React then re-renders with the real theme set by the
+// inline script in BaseLayout, so a light-theme visitor gets no hydration mismatch.
+function getServerTheme(): string {
   return 'dark';
 }
 
-export default function ThemeToggle() {
-  const [theme, setTheme] = useState(getInitialTheme);
+function subscribe(onChange: () => void): () => void {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  });
+  return () => observer.disconnect();
+}
 
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const current = document.documentElement.dataset.theme || 'dark';
-      setTheme(current);
-    });
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
-    return () => observer.disconnect();
-  }, []);
+export default function ThemeToggle() {
+  const theme = useSyncExternalStore(subscribe, getTheme, getServerTheme);
 
   function toggle() {
     const next = theme === 'dark' ? 'light' : 'dark';
