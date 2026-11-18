@@ -24,7 +24,7 @@ if (!resume) throw new Error('Resume entry not found at frontend/src/content/res
     <ResumeBody resume={resume} />
   </div>
   <footer class="resume-modal-footer">
-    Contact via <a href="/#contact">contact form</a> or
+    Contact via <a href="/#contact" data-brief-cta="resume-modal">contact form</a> or
     <a href={resume.data.links.linkedin} target="_blank" rel="noopener noreferrer" data-umami-event="linkedin-click" data-umami-event-location="resume-modal">LinkedIn →</a>
   </footer>
 </dialog>
@@ -51,5 +51,11 @@ if (!resume) throw new Error('Resume entry not found at frontend/src/content/res
   // is, in practice, a click on the ::backdrop pseudo-element.
   modal?.addEventListener('click', (e) => {
     if (e.target === modal) modal.close();
+  });
+</script>
+
+<script>
+  document.querySelector('[data-brief-cta="resume-modal"]')?.addEventListener('click', () => {
+    if (typeof umami !== 'undefined') umami.track('brief-cta-click', { location: 'resume-modal' });
   });
 </script>

@@ -98,6 +98,7 @@ const services = [
     <div class="mt-12 text-center">
       <a
         href="#contact"
+        data-brief-cta="services"
         class="inline-flex items-center gap-2 text-accent-indigo hover:text-accent-indigo/80 text-sm font-semibold transition-colors"
       >
         <span>Have a project in mind? Submit a brief below</span>
@@ -106,3 +107,9 @@ const services = [
     </div>
   </div>
 </section>
+
+<script>
+  document.querySelector('[data-brief-cta="services"]')?.addEventListener('click', () => {
+    if (typeof umami !== 'undefined') umami.track('brief-cta-click', { location: 'services' });
+  });
+</script>
