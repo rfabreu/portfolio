@@ -2,9 +2,13 @@ package game
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 )
+
+// MaxBodyBytes is far above the largest valid request (a 9-cell board plus session counts).
+const MaxBodyBytes = 4 << 10
 
 // rawGameRequest is used for decoding so we can validate board length strictly.
 type rawGameRequest struct {
@@ -26,8 +30,14 @@ type GameResponse struct {
 
 func NewHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.Body = http.MaxBytesReader(w, r.Body, MaxBodyBytes)
 		var raw rawGameRequest
 		if err := json.NewDecoder(r.Body).Decode(&raw); err != nil {
+			var tooLarge *http.MaxBytesError
+			if errors.As(err, &tooLarge) {
+				http.Error(w, `{"error":"request body too large"}`, http.StatusRequestEntityTooLarge)
+				return
+			}
 			http.Error(w, `{"error":"invalid request body"}`, http.StatusBadRequest)
 			return
 		}
