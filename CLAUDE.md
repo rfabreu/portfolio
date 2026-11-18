@@ -57,7 +57,7 @@ Requires: Go 1.26.1+
 
 ## Deployment
 
-- **Frontend:** Netlify (static deploy via `nwtgck/actions-netlify@v3`). Triggered on push to `main` when `frontend/**` changes.
+- **Frontend:** Netlify (static deploy via `nwtgck/actions-netlify@v4`). Triggered on push to `main` when `frontend/**` changes.
 - **API:** Fly.io (Docker). Triggered on push to `main` when `api/**`, `frontend/src/content/resume/**`, or `frontend/src/content/projects/**` changes (the chatbot embeds that content). A resume or project content change therefore deploys both the frontend and the API.
 - **CI:** Three jobs on every PR to `main`: `Frontend` (`astro check`, build, Vitest, then the npm audit gate), `Frontend E2E` (build, resume PDF, Playwright) and `API` (`make sync-content`, `go vet`, `go test`, `go build`, then pinned `govulncheck`). The audit gate runs its own unit tests, then `npm audit --json` checked by `.github/scripts/npm-audit-gate.mjs`: high and critical advisories fail unless allowlisted there with a reason and an expiry date. Currently allowlisted: GHSA-fc5q-39xc-vjpf (picomatch ReDoS; no patched release, 4.0.7 was still the latest on npm, checked 2026-11-18), until 2027-01-31. An expired entry fails the gate. `govulncheck` is pinned to `v1.9.0` in `ci.yml`; bump it by hand.
 - **Playwright runner pin:** the `Frontend E2E` job and the `Deploy to Netlify` job (`deploy-frontend.yml`) run on `ubuntu-24.04`, not `ubuntu-latest` (Ubuntu 26.04), because Playwright 1.59.1 could not install Chromium there (PR #48). Playwright is now 1.65.1, but the pins are still in place until a follow-up confirms Chromium installs on 26.04.

@@ -28,5 +28,5 @@
 
 ## Task 3: Review and open the PR
 
-- [ ] **Step 1:** Adversarial review of the diff by a reviewer subagent; fix findings.
+- [x] **Step 1:** Adversarial review of the diff by a reviewer subagent (Opus); findings applied (rebase onto `main` after #51–#54, Node 22.23.4 claim, install-script count, `actions-netlify@v4` in CLAUDE.md, first-deploy note).
 - [ ] **Step 2:** Push the branch, open a PR to `main`, check `gh pr checks`.
