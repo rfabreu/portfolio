@@ -7,7 +7,13 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
+
+const defaultBaseURL = "https://generativelanguage.googleapis.com/v1beta"
+
+// RequestTimeout bounds each Gemini call. The server's WriteTimeout must exceed it.
+const RequestTimeout = 30 * time.Second
 
 type Message struct {
 	Role    string `json:"role"`
@@ -19,15 +25,22 @@ type Provider interface {
 }
 
 type GeminiProvider struct {
-	APIKey string
-	Model  string
+	APIKey     string
+	Model      string
+	BaseURL    string
+	HTTPClient *http.Client
 }
 
 func NewGeminiProvider(apiKey, model string) *GeminiProvider {
 	if model == "" {
 		model = "gemini-2.5-flash-lite"
 	}
-	return &GeminiProvider{APIKey: apiKey, Model: model}
+	return &GeminiProvider{
+		APIKey:     apiKey,
+		Model:      model,
+		BaseURL:    defaultBaseURL,
+		HTTPClient: &http.Client{Timeout: RequestTimeout},
+	}
 }
 
 func (g *GeminiProvider) GenerateResponse(ctx context.Context, systemPrompt string, messages []Message) (string, error) {
@@ -60,14 +73,16 @@ func (g *GeminiProvider) GenerateResponse(ctx context.Context, systemPrompt stri
 		return "", fmt.Errorf("marshal request: %w", err)
 	}
 
-	url := fmt.Sprintf("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s", g.Model, g.APIKey)
+	// The key goes in a header, never the URL: *url.Error includes the full URL and gets logged.
+	url := fmt.Sprintf("%s/models/%s:generateContent", g.BaseURL, g.Model)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(jsonBody))
 	if err != nil {
 		return "", fmt.Errorf("create request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("x-goog-api-key", g.APIKey)
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := g.HTTPClient.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("gemini request: %w", err)
 	}

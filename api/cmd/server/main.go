@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/rfabreu/portfolio-api/internal/chat"
 	"github.com/rfabreu/portfolio-api/internal/game"
@@ -35,8 +36,20 @@ func main() {
 	handler := middleware.CORS(allowedOrigins)(middleware.RateLimit(rpm)(mux))
 
 	log.Printf("API server starting on :%s", port)
-	if err := http.ListenAndServe(":"+port, handler); err != nil {
+	if err := newServer(":"+port, handler).ListenAndServe(); err != nil {
 		log.Fatal(err)
+	}
+}
+
+func newServer(addr string, handler http.Handler) *http.Server {
+	return &http.Server{
+		Addr:              addr,
+		Handler:           handler,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		// Must outlast the Gemini call so chat errors still reach the client.
+		WriteTimeout: chat.RequestTimeout + 15*time.Second,
+		IdleTimeout:  120 * time.Second,
 	}
 }
 
