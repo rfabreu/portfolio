@@ -19,8 +19,8 @@ Branch: fix/hydration-mismatch
 - [x] Capture before screenshots (pre-hydration and hydrated, both themes) and the per-frame theme/background samples.
 
 ### Task 2: Failing test
-- [x] Add `frontend/tests/e2e/hydration.spec.ts`.
-- [x] Run it against a build of `main`; confirm the light-theme cases fail.
+- [x] Add `frontend/tests/e2e/hydration.spec.ts` (dark/light, reduced motion, OS-derived light, desktop and mobile toggle).
+- [x] Run it against a build with `main`'s `ThemeToggle.tsx`; confirm the light-theme cases fail (12 of 27).
 
 ### Task 3: Fix
 - [x] `frontend/src/islands/ThemeToggle.tsx`: `useSyncExternalStore(subscribe, getTheme, getServerTheme)`.
@@ -30,5 +30,5 @@ Branch: fix/hydration-mismatch
 - [x] In `frontend/`: `npm ci`, `npx astro check`, `npm run build`, `npm test`, `npm run build:pdf`, `npm run test:e2e`.
 
 ### Task 5: Review and PR
-- [x] Adversarial review of the diff vs `origin/main` by a reviewer subagent; fix findings.
-- [x] Push `fix/hydration-mismatch`, open the PR to `main`, check `gh pr checks`.
+- [x] Adversarial review of the diff vs `origin/main` by a reviewer subagent (Opus); findings fixed.
+- [ ] Push `fix/hydration-mismatch`, open the PR to `main`, check `gh pr checks`.

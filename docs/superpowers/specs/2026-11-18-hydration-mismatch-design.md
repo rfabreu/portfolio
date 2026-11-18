@@ -42,7 +42,7 @@ Ruled out by the same runs (zero mismatches in dark theme, and the only reported
 
 This is the pattern React documents for external mutable state with SSR. Alternatives rejected:
 
-- `useState('dark')` + `useEffect` sync: also correct, but duplicates what `useSyncExternalStore` provides and needs an extra effect-triggered render plus manual subscription state.
+- `useState('dark')` + `useEffect` sync: also correct and equally one extra render after hydration, but the subscription and the state copy are hand-written; `useSyncExternalStore` has both built in, with no state to keep in sync.
 - `suppressHydrationWarning` on the button: hides the error but leaves the server markup wrong and only covers one attribute, not the swapped SVG child.
 - `client:only="react"`: loses the server-rendered button (layout shift in the nav) for no benefit.
 
@@ -58,8 +58,12 @@ Before and after the fix (production build, JS for islands blocked to capture th
 
 ## 5. Tests
 
-- `frontend/tests/e2e/hydration.spec.ts` (Playwright, runs in the existing `Frontend E2E` job): the five pages × dark/light × `reducedMotion` `no-preference`/`reduce` = 20 tests. Each collects `console` errors and `pageerror`s, waits until no `astro-island[ssr]` remains, and fails on `Minified React error #418`, `Hydration` or `did not match`. One more test checks that a persisted light theme gets the "Switch to dark mode" label after hydration and that clicking the toggle flips `data-theme` and the label.
-- **Proven to fail before the fix:** run against a build of `main`, 8 of the 21 fail (every light-theme page except `/resume/`) and 13 pass. After the fix, 21 pass.
+- `frontend/tests/e2e/hydration.spec.ts` (Playwright, runs in the existing `Frontend E2E` job):
+  - The five pages × stored dark/light theme × `reducedMotion` `no-preference`/`reduce` = 20 tests, plus the five pages with no stored theme and OS `prefers-color-scheme: light` = 5 tests. Each collects `console` errors and `pageerror`s and fails on `Minified React error #418`, `Hydration`, `did not match` or `didn't match`.
+  - Waiting for hydration: Astro drops an island's `ssr` attribute when `hydrateRoot` is scheduled, and React reports a mismatch when that hydration commits, so the helper waits for no `astro-island[ssr]` and then for an idle callback, to avoid asserting before a late error arrives (found in review).
+  - Two behaviour tests: a persisted light theme gets the "Switch to dark mode" label after hydration and clicking flips `data-theme` and the label, on desktop and in the 390px mobile menu overlay.
+  - `/resume/` has no React islands (it does not render `Nav`), so its tests pass trivially; they are kept so a future island there is covered.
+- **Proven to fail before the fix:** run against a build with `main`'s `ThemeToggle.tsx`, 12 of the 27 fail (every light-theme page except `/resume/`, stored or OS-derived) and 15 pass. After the fix, 27 pass.
 
 ## 6. Verification
 
