@@ -125,7 +125,7 @@ Set `featured: true` for large cards on the main page, `false` for the compact g
 feature/*  ──PR──►  main  ──auto-deploy──►  production
 ```
 
-No `develop` branch. PRs to `main` trigger CI checks; merges trigger production deploys. Netlify's PR preview checks currently report failures (Issue #34).
+No `develop` branch. PRs to `main` trigger CI checks; merges trigger production deploys. Netlify also posts a deploy-preview check on each PR (the earlier failures, Issue #34, were fixed by PR #44).
 
 ## License
 
