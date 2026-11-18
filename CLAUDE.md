@@ -58,8 +58,8 @@ Requires: Go 1.26.1+
 - **Frontend:** Netlify (static deploy via `nwtgck/actions-netlify@v3`). Triggered on push to `main` when `frontend/**` changes.
 - **API:** Fly.io (Docker). Triggered on push to `main` when `api/**`, `frontend/src/content/resume/**`, or `frontend/src/content/projects/**` changes (the chatbot embeds that content). A resume or project content change therefore deploys both the frontend and the API.
 - **CI:** Three jobs on every PR to `main`: `Frontend` (`astro check`, build, Vitest), `Frontend E2E` (build, resume PDF, Playwright) and `API` (`make sync-content`, `go vet`, `go test`, `go build`).
-- **Branch protection (checked 2026-11-07):** `main` requires the `Frontend` and `API` checks. `Frontend E2E` is not required, and enforcement applies to non-admins only. Other protection settings (required reviews, force-push rules) are not readable with the available token.
-- **Known failing checks (not required):** three Netlify preview checks for the project `rafaelswe` ("Deploy failed", cause not yet known). Tracked in Issue #34.
+- **Branch protection (checked 2026-11-17):** `main` requires the `Frontend`, `API` and `Frontend E2E` checks, with strict mode (branch must be up to date) on. Admin enforcement is off, so the rules bind non-admins only. Force pushes and deletions are disallowed. Required reviews: the protection endpoint returns no review rule, but the dedicated `required_pull_request_reviews` endpoint returns 1 approving review, so the owner should confirm which applies.
+- **Netlify preview checks:** Issue #34 (failing `rafaelswe` previews) is closed (2026-11-07). PR #44 added a root `netlify.toml` (`base = "frontend"`); on PR #42 `netlify/rafaelswe/deploy-preview` passes (checked 2026-11-17).
 
 ## Phase 2 Status
 
@@ -75,8 +75,9 @@ Roadmap: `docs/phase2-roadmap.md`
 - [x] P7: Dark/Light Theme Toggle (PR #17)
 - [x] P8: Testimonials architecture (PR #31) — section stays hidden until real testimonials are added
 - [x] P9: Resume Feature (PR #26, #27)
-- [ ] P10: Reposition for OrangeCat Labs (Issue #30) — done: Phase 1 (PR #32, og follow-up PR #35), About copy (PR #36), Contact copy (PR #38). Open: Freckles Design credit, resume headline (via P11), optional contact fields (deferred), chatbot (spec first), chat widget greeting, analytics events, page order, GitHub repo description
-- [ ] P11: Resume for Executive and Technical Leadership Audiences (Issue #37)
+- [ ] P10: Reposition for OrangeCat Labs (Issue #30) — done: Phase 1 (PR #32, og follow-up PR #35), About copy (PR #36), Contact copy (PR #38), Freckles Design credit (PR #41), Services section, Project Brief contact fields (`project_type`, `timeline`; no budget field), project-page CTA and resume `title` (PR #42), GitHub repo description (now names OrangeCat Labs; checked 2026-11-17). Open: resume summary and the rest of the resume (via P11), chatbot (spec first), chat widget greeting, analytics events (only `chat-opened` and `game-started` exist), page order. **Owner to confirm:** Issue #30 says the standalone Services section was dropped from the plan, but PR #42 shipped `frontend/src/components/Services.astro` and a Services nav item; was reinstating it intended?
+- [ ] P11: Resume for Executive and Technical Leadership Audiences (Issue #37) — open; PR #42 already changed the `profile.md` `title` to "Co-Founder, OrangeCat Labs | Full-Stack & Infrastructure Leader", the `summary` is unchanged
+- [x] Dependabot triage (Issue #39): closed 2026-11-13; 0 open alerts (checked 2026-11-17)
 
 ## Docs Workflow
 
@@ -126,8 +127,8 @@ The site drives business to OrangeCat Labs (https://orangecatlabs.ca). While P10
 
 Confirmed by the owner on 2026-11-07:
 
-- **Production URL:** https://rafaelabreu.netlify.app (`site` in `frontend/astro.config.mjs`). `rafaelabreu.dev` is not the production URL. The references to it in `frontend/src/content/resume/profile.md` (`links.portfolio`) and `frontend/src/content/projects/portfolio.md` (`demo`) are known mismatches awaiting correction (P11, and a projects-content PR that is not yet opened).
-- **LinkedIn:** https://linkedin.com/in/rafael-a-gomes. `links.linkedin` in `profile.md` currently differs; tracked in Issue #37.
+- **Production URL:** https://rafaelabreu.netlify.app (`site` in `frontend/astro.config.mjs`). `rafaelabreu.dev` is not the production URL. `links.portfolio` in `frontend/src/content/resume/profile.md` and `demo` in `frontend/src/content/projects/portfolio.md` now use it (corrected in PR #41, checked on `main` 2026-11-17).
+- **LinkedIn:** https://linkedin.com/in/rafael-a-gomes. `links.linkedin` in `profile.md` now matches (PR #41, checked on `main` 2026-11-17).
 
 ## Working Rules
 
