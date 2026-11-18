@@ -173,18 +173,17 @@ Features are ordered by impact and dependency. P1–P9 are independent and can e
 
 **Why:** The site is the most visible asset for the studio. Its first screen, calls to action, and contact path should send business to https://orangecatlabs.ca instead of recruiting an employee.
 
-**Status** (checked against `main`, Issue #30, and owner decisions on 2026-11-07):
+**Status** (checked against `main`, GitHub, and Issue #30 on 2026-11-17; owner decisions of 2026-11-07):
 - Phase 1: positioning, CTAs, nav, footer credit, SEO and social tags — ✅ Done (PR #32); absolute `og:image` and `og:url` — ✅ Done (PR #35)
 - Phase 2:
   - About copy in founder voice with one OrangeCat Labs link — ✅ Done (PR #36)
   - Contact section copy for business inquiries — ✅ Done (PR #38, copy only)
-  - Services section — dropped: the studio's own site covers services, and the hero, nav, and footer already link to it
-  - Contact form fields (company, project type; never a budget field) — deferred, undecided
-  - Freckles Design case study credits OrangeCat Labs — planned (the owner confirmed the credit is accurate)
-  - Resume headline alignment — planned, delivered through P11 (Issue #37)
-  - `projects/portfolio.md` `demo` link corrected to the production URL — planned, no issue or PR yet; it can share a PR with the Freckles credit because both change projects content
+  - Freckles Design case study credits OrangeCat Labs — ✅ Done (PR #41); the same PR corrected `projects/portfolio.md` `demo` and the `profile.md` `links.portfolio` and `links.linkedin` values
+  - Services section — ✅ shipped in PR #42 (`frontend/src/components/Services.astro`, mounted after Hero in `index.astro`, Services item in the nav). Issue #30 still says the section "was dropped from the plan". **Owner to confirm whether reinstating it was intended**
+  - Contact form Project Brief fields — ✅ Done in PR #42: `project_type` (required) and `timeline`; no budget field. No `company` field exists in `Contact.astro`
+  - Conversion CTA block on project pages and resume `title` set to "Co-Founder, OrangeCat Labs | Full-Stack & Infrastructure Leader" — ✅ Done (PR #42). The resume `summary` and the rest of the resume are open under P11 (Issue #37)
 - Phase 3: chatbot grounding (design spec first), chat widget greeting, analytics events (only `chat-opened` and `game-started` exist today), page section order — planned
-- Follow-ups: GitHub repo description (repo settings, owner)
+- Follow-ups: GitHub repo description now names OrangeCat Labs (checked 2026-11-17); the item is still unticked in Issue #30
 
 **Constraints:**
 - No budget or pricing language anywhere (copy, form fields, chatbot)
@@ -202,12 +201,14 @@ See Issue #30 for the full checklist.
 
 **Why:** The resume is the secondary link behind the OrangeCat Labs call to action. Its headline and summary should match the co-founder voice the rest of the site now has.
 
+**State** (checked 2026-11-17): PR #42 changed the `title` field to "Co-Founder, OrangeCat Labs | Full-Stack & Infrastructure Leader"; the `summary` is unchanged. PR #41 already corrected `links.linkedin` and `links.portfolio`. Issue #37 is open.
+
 **Scope** (see Issue #37 for the full checklist):
 - Decide the target audiences and the headline title; rewrite the summary in executive voice
 - Audit every bullet for a factual result or scale figure; metrics must come from Rafael, none invented
 - Decide how OrangeCat Labs appears in the work history
 - Reconcile the Red Hat certification wording with the About section
-- Correct `links.linkedin` to `https://linkedin.com/in/rafael-a-gomes` and `links.portfolio` to `https://rafaelabreu.netlify.app` (both owner-confirmed 2026-11-07; Issue #37 still lists the portfolio URL as a question)
+- ~~Correct `links.linkedin` and `links.portfolio`~~ — done in PR #41 (owner-confirmed values `https://linkedin.com/in/rafael-a-gomes` and `https://rafaelabreu.netlify.app`; Issue #37's checklist still lists the portfolio URL as a question)
 - Regenerate the PDF and check the modal and `/resume` page
 
 **Constraints:** no email address on the resume; no budget or pricing language; how the resume describes the co-founder role is a decision for Issue #37.
@@ -228,7 +229,7 @@ P6 (Blog)              — independent, new content collection
 P7 (Theme Toggle)      — independent, CSS + React island
 P8 (Testimonials)      — architecture done; section hidden until testimonials are collected
 P9 (Resume Feature)    — independent, replaces broken Resume button
-P10 (OrangeCat Labs)   — Phase 1, About copy, and Contact copy done; the remaining Phase 2 and Phase 3 items build on it (chatbot work needs a spec first)
+P10 (OrangeCat Labs)   — Phase 1, About, Contact, Freckles credit, Services, and Project Brief done; Phase 3 (chatbot spec first, widget greeting, analytics events, page order) builds on it
 P11 (Resume)           — builds on P10; delivers P10's resume headline item
 ```
 
@@ -238,6 +239,6 @@ P1–P9 are independent. P10 and P11 are sequenced as described above. Recommend
 
 Minor items from the V1 review that can be addressed alongside Phase 2 work (some are now resolved):
 
-- **Dependabot alerts** — PR #10 removed the legacy CRA files that the original 88 alerts referred to. The alerts open now are on the current frontend dependencies and are triaged in Issue #39.
+- **Dependabot alerts** — PR #10 removed the legacy CRA files that the original 88 alerts referred to. The alerts on the current frontend dependencies were triaged in Issue #39 (closed 2026-11-13); 0 alerts are open (checked 2026-11-17).
 - **GitHub Pages** — disabled in repo settings (`has_pages` is false, checked 2026-11-07); nothing further to do.
 - **go.sum** — the Go API has no external dependencies yet, so no `go.sum` exists. CI cache warnings about missing `go.sum` are harmless but will resolve once an external dependency is added.
