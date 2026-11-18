@@ -86,3 +86,4 @@ Not verifiable here: production analytics (open question 1).
 3. **Hook attribute naming.** `data-brief-cta` is a new non-visual hook, like `data-view-projects`. A single shared script (delegation) was rejected to keep each component self-contained, at the cost of four small scripts.
 4. **Not distinguished:** the Nav item is one entry, so `nav` counts clicks from every page it is on; add page context only if the owner wants it (it would add a property).
 5. **`chat-error` volume** is expected to be low, since it only shows after a failed request.
+6. **`resume-modal` on the home page.** The link is a same-page hash change while the `<dialog>` is still modal, so the form may stay hidden behind it. The click is counted regardless; read `resume-modal` counts as intent, not arrival. Not changed (would be a visible behaviour change).
