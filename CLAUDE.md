@@ -121,6 +121,7 @@ Every change follows: design spec → implementation plan → feature branch →
 - **Astro components** are `.astro` files; interactive islands use React (`.tsx`) with `client:load`
 - **Islands pattern:** only interactive components hydrate (`client:load`); everything else is static Astro
 - **Styling:** Tailwind CSS v4 with custom theme tokens in `frontend/src/styles/global.css`
+- **Theme-dependent island markup:** keep SSR markup identical in both themes and pick the visible variant with CSS on `html[data-theme]` in `global.css` (as `ThemeToggle`'s `.theme-icon-sun`/`.theme-icon-moon` do). The server snapshot is always dark, so state-driven markup flashes the wrong variant until hydration. Spec `docs/superpowers/specs/2026-11-22-theme-toggle-prehydration-icon-design.md`.
 - **Go API:** stdlib `net/http` with `http.NewServeMux()` — no frameworks
 - **API architecture:** `internal/<domain>/handler.go` + `engine.go` or `provider.go`
 - **Contact form:** Netlify Forms (`data-netlify="true"`) — not handled by Go API
