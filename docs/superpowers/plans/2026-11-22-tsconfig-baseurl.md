@@ -1,6 +1,6 @@
 # Remove tsconfig `baseUrl` — Implementation Plan
 
-> **For agentic workers:** Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Clear TS5101 and keep it cleared.
 
@@ -15,6 +15,6 @@
 
 ## Task 2: Verify and open the PR
 
-- [ ] **Step 1:** `npm ci`, `astro check`, build, Vitest, `tsc` grep for TS5101.
-- [ ] **Step 2:** Adversarial review of the diff; apply findings.
-- [ ] **Step 3:** Push, open PR with real output in the body.
+- [x] **Step 1:** `npm ci`, `astro check`, build, Vitest, `tsc` grep for TS5101.
+- [x] **Step 2:** Adversarial review of the diff; apply findings.
+- [x] **Step 3:** Push, open PR with real output in the body.
