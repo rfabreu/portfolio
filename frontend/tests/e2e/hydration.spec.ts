@@ -92,3 +92,84 @@ test.describe('theme toggle after hydration', () => {
     await expect(toggle).toHaveAttribute('aria-label', 'Switch to light mode');
   });
 });
+
+// The toggle renders both icons and CSS picks one from html[data-theme], so the
+// right icon shows from first paint, before the island hydrates.
+function toggleIcons(page: Page) {
+  const button = page.getByRole('button', { name: /Switch to (dark|light) mode/ }).first();
+  return { sun: button.locator('.theme-icon-sun'), moon: button.locator('.theme-icon-moon') };
+}
+
+test.describe('theme toggle icon before hydration', () => {
+  // Blocking the island bundles leaves the inline theme script running, so this is
+  // the page a visitor sees before React hydrates the toggle.
+  test.beforeEach(async ({ page }) => {
+    await page.route('**/_astro/**/*.js', (route) => route.abort());
+  });
+
+  for (const theme of ['dark', 'light']) {
+    test(`stored ${theme} theme shows the ${theme === 'dark' ? 'sun' : 'moon'} icon`, async ({ page }) => {
+      await page.addInitScript((t) => localStorage.setItem('theme', t), theme);
+      await page.goto('/');
+
+      await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+      await expect(page.locator('astro-island[ssr]').first()).toBeAttached();
+      const { sun, moon } = toggleIcons(page);
+      await expect(theme === 'dark' ? sun : moon).toBeVisible();
+      await expect(theme === 'dark' ? moon : sun).toBeHidden();
+    });
+  }
+
+  test.describe('no stored theme, OS prefers light', () => {
+    test.use({ colorScheme: 'light' });
+
+    test('shows the moon icon', async ({ page }) => {
+      await page.goto('/');
+
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+      const { sun, moon } = toggleIcons(page);
+      await expect(moon).toBeVisible();
+      await expect(sun).toBeHidden();
+    });
+  });
+});
+
+test.describe('theme toggle icon with JavaScript disabled', () => {
+  test.use({ javaScriptEnabled: false });
+
+  // No script runs, so data-theme is never set and the page keeps the dark default.
+  test('the default (no data-theme) shows the sun icon', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(page.locator('html')).not.toHaveAttribute('data-theme', /.*/);
+    const { sun, moon } = toggleIcons(page);
+    await expect(sun).toBeVisible();
+    await expect(moon).toBeHidden();
+  });
+});
+
+test.describe('theme toggle icon after hydration', () => {
+  for (const theme of ['dark', 'light']) {
+    test(`${theme} theme: icon and label match, and toggling swaps both`, async ({ page }) => {
+      await page.addInitScript((t) => localStorage.setItem('theme', t), theme);
+      const errors = collectErrors(page);
+      await page.goto('/');
+      await waitForHydration(page);
+
+      const isDark = theme === 'dark';
+      const { sun, moon } = toggleIcons(page);
+      const toggle = page.getByRole('button', { name: /Switch to (dark|light) mode/ }).first();
+      await expect(toggle).toHaveAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+      await expect(isDark ? sun : moon).toBeVisible();
+      await expect(isDark ? moon : sun).toBeHidden();
+
+      await toggle.click();
+      await expect(page.locator('html')).toHaveAttribute('data-theme', isDark ? 'light' : 'dark');
+      await expect(toggle).toHaveAttribute('aria-label', isDark ? 'Switch to dark mode' : 'Switch to light mode');
+      await expect(isDark ? moon : sun).toBeVisible();
+      await expect(isDark ? sun : moon).toBeHidden();
+
+      expect(errors.filter((e) => HYDRATION_ERROR.test(e))).toEqual([]);
+    });
+  }
+});

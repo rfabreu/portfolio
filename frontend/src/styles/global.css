@@ -365,6 +365,18 @@ a.oc-link:focus-visible {
   color: var(--oc-orange);
 }
 
+/* ===== Theme toggle icon =====
+   ThemeToggle renders both icons so its markup is the same on the server and the
+   client. Show one from html[data-theme] (set by the inline script before first
+   paint). Only 'light' shows the moon; no data-theme or any other value shows the
+   sun, matching ThemeToggle's `theme !== 'light'` and the dark token default. */
+html[data-theme='light'] .theme-icon-sun {
+  display: none;
+}
+html:not([data-theme='light']) .theme-icon-moon {
+  display: none;
+}
+
 /* Print stylesheet — used by Playwright when generating the PDF */
 @media print {
   /* Hide site chrome on the /resume page when printing */
