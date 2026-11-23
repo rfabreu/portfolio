@@ -401,7 +401,7 @@ describe('brief-cta-click: in-page links to the contact form', () => {
     const found = sourceFiles().flatMap((file) =>
       anchorTags(fs.readFileSync(file, 'utf-8'))
         .filter((tag) => /href=["']?\/?#contact/.test(tag))
-        .map((tag) => path.relative(SRC, file)),
+        .map(() => path.relative(SRC, file)),
     );
     // Nav's `/#contact` lives in a data array, and MobileNav reuses it; both are covered above and below.
     expect(found.sort()).toEqual(

@@ -1,4 +1,5 @@
-import { defineCollection, z, reference } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 const projects = defineCollection({
@@ -11,8 +12,8 @@ const projects = defineCollection({
     category: z.string(),
     featured: z.boolean().default(false),
     order: z.number(),
-    github: z.string().url().optional(),
-    demo: z.string().url().optional(),
+    github: z.url().optional(),
+    demo: z.url().optional(),
   }),
 });
 
@@ -23,9 +24,9 @@ const resume = defineCollection({
     title: z.string(),
     location: z.string(),
     links: z.object({
-      linkedin: z.string().url(),
-      github: z.string().url().optional(),
-      portfolio: z.string().url().optional(),
+      linkedin: z.url(),
+      github: z.url().optional(),
+      portfolio: z.url().optional(),
     }),
     summary: z.string(),
     work_history: z.array(z.object({
@@ -61,7 +62,7 @@ const resume = defineCollection({
       title: z.string(),
       venue: z.string(),
       year: z.string(),
-      url: z.string().url().optional(),
+      url: z.url().optional(),
     })).default([]),
     languages_spoken: z.array(z.string()).default([]),
     selected_projects: z.array(z.object({
@@ -77,7 +78,7 @@ export const testimonialSchema = z.object({
   company: z.string(),
   relationship: z.string(),
   avatar: z.string().optional(),
-  linkedin: z.string().url().optional(),
+  linkedin: z.url().optional(),
   order: z.number().default(99),
   featured: z.boolean().default(false),
 });
