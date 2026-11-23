@@ -34,7 +34,7 @@ export default function ChatWidget() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  async function sendMessage(e: React.FormEvent) {
+  async function sendMessage(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const trimmed = input.trim();
     if (!trimmed || isLoading) return;
