@@ -8,3 +8,13 @@
 
 [context.production]
   command = "npm run build"
+
+# Legacy site: rafaelswe.netlify.app is the old Netlify site that also builds this repo.
+# Send its exact host to production. Deploy previews and branch deploys use other hosts
+# (deploy-preview-N--rafaelswe.netlify.app) and are not matched.
+# Spec: docs/superpowers/specs/2026-11-22-legacy-site-redirect-design.md
+[[redirects]]
+  from = "https://rafaelswe.netlify.app/*"
+  to = "https://rafaelabreu.netlify.app/:splat"
+  status = 301
+  force = true
