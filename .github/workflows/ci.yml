@@ -73,7 +73,7 @@ jobs:
 
       - uses: actions/setup-go@v6
         with:
-          go-version: '1.26'
+          go-version: '1.27'
 
       - name: Sync content for embedding
         run: make sync-content
@@ -85,4 +85,4 @@ jobs:
       # Needs the embed directory from `make sync-content` above. Pinned to a
       # released version, not @latest; bump it deliberately.
       - name: Scan Go dependencies for known vulnerabilities
-        run: go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.10.0 ./...
