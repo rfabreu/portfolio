@@ -46,6 +46,23 @@ updates:
           - minor
           - patch
 
+  # The API image's base images (`golang` builder, `alpine` runtime). Alpine
+  # went stale unnoticed before this entry existed. A bump here changes
+  # `api/Dockerfile`, so merging it deploys the API to Fly.io. It does not touch
+  # `go.mod` or the `go-version` in the workflows; keep those in step by hand.
+  - package-ecosystem: docker
+    directory: /api
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      docker-minor-patch:
+        update-types:
+          - minor
+          - patch
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
