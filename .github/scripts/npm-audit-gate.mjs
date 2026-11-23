@@ -9,15 +9,8 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-export const ALLOWLIST = {
-  'GHSA-fc5q-39xc-vjpf': {
-    reason:
-      'picomatch ReDoS; no patched release (<= 4.0.7 affected, 4.0.7 is latest). ' +
-      'Assessed, not tested: in-repo glob patterns are literals in content.config.ts ' +
-      'and the deployed site is static output.',
-    expires: '2027-01-31',
-  },
-};
+// Empty: GHSA-fc5q-39xc-vjpf (picomatch) was withdrawn by GitHub on 2026-11-18.
+export const ALLOWLIST = {};
 
 const BLOCKING = new Set(['high', 'critical']);
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -111,7 +104,7 @@ function main() {
     console.error(`npm-audit-gate: failed:\n  ${problems.join('\n  ')}`);
     process.exit(1);
   }
-  console.log(`npm-audit-gate: passed (${allowed.length} high/critical advisories, all allowlisted)`);
+  console.log(`npm-audit-gate: passed (${allowed.length} allowlisted high/critical advisories)`);
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) main();
